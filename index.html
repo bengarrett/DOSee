@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+
+<!--
+Archive.org
+DOSBox version 8fedaa0 built with Emscripten 1.37.3 04255b4
+Copyright 2002-2015 DOSBox Team, published under GNU GPL.
+CONFIG: Generating default configuration.
+Writing it to /home/web_user/.dosbox/dosbox-SVN.conf
+CONFIG:Loading primary settings from config file /home/web_user/.dosbox/dosbox-SVN.conf
+SDL:Current window pixel format: SDL_PIXELFORMAT_RGB888
+MIDI: Opened device:none
+DOSBox has switched to max cycles, because of the setting: cycles=auto.
+If the game runs too fast, try a fixed cycles amount in DOSBox's options.
+Emulation aborted due to nested emulation timeout.
+
+Local:
+DOSBox version 30e85e1M built with Emscripten 1.37.0 6dc4ac5
+Copyright 2002-2015 DOSBox Team, published under GNU GPL.
+CONFIG:Loading primary settings from config file /dos/s/render.con
+CONFIG:Loading additional settings from config file /dos/s/cpu-auto.con
+CONFIG:Loading additional settings from config file /dos/s/sb16.con
+CONFIG:Loading additional settings from config file /dos/s/vgaonly.con
+SDL:Current window pixel format: SDL_PIXELFORMAT_RGB888
+MIDI: Opened device:none
+ -->
+
+<head>
+    <meta charset="utf-8">
+    <title>DOSee running example</title>
+    <meta name="description" content="DOSee">
+    <meta name="author" content="Ben Garrett">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- DOSee initialisation options -->
+    <meta name="dosee:capname" content="b12599c.png">
+    <meta name="dosee:filename" content="dragglex_loader.zip">
+    <meta name="dosee:gamefilepath" content="dragglex_loader.zip">
+    <meta name="dosee:gusaudio" content="false">
+    <meta name="dosee:resolution" content="640, 480">
+    <meta name="dosee:startexe" content="DRAGGLEX.EXE">
+    <meta name="dosee:utils" content="false">
+
+    <!--- Preloading content to for page load performance improvement -->
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTML/Preloading_content -->
+    <!-- <link rel="preload" href="emulator/dosee-core.js" as="script">
+    <link rel="preload" href="emulator/dosee-core.mem" as="fetch" type="application/octet-stream">
+    <link rel="preload" href="disk_drives/s_drive.zip" as="fetch" type="application/zip">
+    <link rel="preload" href="libs/browserfs.min.js" as="script">
+    <link rel="preload" href="libs/browserfs-zipfs-extras.js" as="script">
+    <link rel="preload" href="dosee-loader.js" as="script">
+    <link rel="preload" href="libs/screenfull.min.js" as="script">
+    <link rel="preload" href="dosee-functions.js" as="script">
+    <link rel="preload" href="libs/FileSaver.min.js" as="script">
+    <link rel="preload" href="libs/canvas-toBlob.min.js" as="script"> -->
+
+    <!-- Javascripts -->
+    <script src="index.js" defer></script>
+
+    <!-- "minimal, responsive, style-agnostic CSS framework" https://minicss.org/docs -->
+    <link rel="stylesheet" href="libs/mini.min.css">
+</head>
+
+<body>
+    <p>DOSee</p>
+    <hr>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm">Emulating ... Something</div>
+        </div>
+    </div>
+    <div id="doseeCrashed">Oops!</div>
+    <p id="doseeSlowLoad">
+        <small class="text-warning"> If the emulation is taking too long to load,
+            <a href="#XMLFormat(dosee.url)#">you can turn it off</a>.</small>
+    </p>
+    <canvas id="doseeCanvas" class="rounded" style="width:640px; height: 480px; background-color: #000"></canvas>
+    <header id="doseeTabs">
+        <a href="#" id="hwButton" class="button tabtoggle">Hardware</a>
+        <a href="#" id="optButton" class="button tabtoggle">Options</a>
+        <a href="#" class="button tabtoggle">Help</a>
+        <a href="#" class="button" id="doseeFullScreen">Fullscreen</a>
+        <a href="#" class="button" id="doseeCaptureScreen">Capture</a>
+        <a href="#" class="button" id="doseereboot">Reboot</a>
+    </header>
+    <form id="hardware">
+        <fieldset>
+            <legend>CPU Speed</legend>
+            <label for="dosspeed2">
+                <input type="radio" name="dosspeed" id="dosspeed2" value="max"> maximum (80486)
+            </label>
+            <label for="dosspeed3">
+                <input type="radio" name="dosspeed" id="dosspeed3" value="386"> medium (80386)
+            </label>
+            <label for="dosspeed4">
+                <input type="radio" name="dosspeed" id="dosspeed4" value="8086"> slow (8086)
+            </label>
+            <label for="dosspeed1">
+                <input type="radio" name="dosspeed" id="dosspeed1" value="auto">
+                <u>automatic</u>
+            </label>
+        </fieldset>
+        <fieldset>
+            <legend>Graphics</legend>
+            <label class="radio-inline">
+                <input type="radio" name="dosmachine" id="dosmachine1" value="svga"> SuperVGA
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="dosmachine" id="dosmachine2" value="vga">
+                <u>VGA</u>
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="dosmachine" id="dosmachine3" value="ega"> EGA
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="dosmachine" id="dosmachine4" value="tandy"> Tandy
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="dosmachine" id="dosmachine5" value="cga"> CGA
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="dosmachine" id="dosmachine6" value="herc"> Hercules
+            </label>
+        </fieldset>
+        <fieldset>
+            <legend>Audio</legend>
+            <label class="radio-inline">
+                <input type="radio" name="dosaudio" id="dosaudio1" value="gus"> Gravis Ultrasound
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="dosaudio" id="dosaudio4" value="covox"> Covox
+                <small>also Disney Sound Source/DA Converter</small>
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="dosaudio" id="dosaudio2" value="sb16">
+                <u>Sound Blaster 16</u>
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="dosaudio" id="dosaudio3" value="sb1"> Sound Blaster 1.0
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="dosaudio" id="dosaudio5" value="none"> none
+            </label>
+        </fieldset>
+        <input type="submit" class="small primary" value="Apply changes">
+    </form>
+    <form id="options">
+        <p>Changes will not be applied until this browser tab has been refreshed</p>
+        <hr>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" id="doseeAutoRun"> Automatically start DOS emulation
+            </label>
+        </div>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" id="doseeAspect"> Disable aspect correction
+                <small class="text-muted">For sharper DOS ASCII/ANSI text</small>
+            </label>
+        </div>
+        <hr>
+        <div class="form-group">
+            <label for="inputEmail3" class="col-sm-12 control-label">SuperVGA real-time graphic effect
+                <br>
+                <small class="text-danger" id="svgaEffectsMsg">Only works when Hardware 🡒 Graphics = SuperVGA</small>
+            </label>
+            <div class="col-sm-12">
+                <div class="radio">
+                    <label class="radio-inline">
+                        <input type="radio" name="dosscale" id="dosscale0" value="none"> None
+                    </label>
+                    <br>
+                    <label class="radio-inline">
+                        <input type="radio" name="dosscale" id="dosscale5" value="advinterp3x"> Advanced interpolation
+                        <small class="text-muted">advinterp3x</small>
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="dosscale" id="dosscale4" value="hq3x"> High Quality 3 magnification
+                        <small class="text-muted">hq3x</small>
+                    </label>
+                    <br>
+                    <label class="radio-inline">
+                        <input type="radio" name="dosscale" id="dosscale3" value="rgb3x"> RGB
+                        <small class="text-muted">rgb3x</small>
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="dosscale" id="dosscale1" value="super2xsai"> Super scale and interpolation
+                        <small class="text-muted">super2xsai</small>
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="dosscale" id="dosscale2" value="tv3x"> Television
+                        <small class="text-muted">tv3x</small>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div id="helpBlock" class="help-block">
+            <p>
+                <i class="fal fa-info-circle"></i>
+                <a href="https://www.dosbox.com/wiki/Scaler">Graphic effect comparisons</a>
+            </p>
+        </div>
+    </form>
+    <footer>© 2018 - Ben Garrett |
+        <a href="">GitHub Repo</a>
+        <p>
+            <small>DOSee
+                <span id="doseeVersion"></span>, built on The Emularity, EM-DOSBox and DOSBox. Capture screenshot and save function built on
+                <a href="https://github.com/eligrey/canvas-toBlob.js">canvas-toBlob.js</a>.</small>
+        </p>
+    </footer>
+
+    <!-- these javascripts are placed at end of the page for a better user load page experience -->
+    <!-- they need to be loaded in this sequence and will not work with async or deferred loading -->
+
+    <!-- dosee loader -->
+    <script src="dosee-loader.js"></script>
+    <!-- browserfs -->
+    <script src="libs/browserfs.min.js"></script>
+    <!-- browserfs zipfs -->
+    <script src="libs/browserfs-zipfs-extras.js"></script>
+    <!-- screenfull -->
+    <script src="libs/screenfull.min.js"></script>
+    <!-- dosee functions -->
+    <script src="dosee-functions.js"></script>
+    <!-- dosee initialisation -->
+    <script src="dosee-init.js"></script>
+
+</body>
+
+</html>
