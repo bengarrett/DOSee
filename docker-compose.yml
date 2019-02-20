@@ -1,0 +1,22 @@
+# DOSee Docker compose to load an nginx webhost server
+#
+# Run: docker-compose up -d
+# Access in browser: http://localhost:5555
+
+version: "3.2"
+
+services:
+
+  web:
+    # nginx stable is used due to its less frequent updates
+    # alpine is a tiny linux distribution
+    image: nginx:stable-alpine
+
+    # read-only mount this local root directory to the nginx html share
+    volumes:
+      - .:/usr/share/nginx/html:ro
+
+    # expose nginx web port 80 as port 5555
+    ports:
+      - "5555:80"
+    
