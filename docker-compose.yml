@@ -8,6 +8,8 @@ version: "3.2"
 services:
 
   web:
+    build: ./libs
+
     # nginx stable is used due to its less frequent updates
     # alpine is a tiny linux distribution
     image: nginx:stable-alpine
