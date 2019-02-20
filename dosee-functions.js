@@ -133,12 +133,12 @@ function storageAvailable(type) {
             })
     }
 
-    // Screenshot button
+    // Screen capture button
     try {
         const fss = !!new Blob()
         if (typeof fss !== `undefined`) {
             const ssb = document.getElementById(`doseeCaptureScreen`)
-            // dosee screenshot button
+            // dosee screen capture button
             ssb.classList.remove(`hide-true`)
             ssb.classList.add(`hide-false-inline`)
             ssb.addEventListener(`click`, function() {
@@ -156,14 +156,6 @@ function storageAvailable(type) {
         }
     } catch (err) {
         console.error(err)
-    }
-
-    // Keyboard navigation is disabled
-    {
-        const tki = document.getElementsByClassName(`touchKeyboardIcons`)
-        if (typeof tki[0] !== `undefined`) {
-            tki[0].style.cssText = `display: none`
-        }
     }
 
     // Reboot button
