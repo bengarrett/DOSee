@@ -5,12 +5,8 @@
  */
 
 /* global saveAs screenfull */
-/* eslint-env es6 */
-/* eslint quotes: ['error', 'backtick'] */
-/* eslint indent: ["error", 4, { "SwitchCase": 1 } ] */
-/* eslint no-console: ["error", { allow: ["log", "error", "warn"] }] */
 
-'use strict'
+"use strict"
 
 // Returns the content data stored in HTML <meta> tags
 function metaContent(name) {
@@ -22,7 +18,7 @@ function metaContent(name) {
 // Test the local storage availability for the browser
 // Source: https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API
 function storageAvailable(type) {
-    const test = function (t) {
+    const test = function(t) {
         try {
             const storage = window[t],
                 x = `__storage_test__`
@@ -34,24 +30,26 @@ function storageAvailable(type) {
         }
     }
     switch (type) {
-        case `local`: case `session`:
+        case `local`:
+        case `session`:
             return test(`${type}Storage`)
-        default: return false
+        default:
+            return false
     }
 }
 
-(function () {
+(function() {
     // 'Options' tab interactions
 
     // Restore existing and save new interactions that are kept after the browser is closed
     if (storageAvailable(`local`)) {
         // Reveal Options tab
-        const dto = document.getElementById(`doseeOptionsTab`)
+        const dto = document.getElementById(`optButton`)
         dto.classList.remove(`hide-true`)
         dto.classList.add(`hide-false`)
         // Automatically start DOS emulation
         const asb = document.getElementById(`doseeAutoRun`)
-        asb.addEventListener(`click`, function () {
+        asb.addEventListener(`click`, function() {
             const chk = asb.checked
             localStorage.setItem(`doseeAutostart`, chk) // boolean value
         })
@@ -60,7 +58,7 @@ function storageAvailable(type) {
         // For sharper DOS ASCII/ANSI text
         const nab = document.getElementById(`doseeAspect`)
         const e = localStorage.getItem(`doseeAspect`)
-        nab.addEventListener(`click`, function () {
+        nab.addEventListener(`click`, function() {
             var dosaspect = nab.checked
             localStorage.setItem(`doseeAspect`, !dosaspect) // boolean value
         })
@@ -69,13 +67,17 @@ function storageAvailable(type) {
         const sOpt = document.querySelectorAll(`input[name=dosscale]`)
         let i = sOpt.length
         while (i--)
-            sOpt[i].addEventListener(`change`, function () {
-                localStorage.setItem(`doseeScaler`, this.value)
-            }, 0)
+            sOpt[i].addEventListener(
+                `change`,
+                function() {
+                    localStorage.setItem(`doseeScaler`, this.value)
+                },
+                0
+            )
     }
     // Session storage interactions that get deleted when the browser tab is closed
     if (storageAvailable(`session`)) {
-        const setTab = function (ac) {
+        const setTab = function(ac) {
             if (ac === null) return
             sessionStorage.setItem(`doseeTab`, `${ac}`)
         }
@@ -85,9 +87,13 @@ function storageAvailable(type) {
         if (tabs != null && tabs.length >= 0) {
             let i = tabs.length
             while (i--) {
-                tabs[i].addEventListener(`click`, function () {
-                    setTab(this.firstChild.getAttribute(`aria-controls`))
-                }, 0)
+                tabs[i].addEventListener(
+                    `click`,
+                    function() {
+                        setTab(this.firstChild.getAttribute(`aria-controls`))
+                    },
+                    0
+                )
             }
         }
         // restore most recently used tab
@@ -98,8 +104,12 @@ function storageAvailable(type) {
             const ts = document.getElementById(`${savedTab}Tab`)
             const tb = document.getElementById(savedTab)
             if (dt !== null && dtc !== null && ts !== null && tb !== null) {
-                dt.getElementsByClassName(`active`)[0].classList.remove(`active`)
-                dtc.getElementsByClassName(`active`)[0].classList.remove(`active`)
+                dt.getElementsByClassName(`active`)[0].classList.remove(
+                    `active`
+                )
+                dtc.getElementsByClassName(`active`)[0].classList.remove(
+                    `active`
+                )
                 ts.classList.add(`active`)
                 tb.classList.add(`active`)
             }
@@ -113,12 +123,16 @@ function storageAvailable(type) {
             const fsb = document.getElementById(`doseeFullScreen`)
             fsb.classList.remove(`hide-true`)
             fsb.classList.add(`hide-false-inline`)
-            const chrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor)
+            const chrome =
+                /Chrome/.test(navigator.userAgent) &&
+                /Google Inc/.test(navigator.vendor)
             if (chrome) elem = document.getElementById(`doseeContainer`)
         }
-        document.getElementById(`doseeFullScreen`).addEventListener(`click`, function () {
-            if (screenfull.enabled) screenfull.request(elem)
-        })
+        document
+            .getElementById(`doseeFullScreen`)
+            .addEventListener(`click`, function() {
+                if (screenfull.enabled) screenfull.request(elem)
+            })
     }
 
     // Screenshot button & screenshot + upload button
@@ -129,14 +143,16 @@ function storageAvailable(type) {
             // dosee screenshot button
             ssb.classList.remove(`hide-true`)
             ssb.classList.add(`hide-false-inline`)
-            ssb.addEventListener(`click`, function () {
+            ssb.addEventListener(`click`, function() {
                 const canvas = document.getElementById(`doseeCanvas`)
                 const filename = metaContent(`dosee:capname`)
-                canvas.toBlob(function (blob) {
+                canvas.toBlob(function(blob) {
                     saveAs(blob, filename)
                     const click = ssb.childNodes[0].childNodes[0].classList
                     click.add(`brand-success`)
-                    setTimeout(function () { click.remove(`brand-success`) }, 750)
+                    setTimeout(function() {
+                        click.remove(`brand-success`)
+                    }, 750)
                 })
             })
         }
@@ -153,8 +169,9 @@ function storageAvailable(type) {
     }
 
     // Reboot button
-    document.getElementById(`doseereboot`).addEventListener(`click`, function () {
-        location.reload(true)
-    })
-
+    document
+        .getElementById(`doseereboot`)
+        .addEventListener(`click`, function() {
+            location.reload(true)
+        })
 })()

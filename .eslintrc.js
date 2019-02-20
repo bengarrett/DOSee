@@ -1,5 +1,6 @@
 module.exports = {
     "env": {
+        "browser":true,
         "es6": true,
     },
     "extends": "eslint:recommended",
@@ -8,11 +9,11 @@ module.exports = {
         "impliedStrict": true,
     },
     "rules": {
-        "indent": ["error", 2, { "SwitchCase": 1 }],
+        "indent": ["error", 4, { "SwitchCase": 1 }],
         "linebreak-style": [
             "off"
         ],
-        "no-console": 0,
+        "no-console": ["error", { allow: ["log", "error", "warn"] }],
         "no-fallthrough": ["error", { "commentPattern": "break[\\s\\w]*omitted" }],
         "no-unused-vars": ["error", { "vars": "local" }],
         "quotes": [
