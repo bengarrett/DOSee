@@ -17,8 +17,8 @@ wget -nc -O libs/browserfs-zipfs-extras.js.map $MAP
 echo "Fetching screenfull"
 wget -nc -O libs/screenfull.min.js $FULL
 
-echo "Fetching FileSaver (needs to be minified)"
+echo "Fetching FileSaver"
 wget -nc -O libs/FileSaver.min.js $SAVE
 
-echo "Fetching canvas-toBlob (needs to be minified)"
-wget -nc -O libs/canvas-toBlob.min.js $CTB
+echo "Fetching canvas-toBlob"
+wget -nc -O libs/canvas-toBlob.js $CTB

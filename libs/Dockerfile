@@ -14,5 +14,5 @@ RUN wget -nc -O /opt/libs/browserfs-zipfs-extras.js $ZFS
 RUN wget -nc -O /opt/libs/browserfs-zipfs-extras.js.map $MAP
 RUN wget -nc -O /opt/libs/screenfull.min.js $FULL
 RUN wget -nc -O /opt/libs/FileSaver.min.js $SAVE
-RUN wget -nc -O /opt/libs/canvas-toBlob.min.js $CTB
+RUN wget -nc -O /opt/libs/canvas-toBlob.js $CTB
 RUN ls -l /opt/libs
