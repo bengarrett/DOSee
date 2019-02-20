@@ -1,6 +1,6 @@
 /*
  * dosee-loader.js
- * DOSee initialisator
+ * DOSee initialisation
  */
 "use strict"
 
@@ -76,7 +76,7 @@ const init = new DoseeLoader(
     DoseeLoader.nativeResolution(nr()[0], nr()[1]),
     DoseeLoader.mountZip(
         `c`,
-        DoseeLoader.fetchFile(`\'${cfg.filename}\'`, `${cfg.path}`)
+        DoseeLoader.fetchFile(`'${cfg.filename}'`, `${cfg.path}`)
     ),
     DoseeLoader.mountZip(
         `s`,
