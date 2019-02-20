@@ -133,7 +133,7 @@ function storageAvailable(type) {
             })
     }
 
-    // Screenshot button & screenshot + upload button
+    // Screenshot button
     try {
         const fss = !!new Blob()
         if (typeof fss !== `undefined`) {

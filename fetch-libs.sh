@@ -4,7 +4,7 @@ BFS="https://github.com/jvilk/BrowserFS/releases/download/v1.4.3/browserfs.min.j
 ZFS="https://github.com/jvilk/browserfs-zipfs-extras/releases/download/v1.0.1/browserfs-zipfs-extras.js"
 MAP="https://github.com/jvilk/browserfs-zipfs-extras/releases/download/v1.0.1/browserfs-zipfs-extras.js.map"
 FULL="https://raw.githubusercontent.com/sindresorhus/screenfull.js/gh-pages/dist/screenfull.min.js"
-SAVE="https://raw.githubusercontent.com/eligrey/FileSaver.js/master/src/FileSaver.js"
+SAVE="https://raw.githubusercontent.com/eligrey/FileSaver.js/master/dist/FileSaver.min.js"
 CTB="https://raw.githubusercontent.com/eligrey/canvas-toBlob.js/master/canvas-toBlob.js"
 
 echo "Fetching BrowserFS"
