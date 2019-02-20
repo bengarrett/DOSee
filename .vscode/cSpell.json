@@ -5,8 +5,10 @@
     "dosbox",
     "dosee",
     "Emscripten",
+    "Emularity",
     "gravis",
     "initialisation",
-    "initialise"
+    "initialise",
+    "minified"
   ]
 }

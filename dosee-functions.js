@@ -1,11 +1,9 @@
 /*
- * /javascripts/dosee-functions.js
- *
+ * dosee-functions.js
  * DOSee user interface functions
  */
 
 /* global saveAs screenfull */
-
 "use strict"
 
 // Returns the content data stored in HTML <meta> tags

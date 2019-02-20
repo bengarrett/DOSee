@@ -1,6 +1,5 @@
 /*
- * /javascripts/dosee-loader.js
- *
+ * dosee-loader.js
  * DOSee emulator
  *
  * Fork of https://github.com/db48x/emularity/blob/master/loader.js
@@ -14,16 +13,12 @@
  */
 
 /* global storageAvailable Module BrowserFS ES6Promise FS Promise */
-/* eslint-env es6 */
-/* eslint quotes: ['error', 'backtick'] */
-/* eslint indent: ["error", 4, { "SwitchCase": 1 } ] */
-/* eslint no-console: ["error", { allow: ["log","warn", "error"] }] */
+/* eslint strict: ["error", "safe"] */
 /* eslint no-global-assign: ["error", {"exceptions": ["Module"]}] */
-
 Module = null;
 
 (function (Promise) {
-    `use strict`
+    "use strict"
 
     const doseeVersion = `1.8p`
 
