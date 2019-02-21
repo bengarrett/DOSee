@@ -41,10 +41,6 @@ function storageAvailable(type) {
 
     // Restore existing and save new interactions that are kept after the browser is closed
     if (storageAvailable(`local`)) {
-        // Reveal Options tab
-        const dto = document.getElementById(`optButton`)
-        dto.classList.remove(`hide-true`)
-        dto.classList.add(`hide-false`)
         // Automatically start DOS emulation
         const asb = document.getElementById(`doseeAutoRun`)
         asb.addEventListener(`click`, function() {
@@ -118,9 +114,6 @@ function storageAvailable(type) {
     {
         let elem = document.getElementById(`doseeCanvas`)
         if (screenfull.enabled) {
-            const fsb = document.getElementById(`doseeFullScreen`)
-            fsb.classList.remove(`hide-true`)
-            fsb.classList.add(`hide-false-inline`)
             const chrome =
                 /Chrome/.test(navigator.userAgent) &&
                 /Google Inc/.test(navigator.vendor)
@@ -139,17 +132,14 @@ function storageAvailable(type) {
         if (typeof fss !== `undefined`) {
             const ssb = document.getElementById(`doseeCaptureScreen`)
             // dosee screen capture button
-            ssb.classList.remove(`hide-true`)
-            ssb.classList.add(`hide-false-inline`)
             ssb.addEventListener(`click`, function() {
                 const canvas = document.getElementById(`doseeCanvas`)
                 const filename = metaContent(`dosee:capname`)
                 canvas.toBlob(function(blob) {
                     saveAs(blob, filename)
-                    const click = ssb.childNodes[0].childNodes[0].classList
-                    click.add(`brand-success`)
+                    ssb.style.color = `green`
                     setTimeout(function() {
-                        click.remove(`brand-success`)
+                        ssb.style.color = `black`
                     }, 750)
                 })
             })
@@ -160,7 +150,7 @@ function storageAvailable(type) {
 
     // Reboot button
     document
-        .getElementById(`doseereboot`)
+        .getElementById(`doseeReboot`)
         .addEventListener(`click`, function() {
             location.reload(true)
         })

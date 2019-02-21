@@ -14,6 +14,7 @@
     const resetMenu = function() {
         hw.style.display = `none`
         opt.style.display = `none`
+        hlp.style.display = `none`
     }
 
     resetMenu()
