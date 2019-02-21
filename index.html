@@ -46,15 +46,15 @@ MIDI: Opened device:none
     <link rel="preload" href="emulator/dosee-core.mem" as="fetch" type="application/octet-stream">
     <link rel="preload" href="disk_drives/s_drive.zip" as="fetch" type="application/zip"> -->
 
-    <link rel="preload" href="dosee-functions.js" as="script">
-    <link rel="preload" href="dosee-loader.js" as="script">
-    <link rel="preload" href="index.js" as="script">
+    <link rel="preload" href="dosee-functions.js" as="script" />
+    <link rel="preload" href="dosee-loader.js" as="script" />
+    <link rel="preload" href="index.js" as="script" />
 
-    <link rel="preload" href="libs/browserfs.min.js" as="script">
-    <link rel="preload" href="libs/browserfs-zipfs-extras.js" as="script">
-    <link rel="preload" href="libs/screenfull.min.js" as="script">
-    <link rel="preload" href="libs/FileSaver.min.js" as="script">
-    <link rel="preload" href="libs/canvas-toBlob.js" as="script">
+    <link rel="preload" href="libs/browserfs.min.js" as="script" />
+    <link rel="preload" href="libs/browserfs-zipfs-extras.js" as="script" />
+    <link rel="preload" href="libs/screenfull.min.js" as="script" />
+    <link rel="preload" href="libs/FileSaver.min.js" as="script" />
+    <link rel="preload" href="libs/canvas-toBlob.js" as="script" />
 
     <!-- JavaScripts -->
     <script defer src="index.js"></script>
@@ -67,7 +67,11 @@ MIDI: Opened device:none
   </head>
 
   <body>
-    <h2>DOSee<hr /><small>Emulating … <span id="doseeH2">Something</span></small></h2>
+    <h2>
+      DOSee
+      <hr />
+      <small>Emulating … <span id="doseeH2">Something</span></small>
+    </h2>
     <div id="doseeCrashed">Oops!</div>
     <p id="doseeSlowLoad">
       <small class="text-warning">
@@ -75,6 +79,7 @@ MIDI: Opened device:none
         <a href="#XMLFormat(dosee.url)#">you can turn it off</a>.</small
       >
     </p>
+    <!-- DOSee canvas -->
     <div id="doseeContainer">
       <canvas
         id="doseeCanvas"
@@ -82,6 +87,7 @@ MIDI: Opened device:none
         style="width:640px; height: 480px; background-color: #000"
       ></canvas>
     </div>
+    <!-- DOSee UI (menu) -->
     <header id="doseeTabs">
       <a href="#" id="hwButton" class="button tabtoggle">Hardware</a>
       <a href="#" id="optButton" class="button tabtoggle">Options</a>
@@ -248,9 +254,7 @@ MIDI: Opened device:none
       <div id="helpBlock" class="help-block">
         <p>
           <i class="fal fa-info-circle"></i>
-          <a href="https://www.dosbox.com/wiki/Scaler"
-            >Graphic effect comparisons</a
-          >
+          <a href="//www.dosbox.com/wiki/Scaler">Graphic effect comparisons</a>
         </p>
       </div>
     </form>
@@ -258,15 +262,13 @@ MIDI: Opened device:none
       <p>Placeholder</p>
     </form>
     <footer>
-      © 2018 - Ben Garrett |
-      <a href="">GitHub Repo</a>
+      © 2019 - Ben Garrett |
+      <a href="//github.com/bengarrett/DOSee">GitHub Repo</a>
       <p>
         <small
-          >DOSee <span id="doseeVersion"></span>, built on The Emularity,
-          EM-DOSBox and DOSBox. Capture screenshot and save function built on
-          <a href="https://github.com/eligrey/canvas-toBlob.js"
-            >canvas-toBlob.js</a
-          >.</small
+          >DOSee <span id="doseeVersion"></span>, built on <a href="//github.com/db48x/emularity">The Emularity</a>,
+          <a href="//github.com/dreamlayers/em-dosbox">EM-DOSBox</a> and <a href="//www.dosbox.com">DOSBox</a>. Capture and save function uses
+          <a href="//github.com/eligrey/FileSaver.js">FileSaver.js</a>.</small
         >
       </p>
     </footer>
