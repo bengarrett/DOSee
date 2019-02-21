@@ -44,17 +44,23 @@ MIDI: Opened device:none
     <!-- https://developer.mozilla.org/en-US/docs/Web/HTML/Preloading_content -->
     <!-- <link rel="preload" href="emulator/dosee-core.js" as="script">
     <link rel="preload" href="emulator/dosee-core.mem" as="fetch" type="application/octet-stream">
-    <link rel="preload" href="disk_drives/s_drive.zip" as="fetch" type="application/zip">
+    <link rel="preload" href="disk_drives/s_drive.zip" as="fetch" type="application/zip"> -->
+
+    <link rel="preload" href="dosee-functions.js" as="script">
+    <link rel="preload" href="dosee-loader.js" as="script">
+    <link rel="preload" href="index.js" as="script">
+
     <link rel="preload" href="libs/browserfs.min.js" as="script">
     <link rel="preload" href="libs/browserfs-zipfs-extras.js" as="script">
-    <link rel="preload" href="dosee-loader.js" as="script">
     <link rel="preload" href="libs/screenfull.min.js" as="script">
-    <link rel="preload" href="dosee-functions.js" as="script">
     <link rel="preload" href="libs/FileSaver.min.js" as="script">
-    <link rel="preload" href="libs/canvas-toBlob.js" as="script"> -->
+    <link rel="preload" href="libs/canvas-toBlob.js" as="script">
 
     <!-- JavaScripts -->
     <script src="index.js" defer></script>
+    <!-- screen capture -->
+    <script async src="libs/FileSaver.min.js"></script>
+    <script async src="libs/canvas-toBlob.js"></script>
 
     <!-- "minimal, responsive, style-agnostic CSS framework" https://minicss.org/docs -->
     <link rel="stylesheet" href="libs/mini.min.css" />
@@ -75,11 +81,13 @@ MIDI: Opened device:none
         <a href="#XMLFormat(dosee.url)#">you can turn it off</a>.</small
       >
     </p>
-    <canvas
-      id="doseeCanvas"
-      class="rounded"
-      style="width:640px; height: 480px; background-color: #000"
-    ></canvas>
+    <div id="doseeContainer">
+      <canvas
+        id="doseeCanvas"
+        class="rounded"
+        style="width:640px; height: 480px; background-color: #000"
+      ></canvas>
+    </div>
     <header id="doseeTabs">
       <a href="#" id="hwButton" class="button tabtoggle">Hardware</a>
       <a href="#" id="optButton" class="button tabtoggle">Options</a>
@@ -276,13 +284,10 @@ MIDI: Opened device:none
     <script src="dosee-loader.js"></script>
     <!-- browserfs -->
     <script src="libs/browserfs.min.js"></script>
-    <!-- browserfs zipfs -->
-    <script src="libs/browserfs-zipfs-extras.js"></script>
+    <!-- browserfs zip filesystem -->
+    <script defer src="libs/browserfs-zipfs-extras.js"></script>
     <!-- screenfull -->
     <script src="libs/screenfull.min.js"></script>
-    <!-- screen capture -->
-    <script async src="libs/FileSaver.min.js"></script>
-    <script async src="libs/canvas-toBlob.js"></script>
     <!-- dosee functions -->
     <script src="dosee-functions.js"></script>
     <!-- dosee initialisation -->
