@@ -1,0 +1,9 @@
+.radio-inline {
+  white-space: nowrap;
+}
+
+#doseeContainer > canvas {
+  min-width: 640px;
+  min-height: 480px;
+  background-color: #000;
+}

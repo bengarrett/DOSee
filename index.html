@@ -10,7 +10,7 @@
     <!-- DOSee initialisation options -->
     <meta name="dosee:capname" content="dragglex_loader.png" />
     <meta name="dosee:filename" content="dragglex_loader.zip" />
-    <meta name="dosee:gamefilepath" content="dragglex_loader.zip" />
+    <meta name="dosee:gamefilepath" content="dos_programs/program_1/dragglex_loader.zip" />
     <meta name="dosee:gusaudio" content="false" />
     <meta name="dosee:resolution" content="640, 480" />
     <meta name="dosee:startexe" content="DRAGGLEX.EXE" />
@@ -38,6 +38,7 @@
     <script async src="libs/FileSaver.min.js"></script>
     <script async src="libs/canvas-toBlob.js"></script>
 
+    <link rel="stylesheet" href="index.css" />
     <!-- "minimal, responsive, style-agnostic CSS framework" https://minicss.org/docs -->
     <link rel="stylesheet" href="libs/mini.min.css" />
   </head>
@@ -52,11 +53,7 @@
     <p id="doseeSlowLoad">The emulator is taking a while to load.</p>
     <!-- DOSee canvas -->
     <div id="doseeContainer">
-      <canvas
-        id="doseeCanvas"
-        class="rounded"
-        style="width:640px; height: 480px; background-color: #000"
-      ></canvas>
+      <canvas id="doseeCanvas" class="rounded"></canvas>
     </div>
     <!-- DOSee UI (menu) -->
     <header id="doseeTabs">
@@ -146,9 +143,7 @@
       <input type="submit" class="small primary" value="Apply changes" />
     </form>
     <form id="options">
-      <p>
-        Click the <em>REBOOT</em> button to activate any changes
-      </p>
+      <p>Click the <em>REBOOT</em> button to activate any changes</p>
       <hr />
       <div class="checkbox">
         <label>
@@ -168,7 +163,7 @@
           >SuperVGA real-time graphic effect
           <br />
           <small class="text-danger" id="svgaEffectsMsg"
-            >Only works when Hardware 🡒 Graphics = SuperVGA</small
+            >Hardware 🡒 Graphics, MUST be set to SuperVGA</small
           >
         </label>
         <div class="col-sm-12">
@@ -237,8 +232,10 @@
       <a href="//github.com/bengarrett/DOSee">GitHub Repo</a>
       <p>
         <small
-          >DOSee <span id="doseeVersion"></span>, built on <a href="//github.com/db48x/emularity">The Emularity</a>,
-          <a href="//github.com/dreamlayers/em-dosbox">EM-DOSBox</a> and <a href="//www.dosbox.com">DOSBox</a>. Capture and save function uses
+          >DOSee <span id="doseeVersion"></span>, built on
+          <a href="//github.com/db48x/emularity">The Emularity</a>,
+          <a href="//github.com/dreamlayers/em-dosbox">EM-DOSBox</a> and
+          <a href="//www.dosbox.com">DOSBox</a>. Capture and save function uses
           <a href="//github.com/eligrey/FileSaver.js">FileSaver.js</a>.</small
         >
       </p>
