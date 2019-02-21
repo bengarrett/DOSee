@@ -2,9 +2,9 @@
  * index.js
  * DOSee index.html functions
  */
-"use strict";
+"use strict"
 
-(function() {
+;(function() {
     const hw = document.getElementById(`hardware`)
     const opt = document.getElementById(`options`)
     const hlp = document.getElementById(`helpTab`)
@@ -19,6 +19,10 @@
 
     resetMenu()
     hw.style.display = `block`
+
+    const h2 = document.getElementById(`doseeH2`)
+    h2.innerText = `${metaContent(`dosee:filename`)}`
+
     console.info(`index.js v1.0 loaded`)
     //        document.getElementById(`hardware`)
     hwBut.onclick = function() {

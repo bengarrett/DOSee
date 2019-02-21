@@ -57,7 +57,7 @@ MIDI: Opened device:none
     <link rel="preload" href="libs/canvas-toBlob.js" as="script">
 
     <!-- JavaScripts -->
-    <script src="index.js" defer></script>
+    <script defer src="index.js"></script>
     <!-- screen capture -->
     <script async src="libs/FileSaver.min.js"></script>
     <script async src="libs/canvas-toBlob.js"></script>
@@ -67,13 +67,7 @@ MIDI: Opened device:none
   </head>
 
   <body>
-    <p>DOSee</p>
-    <hr />
-    <div class="container">
-      <div class="row">
-        <div class="col-sm">Emulating ... Something</div>
-      </div>
-    </div>
+    <h2>DOSee<hr /><small>Emulating … <span id="doseeH2">Something</span></small></h2>
     <div id="doseeCrashed">Oops!</div>
     <p id="doseeSlowLoad">
       <small class="text-warning">
