@@ -69,7 +69,7 @@ function storageAvailable(type) {
                 0
             )
     }
-    // Session storage interactions that get deleted when the browser tab is closed
+    // ❌ Session storage interactions that get deleted when the browser tab is closed
     if (storageAvailable(`session`)) {
         const setTab = function(ac) {
             if (ac === null) return
@@ -84,7 +84,7 @@ function storageAvailable(type) {
                 tabs[i].addEventListener(
                     `click`,
                     function() {
-                        setTab(this.firstChild.getAttribute(`aria-controls`))
+                        //setTab(this.firstChild.getAttribute(`aria-controls`))
                     },
                     0
                 )

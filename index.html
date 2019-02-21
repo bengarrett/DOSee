@@ -1,29 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-  <!--
-Archive.org
-DOSBox version 8fedaa0 built with Emscripten 1.37.3 04255b4
-Copyright 2002-2015 DOSBox Team, published under GNU GPL.
-CONFIG: Generating default configuration.
-Writing it to /home/web_user/.dosbox/dosbox-SVN.conf
-CONFIG:Loading primary settings from config file /home/web_user/.dosbox/dosbox-SVN.conf
-SDL:Current window pixel format: SDL_PIXELFORMAT_RGB888
-MIDI: Opened device:none
-DOSBox has switched to max cycles, because of the setting: cycles=auto.
-If the game runs too fast, try a fixed cycles amount in DOSBox's options.
-Emulation aborted due to nested emulation timeout.
-
-Local:
-DOSBox version 30e85e1M built with Emscripten 1.37.0 6dc4ac5
-Copyright 2002-2015 DOSBox Team, published under GNU GPL.
-CONFIG:Loading primary settings from config file /dos/s/render.con
-CONFIG:Loading additional settings from config file /dos/s/cpu-auto.con
-CONFIG:Loading additional settings from config file /dos/s/sb16.con
-CONFIG:Loading additional settings from config file /dos/s/vgaonly.con
-SDL:Current window pixel format: SDL_PIXELFORMAT_RGB888
-MIDI: Opened device:none
- -->
-
   <head>
     <meta charset="utf-8" />
     <title>DOSee running example</title>
@@ -72,13 +48,8 @@ MIDI: Opened device:none
       <hr />
       <small>Emulating … <span id="doseeH2">Something</span></small>
     </h2>
-    <div id="doseeCrashed">Oops!</div>
-    <p id="doseeSlowLoad">
-      <small class="text-warning">
-        If the emulation is taking too long to load,
-        <a href="#XMLFormat(dosee.url)#">you can turn it off</a>.</small
-      >
-    </p>
+    <p id="doseeCrashed">Oops, something crashed?</p>
+    <p id="doseeSlowLoad">The emulator is taking a while to load.</p>
     <!-- DOSee canvas -->
     <div id="doseeContainer">
       <canvas
@@ -176,7 +147,7 @@ MIDI: Opened device:none
     </form>
     <form id="options">
       <p>
-        Changes will not be applied until this browser tab has been refreshed
+        Click the <em>REBOOT</em> button to activate any changes
       </p>
       <hr />
       <div class="checkbox">
