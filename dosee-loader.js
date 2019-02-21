@@ -136,7 +136,10 @@ Module = null;
             console.log(`DOSee needs the URLSearchParams interface to read URL query string values`)
             return args
         }
-        const urlParams = new URLSearchParams(window.location.href)
+
+        // extract URL query string and run it through the URLSearchParams API
+        const wlh = window.location.href
+        const urlParams = new URLSearchParams(wlh.slice(wlh.indexOf(`?`), wlh.indexOf(`#`)))
 
         // graphic engine scalers (https://www.dosbox.com/wiki/Scaler)
         let scaler = null
@@ -210,6 +213,7 @@ Module = null;
 
         // emulation sound cards
         const sound = urlParams.get(`dosaudio`)
+        console.log(`DOS Audio --->`,sound)
         switch (sound) {
             case `none`:
                 verbose += ` No audio.`

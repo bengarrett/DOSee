@@ -7,7 +7,7 @@
 "use strict"
 
 // Returns the content data stored in HTML <meta> tags
-function metaContent(name) {
+function getMetaContent(name) {
     const elm = document.getElementsByName(name)
     if (elm[0] === undefined) return null
     else return elm[0].getAttribute(`content`)
@@ -134,7 +134,7 @@ function storageAvailable(type) {
             // dosee screen capture button
             ssb.addEventListener(`click`, function() {
                 const canvas = document.getElementById(`doseeCanvas`)
-                const filename = metaContent(`dosee:capname`)
+                const filename = getMetaContent(`dosee:capname`)
                 canvas.toBlob(function(blob) {
                     saveAs(blob, filename)
                     ssb.style.color = `green`

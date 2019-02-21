@@ -4,7 +4,14 @@
  */
 "use strict"
 
-;(function() {
+// todo
+function setMetaContent(name) {
+    const elm = document.getElementsByName(name)
+    if (elm[0] === undefined) return null
+    else return elm[0].getAttribute(`content`)
+}
+
+(function() {
     const hw = document.getElementById(`hardware`)
     const opt = document.getElementById(`options`)
     const hlp = document.getElementById(`helpTab`)
@@ -17,13 +24,6 @@
         hlp.style.display = `none`
     }
 
-    resetMenu()
-    hw.style.display = `block`
-
-    const h2 = document.getElementById(`doseeH2`)
-    h2.innerText = `${metaContent(`dosee:filename`)}`
-
-    console.info(`index.js v1.0 loaded`)
     //        document.getElementById(`hardware`)
     hwBut.onclick = function() {
         resetMenu()
@@ -37,4 +37,14 @@
         resetMenu()
         hlp.style.display = `block`
     }
+
+
+    resetMenu()
+    hwBut.click()
+
+    // set the header to show the filename
+    document.getElementById(`doseeH2`).innerText = `${getMetaContent(`dosee:filename`)}`
+
+    console.info(`index.js v1.0 loaded`)
+
 })()

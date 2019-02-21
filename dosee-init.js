@@ -50,12 +50,12 @@ const utils = function(q) {
 // Load configurations obtained from <meta name="dosee:"> HTML tags
 const cfg = {
     start: false,
-    exe: metaContent(`dosee:startexe`),
-    filename: metaContent(`dosee:filename`),
-    gus: metaContent(`dosee:gusaudio`),
-    path: metaContent(`dosee:gamefilepath`),
-    res: metaContent(`dosee:resolution`),
-    utils: metaContent(`dosee:utils`)
+    exe: getMetaContent(`dosee:startexe`),
+    filename: getMetaContent(`dosee:filename`),
+    gus: getMetaContent(`dosee:gusaudio`),
+    path: getMetaContent(`dosee:gamefilepath`),
+    res: getMetaContent(`dosee:resolution`),
+    utils: getMetaContent(`dosee:utils`)
 }
 
 // Start DOSee automatically?

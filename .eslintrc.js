@@ -30,7 +30,7 @@ module.exports = {
     "globals": {
         "DoseeLoader": true,
         "Emulator": true,
-        "metaContent": true,
+        "getMetaContent": true,
         "storageAvailable": true,
 
         "BuildEcma48": true,
