@@ -29,7 +29,6 @@ const config = new Map()
     const urlParams = newQueryString()
     // Gravis Ultrasound Audio drivers (dosaudio=gus)
     const audio = urlParams.get(`dosaudio`)
-    console.log(`GUS`, audio)
     if (audio === `gus`) {
         config.set(`gus`, `true`)
         setMetaContent(`dosee:gusaudio`, `true`)
@@ -79,6 +78,8 @@ const utils = q => {
 }
 
 // Start DOSee without user interaction
+// NOTE: This may break audio support in Chrome 71+ due to its Web Audio autoplay policy?
+// https://goo.gl/7K7WLu
 if (storageAvailable(`local`)) {
     if(localStorage.getItem(`doseeAutostart`) === `true`) config.set(`start`, true)
 }
