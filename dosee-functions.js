@@ -6,11 +6,18 @@
 /* global saveAs screenfull */
 "use strict"
 
-// Returns the content data stored in HTML <meta> tags
+// Returns the content data stored in a HTML <meta> tag
 function getMetaContent(name) {
     const elm = document.getElementsByName(name)
     if (elm[0] === undefined) return null
-    else return elm[0].getAttribute(`content`)
+    return elm[0].getAttribute(`content`)
+}
+
+// Updates the content data stored in a HTML <meta> tag
+function setMetaContent(name, value) {
+    const elm = document.getElementsByName(name)
+    if (elm[0] === undefined || !elm[0].hasAttribute(`content`)) return null
+    return elm[0].setAttribute(`content`, `${value}`)
 }
 
 // Extracts the URL query string and run it through the URLSearchParams API
