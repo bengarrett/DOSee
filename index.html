@@ -57,19 +57,19 @@
     </div>
     <!-- DOSee UI (menu) -->
     <header id="doseeTabs">
-      <a href="#" id="hwButton" class="button tabtoggle">Hardware</a>
-      <a href="#" id="optButton" class="button tabtoggle">Options</a>
-      <a href="#" id="hlpButton" class="button tabtoggle">Help</a>
+      <a href="#" id="hardwareBtn" class="button tabtoggle">Hardware</a>
+      <a href="#" id="optionsBtn" class="button tabtoggle">Options</a>
+      <a href="#" id="helpBtn" class="button tabtoggle">Help</a>
       <a href="#" class="button" id="doseeFullScreen">Fullscreen</a>
       <a href="#" class="button" id="doseeCaptureScreen">Capture</a>
       <a href="#" class="button" id="doseeReboot">Reboot</a>
     </header>
-    <form id="hardware">
+    <form id="hardwareTab">
       <fieldset>
         <legend>CPU Speed</legend>
         <label for="dosspeed2">
           <input type="radio" name="dosspeed" id="dosspeed2" value="max" />
-          maximum (80486)
+          faster (80486)
         </label>
         <label for="dosspeed3">
           <input type="radio" name="dosspeed" id="dosspeed3" value="386" />
@@ -142,7 +142,7 @@
       </fieldset>
       <input type="submit" class="small primary" value="Apply changes" />
     </form>
-    <form id="options">
+    <form id="optionsTab">
       <p>Click the <em>REBOOT</em> button to activate any changes</p>
       <hr />
       <div class="checkbox">

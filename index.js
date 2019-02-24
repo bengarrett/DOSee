@@ -1,50 +1,50 @@
 /*
  * index.js
- * DOSee index.html functions
+ * DOSee index.html example menu user-interactions
  */
 "use strict"
 
-// todo
-function setMetaContent(name) {
-    const elm = document.getElementsByName(name)
-    if (elm[0] === undefined) return null
-    else return elm[0].getAttribute(`content`)
+// Menu containers
+const menuTabs = new Map()
+    .set(`hardware`, document.getElementById(`hardwareTab`))
+    .set(`options`, document.getElementById(`optionsTab`))
+    .set(`help`, document.getElementById(`helpTab`))
+
+// Menu buttons
+const menuBtns = new Map()
+    .set(`hardware`, document.getElementById(`hardwareBtn`))
+    .set(`options`, document.getElementById(`optionsBtn`))
+    .set(`help`, document.getElementById(`helpBtn`))
+
+// Create mouse click events for each menu button
+const monitorTabs = () => {
+    menuBtns.forEach(button => {
+        button.addEventListener(`click`, (event) => {
+            const srcId = event.srcElement.id
+            // replace the trailing `Btn` from the srcElement Id with `Tab`
+            const newId = `${srcId.slice(0, -3)}Tab`
+            resetTabs(newId)
+        })
+    })
 }
 
-(function() {
-    const hw = document.getElementById(`hardware`)
-    const opt = document.getElementById(`options`)
-    const hlp = document.getElementById(`helpTab`)
-    const hwBut = document.getElementById(`hwButton`)
-    const optBut = document.getElementById(`optButton`)
-    const hlpBut = document.getElementById(`hlpButton`)
-    const resetMenu = function() {
-        hw.style.display = `none`
-        opt.style.display = `none`
-        hlp.style.display = `none`
-    }
+// Hides all menu containers, if a defaultTab is provided then it will be displayed
+const resetTabs = (defaultTab) => {
+    menuTabs.forEach(tab => {
+        if(tab.id === `${defaultTab}`) tab.style.display = `block`
+        else tab.style.display = `none`
+    })
+}
 
-    //        document.getElementById(`hardware`)
-    hwBut.onclick = function() {
-        resetMenu()
-        hw.style.display = `block`
-    }
-    optBut.onclick = function() {
-        resetMenu()
-        opt.style.display = `block`
-    }
-    hlpBut.onclick = function() {
-        resetMenu()
-        hlp.style.display = `block`
-    }
+// Self-invoking function
+(()=> {
+    monitorTabs()
+    resetTabs(`hardwareTab`)
 
+    // set the <H2> element to show the filename
+    document.getElementById(`doseeH2`).innerText = `${getMetaContent(
+        `dosee:filename`
+    )}`
 
-    resetMenu()
-    hwBut.click()
-
-    // set the header to show the filename
-    document.getElementById(`doseeH2`).innerText = `${getMetaContent(`dosee:filename`)}`
-
-    console.info(`index.js v1.0 loaded`)
-
+    console.info(`index.js loaded`)
 })()
