@@ -14,19 +14,35 @@ const paths = new Map()
     .set(`core`, `emulator/dosee-core.js`)
     .set(`mem`, `emulator/dosee-core.mem`)
 
-// Handle URL params special cases that require additional files to be loaded into DOSee
+// Load configurations that are obtained from the <meta name="dosee:"> HTML tags
+const config = new Map()
+    .set(`exe`, getMetaContent(`dosee:startexe`))
+    .set(`filename`, getMetaContent(`dosee:filename`))
+    .set(`gus`, getMetaContent(`dosee:gusaudio`))
+    .set(`path`, getMetaContent(`dosee:gamefilepath`))
+    .set(`res`, getMetaContent(`dosee:resolution`))
+    .set(`start`, false)
+    .set(`utils`, getMetaContent(`dosee:utils`))
+
+// Handle URL params special cases that need additional files to be loaded by DOSee
 {
     const urlParams = newQueryString()
     // Gravis Ultrasound Audio drivers (dosaudio=gus)
     const audio = urlParams.get(`dosaudio`)
     console.log(`GUS`, audio)
-    if (audio === `gus`) setMetaContent(`dosee:gusaudio`, `true`)
+    if (audio === `gus`) {
+        config.set(`gus`, `true`)
+        setMetaContent(`dosee:gusaudio`, `true`)
+    }
     // DOSee Utilities (dosutils=true)
     const utils = urlParams.get(`dosutils`)
-    if (utils === `true`) setMetaContent(`dosee:utils`, `true`)
+    if (utils === `true`) {
+        config.set(`utils`, `true`)
+        setMetaContent(`dosee:utils`, `true`)
+    }
 }
 
-// Load GUS (Gravis UltraSound) driver
+// Load the GUS (Gravis UltraSound) driver
 const gusDriver = q => {
     if (q !== `true`) return null
     return DoseeLoader.mountZip(
@@ -48,7 +64,7 @@ const locateFiles = filename => {
 // Initialise the resolution of the DOS program - width, height
 const nativeRes = () => {
     const defaults = [640, 480]
-    const arr = cfg.res.split(`,`)
+    const arr = config.get(`res`).split(`,`)
     if (arr.length < 1) return defaults
     return [parseInt(arr[0]), parseInt(arr[1])]
 }
@@ -62,25 +78,11 @@ const utils = q => {
     )
 }
 
-// Load configurations that are obtained from the <meta name="dosee:"> HTML tags
-const cfg = {
-    start: false,
-    exe: getMetaContent(`dosee:startexe`),
-    filename: getMetaContent(`dosee:filename`),
-    gus: getMetaContent(`dosee:gusaudio`),
-    path: getMetaContent(`dosee:gamefilepath`),
-    res: getMetaContent(`dosee:resolution`),
-    utils: getMetaContent(`dosee:utils`)
+// Start DOSee without user interaction
+if (storageAvailable(`local`)) {
+    if(localStorage.getItem(`doseeAutostart`) === `true`) config.set(`start`, true)
 }
-
-// Start DOSee automatically?
-if (
-    storageAvailable(`local`) &&
-    localStorage.getItem(`doseeAutostart`) === `true`
-) {
-    cfg.start = true
-}
-if (cfg.start === true) console.log(`DOSee will launch automatically`)
+if (config.get(`start`) === true) console.log(`DOSee will launch automatically`)
 
 // Initialise DOSee
 // Note order of these DoseeLoader values are important and swapping them could cause failures
@@ -91,15 +93,18 @@ const init = new DoseeLoader(
     DoseeLoader.nativeResolution(nativeRes()[0], nativeRes()[1]),
     DoseeLoader.mountZip(
         `c`,
-        DoseeLoader.fetchFile(`'${cfg.filename}'`, `${cfg.path}`)
+        DoseeLoader.fetchFile(
+            `'${config.get(`filename`)}'`,
+            `${config.get(`path`)}`
+        )
     ),
     DoseeLoader.mountZip(
         `s`,
         DoseeLoader.fetchFile(`DOSee configurations`, `${paths.get(`driveS`)}`)
     ),
-    gusDriver(cfg.gus),
-    utils(cfg.utils),
-    DoseeLoader.startExe(cfg.exe)
+    gusDriver(config.get(`gus`)),
+    utils(config.get(`utils`)),
+    DoseeLoader.startExe(config.get(`exe`))
 )
 
 // Start DOSee!
@@ -108,4 +113,4 @@ const emulator = new Emulator(
     null,
     init
 )
-emulator.start({ waitAfterDownloading: !cfg.start })
+emulator.start({ waitAfterDownloading: !config.get(`start`) })
