@@ -126,17 +126,17 @@ function storageAvailable(type) {
 
     // Full screen button
     {
-        let elem = document.getElementById(`doseeCanvas`)
+        let element = document.getElementById(`doseeCanvas`)
         if (screenfull.enabled) {
             const chrome =
                 /Chrome/.test(navigator.userAgent) &&
                 /Google Inc/.test(navigator.vendor)
-            if (chrome) elem = document.getElementById(`doseeContainer`)
+            if (chrome) element = document.getElementById(`doseeContainer`)
         }
         document
             .getElementById(`doseeFullScreen`)
-            .addEventListener(`click`, function() {
-                if (screenfull.enabled) screenfull.request(elem)
+            .addEventListener(`click`, () => {
+                if (screenfull.enabled) screenfull.request(element)
             })
     }
 
@@ -146,13 +146,13 @@ function storageAvailable(type) {
         if (typeof fss !== `undefined`) {
             const ssb = document.getElementById(`doseeCaptureScreen`)
             // dosee screen capture button
-            ssb.addEventListener(`click`, function() {
+            ssb.addEventListener(`click`, () => {
                 const canvas = document.getElementById(`doseeCanvas`)
                 const filename = getMetaContent(`dosee:capname`)
-                canvas.toBlob(function(blob) {
+                canvas.toBlob(blob => {
                     saveAs(blob, filename)
                     ssb.style.color = `green`
-                    setTimeout(function() {
+                    setTimeout(() => {
                         ssb.style.color = `black`
                     }, 750)
                 })
