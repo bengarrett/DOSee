@@ -49,8 +49,16 @@
       <hr />
       <small>Emulating … <span id="doseeH2">Something</span></small>
     </h2>
-    <p id="doseeCrashed">Oops, something crashed?</p>
-    <p id="doseeSlowLoad">The emulator is taking a while to load.</p>
+    <div class="row" id="doseeCrashed">
+      <div class="card fluid error">
+        <p>Oops the emulation crashed?</p>
+      </div>
+    </div>
+    <div class="row" id="doseeSlowLoad">
+      <div class="card fluid warning">
+        <p>The emulator is taking a while to load</p>
+      </div>
+    </div>
     <!-- DOSee canvas -->
     <div id="doseeContainer">
       <canvas id="doseeCanvas" class="rounded"></canvas>
@@ -60,9 +68,9 @@
       <a href="#" id="hardwareBtn" class="button tabtoggle">Hardware</a>
       <a href="#" id="optionsBtn" class="button tabtoggle">Options</a>
       <a href="#" id="helpBtn" class="button tabtoggle">Help</a>
-      <a href="#" class="button" id="doseeFullScreen">Fullscreen</a>
-      <a href="#" class="button" id="doseeCaptureScreen">Capture</a>
-      <a href="#" class="button" id="doseeReboot">Reboot</a>
+      <a href="#" id="doseeFullScreen" class="button">Fullscreen</a>
+      <a href="#" id="doseeCaptureScreen" class="button">Capture</a>
+      <a href="#" id="doseeReboot" class="button">Reboot</a>
     </header>
     <form id="hardwareTab">
       <fieldset>
@@ -229,7 +237,7 @@
     </form>
     <footer>
       © 2019 - Ben Garrett |
-      <a href="//github.com/bengarrett/DOSee">GitHub Repo</a>
+      <a href="//github.com/bengarrett/DOSee">GitHub</a>
       <p>
         <small
           >DOSee <span id="doseeVersion"></span>, built on
