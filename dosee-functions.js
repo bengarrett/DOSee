@@ -162,10 +162,10 @@ function storageAvailable(type) {
         console.error(err)
     }
 
-    // Reboot button
-    document
-        .getElementById(`doseeReboot`)
-        .addEventListener(`click`, function() {
+    // Reboot button and links
+    document.getElementsByName(`doseeReboot`).forEach(element => {
+        element.addEventListener(`click`, () => {
             location.reload(true)
         })
+    })
 })()
