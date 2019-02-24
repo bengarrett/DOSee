@@ -1,6 +1,6 @@
 # DOSee
 
-DOSee DOSBox emulator for the web.
+DOSee - a MS-DOS emulator for the web.
 
 ### Dependencies and requirements
 
