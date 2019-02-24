@@ -56,32 +56,35 @@ function storageAvailable(type) {
     // Restore existing and save new interactions that are kept after the browser is closed
     if (storageAvailable(`local`)) {
         // Automatically start DOS emulation
-        const asb = document.getElementById(`doseeAutoRun`)
-        asb.addEventListener(`click`, () => {
-            const chk = asb.checked
+        const autoRun = document.getElementById(`doseeAutoRun`)
+        autoRun.addEventListener(`click`, () => {
+            const chk = autoRun.checked
             localStorage.setItem(`doseeAutoStart`, chk) // boolean value
         })
-        const d = localStorage.getItem(`doseeAutoStart`)
-        if (d === `true`) asb.checked = true
+        const item1 = localStorage.getItem(`doseeAutoStart`)
+        if (item1 === `true`) autoRun.checked = true
         // For sharper DOS ASCII/ANSI text
-        const nab = document.getElementById(`doseeAspect`)
-        const e = localStorage.getItem(`doseeAspect`)
-        nab.addEventListener(`click`, function() {
-            var dosaspect = nab.checked
-            localStorage.setItem(`doseeAspect`, !dosaspect) // boolean value
+        const aspect = document.getElementById(`doseeAspect`)
+        const item2 = localStorage.getItem(`doseeAspect`)
+        aspect.addEventListener(`click`, () => {
+            const dosAspect = aspect.checked
+            localStorage.setItem(`doseeAspect`, !dosAspect) // boolean value
         })
-        if (e === `false`) nab.checked = true
+        if (item2 === `false`) aspect.checked = true
         // Scaler engine
-        const sOpt = document.querySelectorAll(`input[name=dosscale]`)
-        let i = sOpt.length
-        while (i--)
-            sOpt[i].addEventListener(
+        const scaler = document.querySelectorAll(`input[name=dosscale]`)
+        scaler.forEach(input => {
+            input.addEventListener(
                 `change`,
-                function() {
-                    localStorage.setItem(`doseeScaler`, this.value)
+                element => {
+                    localStorage.setItem(
+                        `doseeScaler`,
+                        element.srcElement.value
+                    )
                 },
                 0
             )
+        })
     }
     // ❌ Session storage interactions that get deleted when the browser tab is closed
     if (storageAvailable(`session`)) {
