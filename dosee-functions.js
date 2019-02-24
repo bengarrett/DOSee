@@ -50,7 +50,7 @@ function storageAvailable(type) {
     }
 }
 
-(function() {
+(() => {
     // 'Options' tab interactions
 
     // Restore existing and save new interactions that are kept after the browser is closed
@@ -85,46 +85,6 @@ function storageAvailable(type) {
                 0
             )
         })
-    }
-    // ❌ Session storage interactions that get deleted when the browser tab is closed
-    if (storageAvailable(`session`)) {
-        const setTab = function(ac) {
-            if (ac === null) return
-            sessionStorage.setItem(`doseeTab`, `${ac}`)
-        }
-        const tab = document.getElementById(`doseeTabs`)
-        const tabs = tab.getElementsByClassName(`tabtoggle`)
-        // tab event listeners
-        if (tabs != null && tabs.length >= 0) {
-            let i = tabs.length
-            while (i--) {
-                tabs[i].addEventListener(
-                    `click`,
-                    function() {
-                        //setTab(this.firstChild.getAttribute(`aria-controls`))
-                    },
-                    0
-                )
-            }
-        }
-        // restore most recently used tab
-        const savedTab = sessionStorage.getItem(`doseeTab`)
-        if (savedTab !== null) {
-            const dt = document.getElementById(`doseeTabs`)
-            const dtc = document.getElementById(`doseeTabContent`)
-            const ts = document.getElementById(`${savedTab}Tab`)
-            const tb = document.getElementById(savedTab)
-            if (dt !== null && dtc !== null && ts !== null && tb !== null) {
-                dt.getElementsByClassName(`active`)[0].classList.remove(
-                    `active`
-                )
-                dtc.getElementsByClassName(`active`)[0].classList.remove(
-                    `active`
-                )
-                ts.classList.add(`active`)
-                tb.classList.add(`active`)
-            }
-        }
     }
 
     // Full screen button
