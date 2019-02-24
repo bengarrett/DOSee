@@ -9,20 +9,20 @@ CTB="https://raw.githubusercontent.com/eligrey/canvas-toBlob.js/master/canvas-to
 MINI="https://raw.githubusercontent.com/Chalarangelo/mini.css/v3.0.1/dist/mini-default.min.css"
 
 echo "Fetching BrowserFS"
-wget -nc -O libs/browserfs.min.js $BFS
+wget -nc -nv -O browserfs.min.js $BFS
 
 echo "Fetching BrowserFS ZipFS"
-wget -nc -O libs/browserfs-zipfs-extras.js $ZFS
-wget -nc -O libs/browserfs-zipfs-extras.js.map $MAP
+wget -nc -nv -O browserfs-zipfs-extras.js $ZFS
+wget -nc -nv -O browserfs-zipfs-extras.js.map $MAP
 
 echo "Fetching screenfull"
-wget -nc -O libs/screenfull.min.js $FULL
+wget -nc -nv -O screenfull.min.js $FULL
 
 echo "Fetching FileSaver"
-wget -nc -O libs/FileSaver.min.js $SAVE
+wget -nc -nv -O FileSaver.min.js $SAVE
 
 echo "Fetching canvas-toBlob"
-wget -nc -O libs/canvas-toBlob.js $CTB
+wget -nc -nv -O canvas-toBlob.js $CTB
 
 echo "Fetching mini.css"
-wget -nc -O libs/mini.min.css $MINI
+wget -nc -nv -O mini.min.css $MINI

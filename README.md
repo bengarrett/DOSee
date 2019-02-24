@@ -23,14 +23,10 @@ git clone https://github.com/bengarrett/DOSee.git
 Download the libraries and dependencies.
 
 ```
-chmod +x DOSee/libs/wget_libs.sh
-./DOSee/libs/wget_libs.sh
-```
-
-Change to the current directory and run a HTTP server.
-
-```
-cd DOSee
+cd DOSee/libs
+chmod +x wget_libs.sh
+./wget_libs.sh
+cd ..
 ```
 
 __DOSee has to be served via a HTTP server, it can not be run using the browser `file:///` protocol.__
@@ -38,6 +34,7 @@ __DOSee has to be served via a HTTP server, it can not be run using the browser 
 #### Python 3
 
 ```
+cd DOSee
 python3 -m http.server 5555
 ```
 Point a web browser to http://localhost:5555
@@ -45,6 +42,7 @@ Point a web browser to http://localhost:5555
 #### Node.js
 
 ```
+cd DOSee
 http-server -p 5555
 ```
 Point a web browser to http://localhost:5555
@@ -58,6 +56,7 @@ Requirement:
 Run
 
 ```
+cd DOSee
 docker-compose up -d
 ```
 
@@ -66,5 +65,6 @@ Point a web browser to http://localhost:5555
 Stop
 
 ```
+cd DOSee
 docker-compose down
 ```
