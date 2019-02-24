@@ -2,52 +2,67 @@
  * dosee-loader.js
  * DOSee initialisation
  */
+
+/* global newQueryString setMetaContent */
 "use strict"
 
+// Relative file paths to DOSee emulation dependencies
 const paths = new Map()
-    .set(`ddg`, `disk_drives/g_drive.zip`)
-    .set(`dds`, `disk_drives/s_drive.zip`)
-    .set(`ddu`, `disk_drives/u_drive.zip`)
+    .set(`driveG`, `disk_drives/g_drive.zip`)
+    .set(`driveS`, `disk_drives/s_drive.zip`)
+    .set(`driveU`, `disk_drives/u_drive.zip`)
     .set(`core`, `emulator/dosee-core.js`)
     .set(`mem`, `emulator/dosee-core.mem`)
 
-// Load GUS (Gravis UltraSound) drivers
-const gusDriver = function(q) {
+// Handle URL params special cases that require additional files to be loaded into DOSee
+{
+    const urlParams = newQueryString()
+    // Gravis Ultrasound Audio drivers (dosaudio=gus)
+    const audio = urlParams.get(`dosaudio`)
+    console.log(`GUS`, audio)
+    if (audio === `gus`) setMetaContent(`dosee:gusaudio`, `true`)
+    // DOSee Utilities (dosutils=true)
+    const utils = urlParams.get(`dosutils`)
+    if (utils === `true`) setMetaContent(`dosee:utils`, `true`)
+}
+
+// Load GUS (Gravis UltraSound) driver
+const gusDriver = q => {
     if (q !== `true`) return null
     return DoseeLoader.mountZip(
         `g`,
         DoseeLoader.fetchFile(
             `gravis ultrasound drivers`,
-            `${paths.get(`ddg`)}`
+            `${paths.get(`driveG`)}`
         )
     )
 }
 
 // Load the Emscripten static memory initialization code external file
 // https://kripken.github.io/emscripten-site/docs/optimizing/Optimizing-Code.html#code-size
-const locateFiles = function(filename) {
-    console.log(`filename: ${filename}`)
+const locateFiles = filename => {
     if (filename === `dosbox.html.mem`) return `${paths.get(`mem`)}`
     return `libs/${filename}`
 }
 
 // Initialise the resolution of the DOS program - width, height
-const nr = function() {
+const nativeRes = () => {
+    const defaults = [640, 480]
     const arr = cfg.res.split(`,`)
-    if (arr.length < 1) return [640, 480]
+    if (arr.length < 1) return defaults
     return [parseInt(arr[0]), parseInt(arr[1])]
 }
 
 // Load additional DOS tools and utilities
-const utils = function(q) {
+const utils = q => {
     if (q !== `true`) return null
     return DoseeLoader.mountZip(
         `u`,
-        DoseeLoader.fetchFile(`dos utilities`, `${paths.get(`ddu`)}`)
+        DoseeLoader.fetchFile(`dos utilities`, `${paths.get(`driveU`)}`)
     )
 }
 
-// Load configurations obtained from <meta name="dosee:"> HTML tags
+// Load configurations that are obtained from the <meta name="dosee:"> HTML tags
 const cfg = {
     start: false,
     exe: getMetaContent(`dosee:startexe`),
@@ -73,14 +88,14 @@ if (cfg.start === true) console.log(`DOSee will launch automatically`)
 const init = new DoseeLoader(
     DoseeLoader.emulatorJS(`${paths.get(`core`)}`),
     DoseeLoader.locateAdditionalEmulatorJS(locateFiles),
-    DoseeLoader.nativeResolution(nr()[0], nr()[1]),
+    DoseeLoader.nativeResolution(nativeRes()[0], nativeRes()[1]),
     DoseeLoader.mountZip(
         `c`,
         DoseeLoader.fetchFile(`'${cfg.filename}'`, `${cfg.path}`)
     ),
     DoseeLoader.mountZip(
         `s`,
-        DoseeLoader.fetchFile(`DOSee configurations`, `${paths.get(`dds`)}`)
+        DoseeLoader.fetchFile(`DOSee configurations`, `${paths.get(`driveS`)}`)
     ),
     gusDriver(cfg.gus),
     utils(cfg.utils),
