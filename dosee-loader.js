@@ -16,7 +16,6 @@
 /* eslint strict: ["error", "safe"] */
 /* eslint no-global-assign: ["error", {"exceptions": ["Module"]}] */
 Module = null
-
 ;(Promise => {
     "use strict"
 
@@ -368,8 +367,10 @@ Module = null
             verbose = `Will execute \`${prog}\` ${verbose}`
             args.push(`-c`, prog)
             // comment to display after guest program is complete
-            const finCmd = `@echo ${prog} has finished.`
-            args.push(`-c`, finCmd)
+            if (prog.trim().length > 0) {
+                const finCmd = `@echo ${prog} has finished.`
+                args.push(`-c`, finCmd)
+            }
         }
         console.log(verbose)
         return args
