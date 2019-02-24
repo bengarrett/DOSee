@@ -17,12 +17,19 @@ const paths = new Map()
 // Load configurations that are obtained from the <meta name="dosee:"> HTML tags
 const config = new Map()
     .set(`exe`, getMetaContent(`dosee:startexe`))
-    .set(`filename`, getMetaContent(`dosee:filename`))
+    .set(`filename`, ``)
     .set(`gus`, getMetaContent(`dosee:gusaudio`))
     .set(`path`, getMetaContent(`dosee:gamefilepath`))
     .set(`res`, getMetaContent(`dosee:resolution`))
     .set(`start`, false)
     .set(`utils`, getMetaContent(`dosee:utils`))
+
+// Extract and save the filename from config path
+{
+    const index = config.get(`path`).lastIndexOf(`/`)
+    if (index > -1) config.set(`filename`, config.get(`path`).slice(index + 1))
+    else config.set(`filename`, config.get(`path`))
+}
 
 // Handle URL params special cases that need additional files to be loaded by DOSee
 {
@@ -81,7 +88,8 @@ const utils = q => {
 // NOTE: This may break audio support in Chrome 71+ due to its Web Audio autoplay policy?
 // https://goo.gl/7K7WLu
 if (storageAvailable(`local`)) {
-    if(localStorage.getItem(`doseeAutoStart`) === `true`) config.set(`start`, true)
+    if (localStorage.getItem(`doseeAutoStart`) === `true`)
+        config.set(`start`, true)
 }
 if (config.get(`start`) === true) console.log(`DOSee will launch automatically`)
 

@@ -43,8 +43,8 @@ function resetTabs(defaultTab) {
 
     // set the <H2> element to show the filename
     document.getElementById(`doseeH2`).innerText = `${getMetaContent(
-        `dosee:filename`
+        `dosee:gamefilepath`
     )}`
 
-    console.log(`index.js loaded`)
+    console.log(`Loaded index.js`)
 })()
