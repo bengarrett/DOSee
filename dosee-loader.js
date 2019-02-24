@@ -20,7 +20,7 @@ Module = null;
 (function (Promise) {
     "use strict"
 
-    const doseeVersion = `1.8p`
+    const doseeVersion = `1.8pa`
 
     // DOSBox requires a valid IndexedDB
     // See: https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Using_IndexedDB
@@ -213,7 +213,6 @@ Module = null;
 
         // emulation sound cards
         const sound = urlParams.get(`dosaudio`)
-        console.log(`DOS Audio --->`,sound)
         switch (sound) {
             case `none`:
                 verbose += ` No audio.`
