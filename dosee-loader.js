@@ -15,9 +15,9 @@
 /* global newQueryString storageAvailable Module BrowserFS ES6Promise FS Promise */
 /* eslint strict: ["error", "safe"] */
 /* eslint no-global-assign: ["error", {"exceptions": ["Module"]}] */
-Module = null;
+Module = null
 
-(function (Promise) {
+;(Promise => {
     "use strict"
 
     const doseeVersion = `1.9`
@@ -28,7 +28,6 @@ Module = null;
         document.getElementById(`doseeCrashed`).classList.add(`hidden`)
     }
 
-
     // Common API functions
     // DOSee is based off The Emularity which supports multiple emulators.
     // The BaseLoader naming convention was used to highlight the shared functions.
@@ -37,89 +36,97 @@ Module = null;
     }
 
     // HTML <canvas> element used to display the emulation
-    DoseeAPI.canvas = function (id) {
+    DoseeAPI.canvas = function(id) {
         const elem = id instanceof Element ? id : document.getElementById(id)
         return { canvas: elem }
     }
 
-    DoseeAPI.emulatorJS = function (url) {
+    DoseeAPI.emulatorJS = function(url) {
         return { emulatorJS: url }
     }
 
-    DoseeAPI.locateAdditionalEmulatorJS = function (func) {
+    DoseeAPI.locateAdditionalEmulatorJS = function(func) {
         return { locateAdditionalJS: func }
     }
 
-    DoseeAPI.nativeResolution = function (width, height) {
+    DoseeAPI.nativeResolution = function(width, height) {
         if (typeof width !== `number` || typeof height !== `number`)
             throw new Error(`Width and height must be numbers`)
         return {
             nativeResolution: {
                 width: Math.floor(width),
-                height: Math.floor(height),
+                height: Math.floor(height)
             }
         }
     }
 
-    DoseeAPI.aspectRatio = function (ratio) {
+    DoseeAPI.aspectRatio = function(ratio) {
         if (typeof ratio !== `number`)
             throw new Error(`Aspect ratio must be a number`)
         return { aspectRatio: ratio }
     }
 
-    DoseeAPI.mountZip = function (drive, file) {
+    DoseeAPI.mountZip = function(drive, file) {
         return {
-            files: [{
-                drive: drive,
-                mountpoint: `/${drive}`,
-                file: file,
-            }]
+            files: [
+                {
+                    drive: drive,
+                    mountpoint: `/${drive}`,
+                    file: file
+                }
+            ]
         }
     }
 
-    DoseeAPI.mountFile = function (filename, file) {
+    DoseeAPI.mountFile = function(filename, file) {
         return {
-            files: [{
-                mountpoint: filename,
-                file: file,
-            }]
+            files: [
+                {
+                    mountpoint: filename,
+                    file: file
+                }
+            ]
         }
     }
 
-    DoseeAPI.fetchFile = function (title, url) {
+    DoseeAPI.fetchFile = function(title, url) {
+        return {
+            title: title,
+            url: url
+        }
+    }
+
+    DoseeAPI.fetchOptionalFile = function(title, url) {
         return {
             title: title,
             url: url,
+            optional: true
         }
     }
 
-    DoseeAPI.fetchOptionalFile = function (title, url) {
+    DoseeAPI.localFile = function(title, data) {
         return {
             title: title,
-            url: url,
-            optional: true,
-        }
-    }
-
-    DoseeAPI.localFile = function (title, data) {
-        return {
-            title: title,
-            data: data,
+            data: data
         }
     }
 
     function DoseeLoader() {
         const config = Array.prototype.reduce.call(arguments, extend)
-        config.emulator_arguments = build_dosbox_arguments(config.emulatorStart, config.files, config.emulatorCPU)
+        config.emulator_arguments = build_dosbox_arguments(
+            config.emulatorStart,
+            config.files,
+            config.emulatorCPU
+        )
         return config
     }
     Object.setPrototypeOf(DoseeLoader, DoseeAPI)
 
-    DoseeLoader.startExe = function (path) {
+    DoseeLoader.startExe = function(path) {
         return { emulatorStart: path }
     }
 
-    const build_dosbox_arguments = function (emulator_start, files) {
+    const build_dosbox_arguments = function(emulator_start, files) {
         console.log(`Initialisation of DOSee ` + doseeVersion)
         let verbose = `with the following configuration:`
 
@@ -133,7 +140,9 @@ Module = null;
 
         // parse URL query string
         if (`URLSearchParams` in window == false) {
-            console.log(`DOSee needs the URLSearchParams interface to read URL query string values`)
+            console.log(
+                `DOSee needs the URLSearchParams interface to read URL query string values`
+            )
             return args
         }
         // see dosee-function.js
@@ -141,7 +150,8 @@ Module = null;
 
         // graphic engine scalers (https://www.dosbox.com/wiki/Scaler)
         let scaler = null
-        if (storageAvailable(`local`)) scaler = localStorage.getItem(`doseeScaler`) // look for saved option
+        if (storageAvailable(`local`))
+            scaler = localStorage.getItem(`doseeScaler`) // look for saved option
         if (scaler === null) scaler = `none`
         switch (scaler) {
             case `advinterp3x`:
@@ -169,13 +179,15 @@ Module = null;
                 args.push(`-conf`, `/dos/s/engine-tv3x.con`)
                 document.getElementById(`dosscale2`).checked = true
                 break
-            default: document.getElementById(`dosscale0`).checked = true
+            default:
+                document.getElementById(`dosscale0`).checked = true
                 break
         }
 
         // impose aspect ratio correction
         let aspect = null
-        if (storageAvailable(`local`)) aspect = localStorage.getItem(`doseeAspect`) // look for saved option
+        if (storageAvailable(`local`))
+            aspect = localStorage.getItem(`doseeAspect`) // look for saved option
         if (aspect === null) aspect = `true`
         if (aspect !== `false`) {
             verbose += ` With aspect correction.`
@@ -197,7 +209,8 @@ Module = null;
                 args.push(`-conf`, `/dos/s/cpu-386.con`)
                 document.getElementById(`dosspeed3`).checked = true
                 break
-            case `486`: case `max`:
+            case `486`:
+            case `max`:
                 verbose += ` Unlocked CPU speed.`
                 args.push(`-conf`, `/dos/s/cpu-max.con`)
                 document.getElementById(`dosspeed2`).checked = true
@@ -246,7 +259,9 @@ Module = null;
                 verbose += ` SVGA s3 graphics.`
                 args.push(`-conf`, `/dos/s/svga.con`)
                 document.getElementById(`dosmachine1`).checked = true
-                document.getElementById(`svgaEffectsMsg`).classList.add(`hidden`)
+                document
+                    .getElementById(`svgaEffectsMsg`)
+                    .classList.add(`hidden`)
                 break
             case `cga`:
                 verbose += ` CGA graphics.`
@@ -316,7 +331,10 @@ Module = null;
         // dosbox mount points (dos drive letters)
         for (const i in files) {
             if (`drive` in files[i]) {
-                args.push(`-c`, `mount ${files[i].drive} /dos${files[i].mountpoint}`)
+                args.push(
+                    `-c`,
+                    `mount ${files[i].drive} /dos${files[i].mountpoint}`
+                )
             }
         }
 
@@ -345,30 +363,13 @@ Module = null;
         }
 
         // automatically run the guest program
-        const skiprun = urlParams.get(`dosautorun`)
-        if (skiprun !== `false`) {
+        if (urlParams.get(`dosautorun`) !== `false`) {
             prog = prog.replace(` :`, ` /`) // hack to implement program options
             verbose = `Will execute \`${prog}\` ${verbose}`
             args.push(`-c`, prog)
-
-            // partial ansi escape code generator for coloured text
-            const ansi = function (code, str) {
-                let c = String.fromCharCode(27, 91, 48, 109) // esc[0m
-                switch (code) {
-                    case `bold`: c = String.fromCharCode(27, 91, 49, 109); break // esc[1m
-                    case `blue`: c = String.fromCharCode(27, 91, 51, 52, 109); break // esc[34m
-                    case `white`: c = String.fromCharCode(27, 91, 51, 55, 109); break // esc[37m
-                }
-                if (str === undefined) return c
-                return `${c}${str}`
-            }
-
-            // test to display after guest program is complete
-            if (urlParams.get(`name`) !== `waitingapproval`) {
-                const finCmd = `@echo ${prog} has finished. -${ansi(`bold`)}${ansi(`blue`, `d`)}${ansi(`white`, `e`)}\
-${ansi(`blue`, `f`)}${ansi(`white`, `acto`)}${ansi(`blue`, `2`)}${ansi(`white`, `.net`)}${ansi()}-`
-                args.push(`-c`, finCmd)
-            }
+            // comment to display after guest program is complete
+            const finCmd = `@echo ${prog} has finished.`
+            args.push(`-c`, finCmd)
         }
         console.log(verbose)
         return args
@@ -381,7 +382,7 @@ ${ansi(`blue`, `f`)}${ansi(`white`, `acto`)}${ansi(`blue`, `2`)}${ansi(`white`, 
         if (typeof callbacks !== `object`) {
             callbacks = {
                 before_emulator: null,
-                before_run: callbacks,
+                before_run: callbacks
             }
         }
         let has_started = false
@@ -389,7 +390,7 @@ ${ansi(`blue`, `f`)}${ansi(`white`, `acto`)}${ansi(`blue`, `2`)}${ansi(`white`, 
             foreground: `white`,
             background: `black`,
             failure: `red`,
-            success: `green`,
+            success: `green`
         }
         const splash = {
             loading_text: ``,
@@ -397,7 +398,7 @@ ${ansi(`blue`, `f`)}${ansi(`white`, `acto`)}${ansi(`blue`, `2`)}${ansi(`white`, 
             finished_loading: false,
             colors: defaultSplashColors,
             table: null,
-            splashimg: new Image(),
+            splashimg: new Image()
         }
 
         let cssResolution, scale, aspectRatio
@@ -411,7 +412,7 @@ ${ansi(`blue`, `f`)}${ansi(`white`, `acto`)}${ansi(`blue`, `2`)}${ansi(`white`, 
             canvas.height = parseInt(style.height, 10)
         }
 
-        this.setSplashImage = function (_splashimg) {
+        this.setSplashImage = function(_splashimg) {
             if (_splashimg) {
                 if (_splashimg instanceof Image) {
                     if (splash.splashimg.parentNode) {
@@ -426,11 +427,11 @@ ${ansi(`blue`, `f`)}${ansi(`white`, `acto`)}${ansi(`blue`, `2`)}${ansi(`white`, 
             return this
         }
 
-        this.setCallbacks = function (_callbacks) {
+        this.setCallbacks = function(_callbacks) {
             if (typeof _callbacks !== `object`) {
                 callbacks = {
                     before_emulator: null,
-                    before_run: _callbacks,
+                    before_run: _callbacks
                 }
             } else {
                 callbacks = _callbacks
@@ -438,17 +439,17 @@ ${ansi(`blue`, `f`)}${ansi(`white`, `acto`)}${ansi(`blue`, `2`)}${ansi(`white`, 
             return this
         }
 
-        this.setSplashColors = function (colors) {
+        this.setSplashColors = function(colors) {
             splash.colors = colors
             return this
         }
 
-        this.setLoad = function (loadFunc) {
+        this.setLoad = function(loadFunc) {
             loadFiles = loadFunc
             return this
         }
 
-        const start = function (options) {
+        const start = function(options) {
             if (has_started) return false
             has_started = true
             if (typeof options !== `object`) {
@@ -465,7 +466,8 @@ ${ansi(`blue`, `f`)}${ansi(`white`, `acto`)}${ansi(`blue`, `2`)}${ansi(`white`, 
                 loading = Promise.resolve(loadFiles)
             }
 
-            loading.then(loadHardDrive)
+            loading
+                .then(loadHardDrive)
                 .then(loadBranding, errBranding)
                 .then(loadDosWarp, errDosWarp)
 
@@ -479,7 +481,7 @@ ${ansi(`blue`, `f`)}${ansi(`white`, `acto`)}${ansi(`blue`, `2`)}${ansi(`white`, 
             return this
 
             function loadHardDrive(_game_data) {
-                return new Promise(function (resolve, reject) {
+                return new Promise(function(resolve, reject) {
                     const deltaFS = new BrowserFS.FileSystem.InMemory()
                     finish()
 
@@ -489,36 +491,56 @@ ${ansi(`blue`, `f`)}${ansi(`white`, `acto`)}${ansi(`blue`, `2`)}${ansi(`white`, 
                         // Any file system writes to MountableFileSystem will be written to the
                         // deltaFS, letting us mount read-only zip files into the MountableFileSystem
                         // while being able to 'write' to them.
-                        game_data.fs = new BrowserFS.FileSystem.OverlayFS(deltaFS,
-                            new BrowserFS.FileSystem.MountableFileSystem())
-                        game_data.fs.initialize(function () {
+                        game_data.fs = new BrowserFS.FileSystem.OverlayFS(
+                            deltaFS,
+                            new BrowserFS.FileSystem.MountableFileSystem()
+                        )
+                        game_data.fs.initialize(function() {
                             const Buffer = BrowserFS.BFSRequire(`buffer`).Buffer
 
                             function fetch(file) {
-                                if (`data` in file && file.data !== null && typeof file.data !== `undefined`) {
+                                if (
+                                    `data` in file &&
+                                    file.data !== null &&
+                                    typeof file.data !== `undefined`
+                                ) {
                                     return Promise.resolve(file.data)
                                 }
-                                return fetch_file(file.title, file.url, `arraybuffer`, file.optional)
+                                return fetch_file(
+                                    file.title,
+                                    file.url,
+                                    `arraybuffer`,
+                                    file.optional
+                                )
                             }
 
                             function mountAt(drive) {
-                                return function (data) {
+                                return function(data) {
                                     if (data !== null) {
                                         drive = drive.toLowerCase()
                                         const mountpoint = `/${drive}`
                                         // Mount into RO MFS.
-                                        game_data.fs.getOverlayedFileSystems().readable.mount(mountpoint, BFSOpenZip(new Buffer(data)))
+                                        game_data.fs
+                                            .getOverlayedFileSystems()
+                                            .readable.mount(
+                                                mountpoint,
+                                                BFSOpenZip(new Buffer(data))
+                                            )
                                     }
                                 }
                             }
 
-                            Promise.all(game_data.files
-                                .map(function (f) {
+                            Promise.all(
+                                game_data.files.map(function(f) {
                                     if (f && f.file) {
-                                        if (f.drive) return fetch(f.file).then(mountAt(f.drive))
+                                        if (f.drive)
+                                            return fetch(f.file).then(
+                                                mountAt(f.drive)
+                                            )
                                     }
                                     return null
-                                })).then(resolve, reject)
+                                })
+                            ).then(resolve, reject)
                         })
                     }
                 })
@@ -527,12 +549,15 @@ ${ansi(`blue`, `f`)}${ansi(`white`, `acto`)}${ansi(`blue`, `2`)}${ansi(`white`, 
             function loadBranding() {
                 if (!game_data || splash.failed_loading) return null
                 if (options.waitAfterDownloading) {
-                    return new Promise(function (resolve) {
+                    return new Promise(function(resolve) {
                         splash.setTitle(`✔ Click here to run`)
                         splash.spinning = false
                         // stashes these event listeners so that we can remove them after
-                        window.addEventListener(`keydown`, k = keyevent(resolve))
-                        canvas.addEventListener(`click`, c = resolve)
+                        window.addEventListener(
+                            `keydown`,
+                            (k = keyevent(resolve))
+                        )
+                        canvas.addEventListener(`click`, (c = resolve))
                         splash.splashElt.addEventListener(`click`, c)
                     })
                 }
@@ -561,7 +586,8 @@ ${ansi(`blue`, `f`)}${ansi(`white`, `acto`)}${ansi(`blue`, `2`)}${ansi(`white`, 
                     game_data.fs,
                     game_data.locateAdditionalJS,
                     game_data.nativeResolution,
-                    game_data.aspectRatio)
+                    game_data.aspectRatio
+                )
 
                 if (callbacks && callbacks.before_emulator) {
                     try {
@@ -573,7 +599,9 @@ ${ansi(`blue`, `f`)}${ansi(`white`, `acto`)}${ansi(`blue`, `2`)}${ansi(`white`, 
                 if (game_data.emulatorJS) {
                     // enable the operator screenshot and upload button plus jump to the emulation canvas
                     {
-                        const oscb = document.getElementById(`doseeCaptureUpload`)
+                        const oscb = document.getElementById(
+                            `doseeCaptureUpload`
+                        )
                         if (oscb !== null) {
                             oscb.disabled = false
                         }
@@ -588,7 +616,9 @@ ${ansi(`blue`, `f`)}${ansi(`white`, `acto`)}${ansi(`blue`, `2`)}${ansi(`white`, 
 
             function errBranding() {
                 if (splash.failed_loading) return null
-                splash.setTitle(`The emulator broke ${String.fromCharCode(9785)}`) // frown face
+                splash.setTitle(
+                    `The emulator broke ${String.fromCharCode(9785)}`
+                ) // frown face
                 splash.failed_loading = true
             }
 
@@ -600,18 +630,24 @@ ${ansi(`blue`, `f`)}${ansi(`white`, `acto`)}${ansi(`blue`, `2`)}${ansi(`white`, 
         }
         this.start = start
 
-        const init_module = function (args, fs, locateAdditionalJS, nativeResolution, aspectRatio) {
+        const init_module = function(
+            args,
+            fs,
+            locateAdditionalJS,
+            nativeResolution,
+            aspectRatio
+        ) {
             return {
                 arguments: args,
                 screenIsReadOnly: true,
-                print: function (text) {
+                print: function(text) {
                     // feedback from DOSBox
                     console.log(text)
                 },
                 canvas: canvas,
                 noInitialRun: false,
                 locateFile: locateAdditionalJS,
-                preInit: function () {
+                preInit: function() {
                     splash.setTitle(`Loading program into the file system`)
                     // Re-initialize BFS to just use the writeable in-memory storage.
                     BrowserFS.initialize(fs)
@@ -621,14 +657,16 @@ ${ansi(`blue`, `f`)}${ansi(`white`, `acto`)}${ansi(`blue`, `2`)}${ansi(`white`, 
                     FS.mount(BFS, { root: `/` }, `/dos`)
                     splash.finished_loading = true
                     splash.hide()
-                    setTimeout(function () {
-                        resizeCanvas(canvas,
-                            scale = scale || scale,
-                            cssResolution = nativeResolution || cssResolution,
-                            aspectRatio = aspectRatio || aspectRatio)
+                    setTimeout(function() {
+                        resizeCanvas(
+                            canvas,
+                            (scale = scale || scale),
+                            (cssResolution = nativeResolution || cssResolution),
+                            (aspectRatio = aspectRatio || aspectRatio)
+                        )
                     })
                     if (callbacks && callbacks.before_run) {
-                        window.setTimeout(function () {
+                        window.setTimeout(function() {
                             callbacks.before_run()
                         }, 0)
                     }
@@ -636,35 +674,51 @@ ${ansi(`blue`, `f`)}${ansi(`white`, `acto`)}${ansi(`blue`, `2`)}${ansi(`white`, 
             }
         }
 
-        const formatSize = function (event) {
+        const formatSize = function(event) {
             if (event.lengthComputable)
-                return `(${(event.total ? (event.loaded / event.total * 100).toFixed(0) : `100`)}% \
+                return `(${
+                    event.total
+                        ? ((event.loaded / event.total) * 100).toFixed(0)
+                        : `100`
+                }% \
 ${formatBytes(event.loaded)} of ${formatBytes(event.total)})`
             return `(${formatBytes(event.loaded)})`
         }
 
-        const formatBytes = function (bytes, base10) {
+        const formatBytes = function(bytes, base10) {
             if (bytes === 0) return `0 B`
             const unit = base10 ? 1000 : 1024,
-                units = base10 ? [`B`, `kB`, `MB`, `GB`, `TB`, `PB`, `EB`, `ZB`, `YB`] : [`B`, `KiB`, `MiB`, `GiB`, `TiB`, `PiB`, `EiB`, `ZiB`, `YiB`],
-                exp = parseInt((Math.log(bytes) / Math.log(unit))),
+                units = base10
+                    ? [`B`, `kB`, `MB`, `GB`, `TB`, `PB`, `EB`, `ZB`, `YB`]
+                    : [
+                        `B`,
+                        `KiB`,
+                        `MiB`,
+                        `GiB`,
+                        `TiB`,
+                        `PiB`,
+                        `EiB`,
+                        `ZiB`,
+                        `YiB`
+                    ],
+                exp = parseInt(Math.log(bytes) / Math.log(unit)),
                 size = bytes / Math.pow(unit, exp)
             return `${size.toFixed(1)} ${units[exp]}`
         }
 
-        const fetch_file = function (title, url, rt, optional) {
+        const fetch_file = function(title, url, rt, optional) {
             const row = addRow(splash.table)
             const titleCell = row[0],
                 statusCell = row[1]
             titleCell.textContent = title
-            return new Promise(function (resolve, reject) {
+            return new Promise(function(resolve, reject) {
                 const xhr = new XMLHttpRequest()
                 xhr.open(`GET`, url, true)
                 xhr.responseType = rt || `arraybuffer`
-                xhr.onprogress = function (e) {
+                xhr.onprogress = function(e) {
                     titleCell.textContent = `${title} ${formatSize(e)}`
                 }
-                xhr.onload = function () {
+                xhr.onload = function() {
                     if (xhr.status === 200 || xhr.status === 0) {
                         success()
                         resolve(xhr.response)
@@ -676,7 +730,7 @@ ${formatBytes(event.loaded)} of ${formatBytes(event.total)})`
                         reject()
                     }
                 }
-                xhr.onerror = function () {
+                xhr.onerror = function() {
                     if (optional) {
                         success()
                         resolve(null)
@@ -691,8 +745,12 @@ ${formatBytes(event.loaded)} of ${formatBytes(event.total)})`
                     statusCell.style.color = splash.getColor(`success`)
                     titleCell.textContent = title
                     titleCell.style.fontWeight = `bold`
-                    titleCell.parentNode.style.backgroundColor = splash.getColor(`foreground`)
-                    titleCell.parentNode.style.color = splash.getColor(`background`)
+                    titleCell.parentNode.style.backgroundColor = splash.getColor(
+                        `foreground`
+                    )
+                    titleCell.parentNode.style.color = splash.getColor(
+                        `background`
+                    )
                 }
 
                 function failure() {
@@ -700,15 +758,19 @@ ${formatBytes(event.loaded)} of ${formatBytes(event.total)})`
                     statusCell.style.color = splash.getColor(`failure`)
                     titleCell.textContent = title
                     titleCell.style.fontWeight = `bold`
-                    titleCell.parentNode.style.backgroundColor = splash.getColor(`foreground`)
-                    titleCell.parentNode.style.color = splash.getColor(`failure`)
+                    titleCell.parentNode.style.backgroundColor = splash.getColor(
+                        `foreground`
+                    )
+                    titleCell.parentNode.style.color = splash.getColor(
+                        `failure`
+                    )
                 }
                 xhr.send()
             })
         }
 
         function keyevent(resolve) {
-            return function (e) {
+            return function(e) {
                 if ((e.keycode || e.which) == 32) {
                     e.preventDefault()
                     resolve()
@@ -716,7 +778,7 @@ ${formatBytes(event.loaded)} of ${formatBytes(event.total)})`
             }
         }
 
-        const resizeCanvas = function (canvas, scale, resolution) {
+        const resizeCanvas = function(canvas, scale, resolution) {
             if (scale && resolution) {
                 // optimizeSpeed is the standardized value. different
                 // browsers support different values they will all ignore
@@ -746,7 +808,9 @@ ${formatBytes(event.loaded)} of ${formatBytes(event.total)})`
                 splash.splashElt.style.left = `${canvas.offsetLeft}px`
                 splash.splashElt.style.width = `${canvas.offsetWidth}px`
                 splash.splashElt.style.color = splash.getColor(`foreground`)
-                splash.splashElt.style.backgroundColor = splash.getColor(`background`)
+                splash.splashElt.style.backgroundColor = splash.getColor(
+                    `background`
+                )
                 canvas.parentElement.appendChild(splash.splashElt)
             }
 
@@ -783,19 +847,21 @@ ${formatBytes(event.loaded)} of ${formatBytes(event.total)})`
             splash.table = table
         }
 
-        splash.setTitle = function (title) {
+        splash.setTitle = function(title) {
             splash.titleElt.textContent = title
         }
 
-        splash.hide = function () {
+        splash.hide = function() {
             splash.splashElt.style.display = `none`
         }
 
-        splash.getColor = function (name) {
-            return name in splash.colors ? splash.colors[name] : defaultSplashColors[name]
+        splash.getColor = function(name) {
+            return name in splash.colors
+                ? splash.colors[name]
+                : defaultSplashColors[name]
         }
 
-        const addRow = function (table) {
+        const addRow = function(table) {
             const row = table.insertRow(-1)
             row.style.textAlign = `center`
             const cell = row.insertCell(-1)
@@ -813,7 +879,7 @@ ${formatBytes(event.loaded)} of ${formatBytes(event.total)})`
             return [titleCell, statusCell]
         }
 
-        const drawsplash = function () {
+        const drawsplash = function() {
             canvas.setAttribute(`moz-opaque`, ``)
             if (!splash.splashimg.src) {
                 splash.splashimg.src = `images/floppy_disk_icon-180x180.png`
@@ -831,33 +897,55 @@ ${formatBytes(event.loaded)} of ${formatBytes(event.total)})`
         }
 
         function getpointerlockenabler() {
-            return canvas.requestPointerLock || canvas.mozRequestPointerLock || canvas.webkitRequestPointerLock
+            return (
+                canvas.requestPointerLock ||
+                canvas.mozRequestPointerLock ||
+                canvas.webkitRequestPointerLock
+            )
         }
 
         function getfullscreenenabler() {
-            return canvas.webkitRequestFullScreen || canvas.mozRequestFullScreen || canvas.requestFullScreen
+            return (
+                canvas.webkitRequestFullScreen ||
+                canvas.mozRequestFullScreen ||
+                canvas.requestFullScreen
+            )
         }
 
-        this.isfullscreensupported = function () {
-            return !!(getfullscreenenabler())
+        this.isfullscreensupported = function() {
+            return !!getfullscreenenabler()
         }
 
         function setupFullScreen() {
-            const fullScreenChangeHandler = function () {
-                if (!(document.mozFullScreenElement || document.fullScreenElement)) {
+            const fullScreenChangeHandler = function() {
+                if (
+                    !(
+                        document.mozFullScreenElement ||
+                        document.fullScreenElement
+                    )
+                ) {
                     resizeCanvas(canvas, scale, cssResolution, aspectRatio)
                 }
             }
             if (`onfullscreenchange` in document) {
-                document.addEventListener(`fullscreenchange`, fullScreenChangeHandler)
+                document.addEventListener(
+                    `fullscreenchange`,
+                    fullScreenChangeHandler
+                )
             } else if (`onmozfullscreenchange` in document) {
-                document.addEventListener(`mozfullscreenchange`, fullScreenChangeHandler)
+                document.addEventListener(
+                    `mozfullscreenchange`,
+                    fullScreenChangeHandler
+                )
             } else if (`onwebkitfullscreenchange` in document) {
-                document.addEventListener(`webkitfullscreenchange`, fullScreenChangeHandler)
+                document.addEventListener(
+                    `webkitfullscreenchange`,
+                    fullScreenChangeHandler
+                )
             }
         }
 
-        this.requestFullScreen = function () {
+        this.requestFullScreen = function() {
             Module.requestFullScreen(1, 0)
         }
 
@@ -880,13 +968,12 @@ ${formatBytes(event.loaded)} of ${formatBytes(event.total)})`
          * Disables the right click menu for the given element.
          */
         function disableRightClickContextMenu(element) {
-            element.addEventListener(`contextmenu`,
-                function (e) {
-                    if (e.button == 2) {
-                        // Block right-click menu thru preventing default action.
-                        e.preventDefault()
-                    }
-                })
+            element.addEventListener(`contextmenu`, function(e) {
+                if (e.button == 2) {
+                    // Block right-click menu thru preventing default action.
+                    e.preventDefault()
+                }
+            })
         }
     }
 
@@ -900,24 +987,56 @@ ${formatBytes(event.loaded)} of ${formatBytes(event.total)})`
     // This is such a hack. We're not calling the BrowserFS api
     // 'correctly', so we have to synthesize these flags ourselves
     const flag_r = {
-        isReadable: function () { return true },
-        isWriteable: function () { return false },
-        isTruncating: function () { return false },
-        isAppendable: function () { return false },
-        isSynchronous: function () { return false },
-        isExclusive: function () { return false },
-        pathExistsAction: function () { return 0 },
-        pathNotExistsAction: function () { return 1 },
+        isReadable: function() {
+            return true
+        },
+        isWriteable: function() {
+            return false
+        },
+        isTruncating: function() {
+            return false
+        },
+        isAppendable: function() {
+            return false
+        },
+        isSynchronous: function() {
+            return false
+        },
+        isExclusive: function() {
+            return false
+        },
+        pathExistsAction: function() {
+            return 0
+        },
+        pathNotExistsAction: function() {
+            return 1
+        }
     }
     const flag_w = {
-        isReadable: function () { return false },
-        isWriteable: function () { return true },
-        isTruncating: function () { return false },
-        isAppendable: function () { return false },
-        isSynchronous: function () { return false },
-        isExclusive: function () { return false },
-        pathExistsAction: function () { return 0 },
-        pathNotExistsAction: function () { return 3 },
+        isReadable: function() {
+            return false
+        },
+        isWriteable: function() {
+            return true
+        },
+        isTruncating: function() {
+            return false
+        },
+        isAppendable: function() {
+            return false
+        },
+        isSynchronous: function() {
+            return false
+        },
+        isExclusive: function() {
+            return false
+        },
+        pathExistsAction: function() {
+            return 0
+        },
+        pathNotExistsAction: function() {
+            return 3
+        }
     }
 
     /**
@@ -928,14 +1047,18 @@ ${formatBytes(event.loaded)} of ${formatBytes(event.total)})`
         let dosboxConfPath = null
         // Recursively search for dosbox.conf.
         function searchDirectory(dirPath) {
-            fs.readdirSync(dirPath).forEach(function (item) {
+            fs.readdirSync(dirPath).forEach(function(item) {
                 if (dosboxConfPath) return
                 // Avoid infinite recursion by ignoring these entries, which exist at
                 // the root.
                 if (item === `.` || item === `..`) return
                 // Append `/` between dirPath and the item's name... unless dirPath
                 // already ends in it (which always occurs if dirPath is the root, `/`).
-                const itemPath = dirPath + (dirPath[dirPath.length - 1] !== `/` ? `/` : ``) + item, itemStat = fs.statSync(itemPath)
+                const itemPath =
+                        dirPath +
+                        (dirPath[dirPath.length - 1] !== `/` ? `/` : ``) +
+                        item,
+                    itemStat = fs.statSync(itemPath)
                 if (itemStat.isDirectory(itemStat.mode)) {
                     searchDirectory(itemPath)
                 } else if (item === `dosbox.conf`) {
@@ -947,7 +1070,13 @@ ${formatBytes(event.loaded)} of ${formatBytes(event.total)})`
         searchDirectory(`/`)
 
         if (dosboxConfPath !== null) {
-            fs.writeFileSync(`/dosbox.conf`, fs.readFileSync(dosboxConfPath, null, flag_r), null, flag_w, 0x1a4)
+            fs.writeFileSync(
+                `/dosbox.conf`,
+                fs.readFileSync(dosboxConfPath, null, flag_r),
+                null,
+                flag_w,
+                0x1a4
+            )
         }
     }
 
@@ -963,13 +1092,17 @@ ${formatBytes(event.loaded)} of ${formatBytes(event.total)})`
         }
         if (Array.isArray(a)) return a.concat(b)
         if (ta === `object`) {
-            Object.keys(b).forEach(function (k) { a[k] = extend(a[k], b[k]) })
+            Object.keys(b).forEach(function(k) {
+                a[k] = extend(a[k], b[k])
+            })
             return a
         }
         return b
     }
 
-    document.getElementById(`doseeVersion`).innerHTML = ` version ${doseeVersion}`
+    document.getElementById(
+        `doseeVersion`
+    ).innerHTML = ` version ${doseeVersion}`
     window.DoseeLoader = DoseeLoader
     window.Emulator = Emulator
 })(typeof Promise === `undefined` ? ES6Promise.Promise : Promise)
