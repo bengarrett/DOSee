@@ -105,19 +105,22 @@ function storageAvailable(type) {
 
     // Screen capture button
     try {
-        const fss = !!new Blob()
-        if (typeof fss !== `undefined`) {
-            const ssb = document.getElementById(`doseeCaptureScreen`)
+        if (typeof !!new Blob() !== `undefined`) {
+            const button = document.getElementById(`doseeCaptureScreen`)
             // dosee screen capture button
-            ssb.addEventListener(`click`, () => {
+            button.addEventListener(`click`, () => {
                 const canvas = document.getElementById(`doseeCanvas`)
                 const filename = getMetaContent(`dosee:capname`)
+                // the default .toBlob() saved image type is image/png
+                // but it can be swapped: https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toBlob
                 canvas.toBlob(blob => {
-                    saveAs(blob, filename)
-                    ssb.style.color = `green`
+                    // cycles the colours of the button when clicked
+                    button.style.color = `green`
                     setTimeout(() => {
-                        ssb.style.color = `black`
+                        button.style.color = `black`
                     }, 750)
+                    // uses FileSaver.js to save the image locally
+                    saveAs(blob, filename)
                 })
             })
         }
