@@ -9,7 +9,10 @@
 
     <!-- DOSee initialisation options -->
     <meta name="dosee:capname" content="sierra.png" />
-    <meta name="dosee:gamefilepath" content="dos_programs/program_4/agi_demo_pack_1.zip" />
+    <meta
+      name="dosee:gamefilepath"
+      content="dos_programs/program_4/agi_demo_pack_1.zip"
+    />
     <meta name="dosee:gusaudio" content="false" />
     <meta name="dosee:resolution" content="640, 480" />
     <meta name="dosee:startexe" content="sierra.com" />
@@ -93,19 +96,19 @@
       </fieldset>
       <fieldset>
         <legend>Graphics</legend>
-        <label class="radio-inline">
+        <label>
           <input type="radio" name="dosmachine" id="dosmachine1" value="svga" />
           SuperVGA
         </label>
-        <label class="radio-inline">
+        <label>
           <input type="radio" name="dosmachine" id="dosmachine2" value="vga" />
           <u>VGA</u>
         </label>
-        <label class="radio-inline">
+        <label>
           <input type="radio" name="dosmachine" id="dosmachine3" value="ega" />
           EGA
         </label>
-        <label class="radio-inline">
+        <label>
           <input
             type="radio"
             name="dosmachine"
@@ -114,35 +117,35 @@
           />
           Tandy
         </label>
-        <label class="radio-inline">
+        <label>
           <input type="radio" name="dosmachine" id="dosmachine5" value="cga" />
           CGA
         </label>
-        <label class="radio-inline">
+        <label>
           <input type="radio" name="dosmachine" id="dosmachine6" value="herc" />
           Hercules
         </label>
       </fieldset>
       <fieldset>
         <legend>Audio</legend>
-        <label class="radio-inline">
+        <label>
           <input type="radio" name="dosaudio" id="dosaudio1" value="gus" />
           Gravis Ultrasound
         </label>
-        <label class="radio-inline">
+        <label>
           <input type="radio" name="dosaudio" id="dosaudio4" value="covox" />
           Covox
           <small>also Disney Sound Source/DA Converter</small>
         </label>
-        <label class="radio-inline">
+        <label>
           <input type="radio" name="dosaudio" id="dosaudio2" value="sb16" />
           <u>Sound Blaster 16</u>
         </label>
-        <label class="radio-inline">
+        <label>
           <input type="radio" name="dosaudio" id="dosaudio3" value="sb1" />
           Sound Blaster 1.0
         </label>
-        <label class="radio-inline">
+        <label>
           <input type="radio" name="dosaudio" id="dosaudio5" value="none" />
           none
         </label>
@@ -152,81 +155,70 @@
     <form id="optionsTab">
       <p><a href="#" name="doseeReboot">Reboot to apply any changes</a></p>
       <hr />
-      <div class="checkbox">
+      <div>
         <label>
           <input type="checkbox" id="doseeAutoRun" /> Automatically start DOS
           emulation
         </label>
       </div>
-      <div class="checkbox">
+      <div>
         <label>
           <input type="checkbox" id="doseeAspect" /> Disable aspect correction
-          <small class="text-muted">For sharper DOS ASCII/ANSI text</small>
+          <small>For sharper DOS ASCII/ANSI text</small>
         </label>
       </div>
-      <hr />
-      <div class="form-group">
-        <label for="inputEmail3" class="col-sm-12 control-label"
-          >SuperVGA real-time graphic effect
-          <br />
-          <small class="text-danger" id="svgaEffectsMsg"
-            >Hardware 🡒 Graphics, MUST be set to SuperVGA</small
+      <fieldset>
+        <legend>SuperVGA real-time graphic effect</legend>
+        <div id="svgaEffectsMsg">
+          <mark class="inline-block"
+            >Hardware 🡒 Graphics, must be set to <em>SuperVGA</em></mark
           >
-        </label>
-        <div class="col-sm-12">
-          <div class="radio">
-            <label class="radio-inline">
-              <input type="radio" name="dosscale" id="dosscale0" value="none" />
-              None
-            </label>
-            <br />
-            <label class="radio-inline">
-              <input
-                type="radio"
-                name="dosscale"
-                id="dosscale5"
-                value="advinterp3x"
-              />
-              Advanced interpolation
-              <small class="text-muted">advinterp3x</small>
-            </label>
-            <label class="radio-inline">
-              <input type="radio" name="dosscale" id="dosscale4" value="hq3x" />
-              High Quality 3 magnification
-              <small class="text-muted">hq3x</small>
-            </label>
-            <br />
-            <label class="radio-inline">
-              <input
-                type="radio"
-                name="dosscale"
-                id="dosscale3"
-                value="rgb3x"
-              />
-              RGB
-              <small class="text-muted">rgb3x</small>
-            </label>
-            <label class="radio-inline">
-              <input
-                type="radio"
-                name="dosscale"
-                id="dosscale1"
-                value="super2xsai"
-              />
-              Super scale and interpolation
-              <small class="text-muted">super2xsai</small>
-            </label>
-            <label class="radio-inline">
-              <input type="radio" name="dosscale" id="dosscale2" value="tv3x" />
-              Television
-              <small class="text-muted">tv3x</small>
-            </label>
-          </div>
         </div>
-      </div>
-      <div id="helpBlock" class="help-block">
+        <label>
+          <input type="radio" name="dosscale" id="dosscale0" value="none" />
+          None
+        </label>
+        <br />
+        <label>
+          <input
+            type="radio"
+            name="dosscale"
+            id="dosscale5"
+            value="advinterp3x"
+          />
+          Advanced interpolation
+          <small>advinterp3x</small>
+        </label>
+        <label>
+          <input type="radio" name="dosscale" id="dosscale4" value="hq3x" />
+          High Quality 3 magnification
+          <small>hq3x</small>
+        </label>
+        <br />
+        <label>
+          <input type="radio" name="dosscale" id="dosscale3" value="rgb3x" />
+          RGB
+          <small>rgb3x</small>
+        </label>
+        <label>
+          <input
+            type="radio"
+            name="dosscale"
+            id="dosscale1"
+            value="super2xsai"
+          />
+          Super scale and interpolation
+          <small>super2xsai</small>
+        </label>
+        <label>
+          <input type="radio" name="dosscale" id="dosscale2" value="tv3x" />
+          Television
+          <small>tv3x</small>
+        </label>
+      </fieldset>
+      <div id="helpBlock">
         <p>
-          <i class="fal fa-info-circle"></i>
+          <span class="icon-help"></span>
           <a href="//www.dosbox.com/wiki/Scaler">Graphic effect comparisons</a>
         </p>
       </div>
