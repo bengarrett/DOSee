@@ -6,6 +6,7 @@ MAP="https://github.com/jvilk/browserfs-zipfs-extras/releases/download/v1.0.1/br
 FULL="https://raw.githubusercontent.com/sindresorhus/screenfull.js/v3.3.3/dist/screenfull.min.js"
 SAVE="https://raw.githubusercontent.com/eligrey/FileSaver.js/master/dist/FileSaver.min.js"
 CTB="https://raw.githubusercontent.com/eligrey/canvas-toBlob.js/master/canvas-toBlob.js"
+MINI="https://raw.githubusercontent.com/Chalarangelo/mini.css/v3.0.1/dist/mini-default.min.css"
 
 echo "Fetching BrowserFS"
 wget -nc -O libs/browserfs.min.js $BFS
@@ -22,3 +23,6 @@ wget -nc -O libs/FileSaver.min.js $SAVE
 
 echo "Fetching canvas-toBlob"
 wget -nc -O libs/canvas-toBlob.js $CTB
+
+echo "Fetching mini.css"
+wget -nc -O libs/mini.min.css $MINI
