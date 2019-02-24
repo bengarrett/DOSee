@@ -19,7 +19,7 @@ const menuBtns = new Map()
 // Create mouse click events for each menu button
 const monitorTabs = () => {
     menuBtns.forEach(button => {
-        button.addEventListener(`click`, (event) => {
+        button.addEventListener(`click`, event => {
             const srcId = event.srcElement.id
             // replace the trailing `Btn` from the srcElement Id with `Tab`
             const newId = `${srcId.slice(0, -3)}Tab`
@@ -29,15 +29,15 @@ const monitorTabs = () => {
 }
 
 // Hides all menu containers, if a defaultTab is provided then it will be displayed
-const resetTabs = (defaultTab) => {
+const resetTabs = defaultTab => {
     menuTabs.forEach(tab => {
-        if(tab.id === `${defaultTab}`) tab.style.display = `block`
+        if (tab.id === `${defaultTab}`) tab.style.display = `block`
         else tab.style.display = `none`
     })
 }
 
 // Self-invoking function
-(()=> {
+;(() => {
     monitorTabs()
     resetTabs(`hardwareTab`)
 
@@ -46,5 +46,5 @@ const resetTabs = (defaultTab) => {
         `dosee:filename`
     )}`
 
-    console.info(`index.js loaded`)
+    console.log(`index.js loaded`)
 })()

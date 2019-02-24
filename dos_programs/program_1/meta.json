@@ -1,9 +1,9 @@
 {
-  "capname": "dragglex_loader.png",
-  "filename": "dragglex_loader.zip",
-  "gamefilepath": "dos_programs/program_1/dragglex_loader.zip",
+  "capname": "df2intro.png",
+  "filename": "df2intro.zip",
+  "gamefilepath": "dos_programs/program_1/df2intro.zip",
   "gusaudio": "false",
   "resolution": "640, 480",
-  "startexe": "DRAGGLEX.EXE",
+  "startexe": "DF2.EXE",
   "utils": "false"
 }
