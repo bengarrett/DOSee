@@ -17,7 +17,7 @@ const menuBtns = new Map()
     .set(`help`, document.getElementById(`helpBtn`))
 
 // Create mouse click events for each menu button
-const monitorTabs = () => {
+function monitorTabs() {
     menuBtns.forEach(button => {
         button.addEventListener(`click`, event => {
             const srcId = event.srcElement.id
@@ -29,7 +29,7 @@ const monitorTabs = () => {
 }
 
 // Hides all menu containers, if a defaultTab is provided then it will be displayed
-const resetTabs = defaultTab => {
+function resetTabs(defaultTab) {
     menuTabs.forEach(tab => {
         if (tab.id === `${defaultTab}`) tab.classList.remove(`hidden`)
         else tab.classList.add(`hidden`)
@@ -37,7 +37,7 @@ const resetTabs = defaultTab => {
 }
 
 // Self-invoking function
-;(() => {
+(() => {
     monitorTabs()
     resetTabs(`hardwareTab`)
 
