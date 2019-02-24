@@ -88,7 +88,7 @@ function storageAvailable(type) {
     }
 
     // Full screen button
-    {
+    if(typeof screenfull !== `undefined`) {
         let element = document.getElementById(`doseeCanvas`)
         if (screenfull.enabled) {
             const chrome =
