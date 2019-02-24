@@ -81,7 +81,7 @@ const utils = q => {
 // NOTE: This may break audio support in Chrome 71+ due to its Web Audio autoplay policy?
 // https://goo.gl/7K7WLu
 if (storageAvailable(`local`)) {
-    if(localStorage.getItem(`doseeAutostart`) === `true`) config.set(`start`, true)
+    if(localStorage.getItem(`doseeAutoStart`) === `true`) config.set(`start`, true)
 }
 if (config.get(`start`) === true) console.log(`DOSee will launch automatically`)
 

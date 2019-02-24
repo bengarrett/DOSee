@@ -57,11 +57,11 @@ function storageAvailable(type) {
     if (storageAvailable(`local`)) {
         // Automatically start DOS emulation
         const asb = document.getElementById(`doseeAutoRun`)
-        asb.addEventListener(`click`, function() {
+        asb.addEventListener(`click`, () => {
             const chk = asb.checked
-            localStorage.setItem(`doseeAutostart`, chk) // boolean value
+            localStorage.setItem(`doseeAutoStart`, chk) // boolean value
         })
-        const d = localStorage.getItem(`doseeAutostart`)
+        const d = localStorage.getItem(`doseeAutoStart`)
         if (d === `true`) asb.checked = true
         // For sharper DOS ASCII/ANSI text
         const nab = document.getElementById(`doseeAspect`)
