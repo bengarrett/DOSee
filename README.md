@@ -1,6 +1,11 @@
 # DOSee
 
-DOSee - a MS-DOS emulator for the web.
+An MS-DOS emulator for the web.
+
+DOSee is a front-end for an MS-DOS emulation ecosystem created by many amazing people over many years. 
+
+DOSee itself is a fork of [The Emularity](https://github.com/db48x/emularity) project created by the Internet Archive.
+[EM-DOSBox](https://github.com/dreamlayers/em-dosbox/) is a JavaScript port of [DOSBox](https://www.dosbox.com), the world's most popular MS-DOS emulator in use today.
 
 ### Dependencies and requirements
 
@@ -17,7 +22,7 @@ git clone https://github.com/bengarrett/DOSee.git
 
 Download the libraries and dependencies.
 
-```sh
+```
 chmod +x DOSee/libs/wget_libs.sh
 ./DOSee/libs/wget_libs.sh
 ```
