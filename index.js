@@ -31,8 +31,8 @@ const monitorTabs = () => {
 // Hides all menu containers, if a defaultTab is provided then it will be displayed
 const resetTabs = defaultTab => {
     menuTabs.forEach(tab => {
-        if (tab.id === `${defaultTab}`) tab.style.display = `block`
-        else tab.style.display = `none`
+        if (tab.id === `${defaultTab}`) tab.classList.remove(`hidden`)
+        else tab.classList.add(`hidden`)
     })
 }
 

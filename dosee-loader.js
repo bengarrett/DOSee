@@ -20,12 +20,12 @@ Module = null;
 (function (Promise) {
     "use strict"
 
-    const doseeVersion = `1.8pa`
+    const doseeVersion = `1.9`
 
     // DOSBox requires a valid IndexedDB
     // See: https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Using_IndexedDB
     if (window.indexedDB) {
-        document.getElementById(`doseeCrashed`).style.display = `none`
+        document.getElementById(`doseeCrashed`).classList.add(`hidden`)
     }
 
 
@@ -246,7 +246,7 @@ Module = null;
                 verbose += ` SVGA s3 graphics.`
                 args.push(`-conf`, `/dos/s/svga.con`)
                 document.getElementById(`dosmachine1`).checked = true
-                document.getElementById(`svgaEffectsMsg`).style.display = `none`
+                document.getElementById(`svgaEffectsMsg`).classList.add(`hidden`)
                 break
             case `cga`:
                 verbose += ` CGA graphics.`
@@ -473,7 +473,7 @@ ${ansi(`blue`, `f`)}${ansi(`white`, `acto`)}${ansi(`blue`, `2`)}${ansi(`white`, 
             {
                 const sdlm = document.getElementById(`doseeSlowLoad`)
                 if (sdlm !== `undefined`) {
-                    sdlm.style.display = `none`
+                    sdlm.classList.add(`hidden`)
                 }
             }
             return this
