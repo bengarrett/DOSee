@@ -7,6 +7,8 @@ DOSee is a front-end for an MS-DOS emulation ecosystem created by many amazing p
 DOSee itself is a fork of [The Emularity](https://github.com/db48x/emularity) project created by the Internet Archive.
 [EM-DOSBox](https://github.com/dreamlayers/em-dosbox/) is a JavaScript port of [DOSBox](https://www.dosbox.com), the world's most popular MS-DOS emulator in use today.
 
+![DOSee preview](images/preview.png)
+
 ### Dependencies and requirements
 
 - A web browser that supports JavaScript ES6 (ECMAScript 2015).
