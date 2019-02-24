@@ -12,7 +12,7 @@
  *  No Web Assembly builds [todo]
  */
 
-/* global storageAvailable Module BrowserFS ES6Promise FS Promise */
+/* global newQueryString storageAvailable Module BrowserFS ES6Promise FS Promise */
 /* eslint strict: ["error", "safe"] */
 /* eslint no-global-assign: ["error", {"exceptions": ["Module"]}] */
 Module = null;
@@ -136,10 +136,8 @@ Module = null;
             console.log(`DOSee needs the URLSearchParams interface to read URL query string values`)
             return args
         }
-
-        // extract URL query string and run it through the URLSearchParams API
-        const wlh = window.location.href
-        const urlParams = new URLSearchParams(wlh.slice(wlh.indexOf(`?`), wlh.indexOf(`#`)))
+        // see dosee-function.js
+        const urlParams = newQueryString()
 
         // graphic engine scalers (https://www.dosbox.com/wiki/Scaler)
         let scaler = null

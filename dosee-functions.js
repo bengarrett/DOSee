@@ -13,6 +13,13 @@ function getMetaContent(name) {
     else return elm[0].getAttribute(`content`)
 }
 
+// Extracts the URL query string and run it through the URLSearchParams API
+function newQueryString() {
+    const wlh = window.location.href
+    // the API works best with only the URL query string rather than the whole URL
+    return new URLSearchParams(wlh.slice(wlh.indexOf(`?`), wlh.indexOf(`#`)))
+}
+
 // Test the local storage availability for the browser
 // Source: https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API
 function storageAvailable(type) {
