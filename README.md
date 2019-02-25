@@ -28,7 +28,6 @@ Download the libraries and dependencies.
 cd DOSee/libs
 chmod +x wget_libs.sh
 ./wget_libs.sh
-cd ..
 ```
 
 __DOSee has to be served via a HTTP server, it can not be run using the browser `file:///` protocol.__
@@ -118,7 +117,7 @@ When set to `true` it tells DOSee to mount a collection of MS-DOS utilities and 
 
 When set to `true` it tells DOSee to mount a collection of Gravis Ultrasound audio drivers and tools that are accessible from the `G:` drive. These drivers are always loaded by DOSee whenever the Gravis Ultrasound audio option is selected so this should always be left to `false`.
 
-### `<meta name="dosee:resolution">`
+#### `<meta name="dosee:resolution">`
 
 This should adjust the pixel width and height of the EM-DOSBox emulator but it seems to have no noticeable effect.
 
