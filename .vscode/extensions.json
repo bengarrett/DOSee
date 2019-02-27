@@ -6,7 +6,6 @@
   "recommendations": [
     "dbaeumer.vscode-eslint",
     "esbenp.prettier-vscode",
-    "patrys.vscode-code-outline",
     "visualstudioexptteam.vscodeintellicode",
     "wix.vscode-import-cost"
   ],

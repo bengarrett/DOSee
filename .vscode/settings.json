@@ -1,34 +1,14 @@
 {
-    "prettier.eslintIntegration": true,
-    "eslint.alwaysShowStatus": true,
-    "cSpell.language": "en-GB",
-    "cSpell.enabledLanguageIds": [
-        "asciidoc",
-        "c",
-        "cpp",
-        "csharp",
-        "css",
-        "go",
-        "handlebars",
-        "html",
-        "jade",
-        "javascript",
-        "javascriptreact",
-        "json",
-        "latex",
-        "less",
-        "markdown",
-        "php",
-        "plaintext",
-        "pub",
-        "python",
-        "restructuredtext",
-        "rust",
-        "scss",
-        "text",
-        "typescript",
-        "typescriptreact",
-        "yaml",
-        "yml"
-    ]
+  "eslint.alwaysShowStatus": true,
+  "prettier.eslintIntegration": true,
+  "spellright.documentTypes": [
+    "markdown",
+    "latex",
+    "plaintext",
+    "javascript",
+    "html"
+],
+  "spellright.language": [
+    "en"
+]
 }
