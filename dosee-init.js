@@ -126,10 +126,10 @@ emulator.start({ waitAfterDownloading: !config.get(`start`) })
 
 // Checks for and provides feedback for missing dependencies
 {
-    const checks = [`BrowserFS`, `saveAs`, `screenfull`]
+    const checks = [`BrowserFS`, `saveAs`]
     let pass = true
     checks.forEach(objName => {
-        if (typeof window[objName] === `undefined`) return pass = false
+        if (typeof window[objName] === `undefined`) return (pass = false)
     })
     if (!pass) {
         // error link

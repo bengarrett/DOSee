@@ -1,0 +1,13 @@
+# DOSee
+
+## Changes and updates
+
+### v1.11
+
+- Added a PowerShell install script for Windows (and PowerShell Core) users.
+- Replaced `doseeVersion` string with a `version` Map() object.
+- Replaced the use of the outdated and broken _screenfull_ library with the [Fullscreen API](https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API).
+
+### v1.10
+
+- Initial public release.

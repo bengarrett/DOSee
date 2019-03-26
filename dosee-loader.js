@@ -9,7 +9,7 @@
  *  Requires ES6 compatible browser
  *  Only DOS emulation
  *  No local save game states
- *  No Web Assembly builds [todo]
+ *  No Web Assembly builds [to-do]
  */
 
 /* global newQueryString storageAvailable Module BrowserFS ES6Promise FS Promise */
@@ -19,7 +19,22 @@ Module = null
 ;(Promise => {
     "use strict"
 
-    const doseeVersion = `1.10`
+    const version = new Map()
+        .set(`date`, new Date(`27,Mar,2019`))
+        .set(`minor`, `11`)
+        .set(`major`, `1`)
+        .set(`display`, ``)
+    version.set(
+        `display`,
+        `${version.get(`major`)}.${version.get(`minor`)} (${version
+            .get(`date`)
+            .toLocaleDateString()})`
+    )
+
+    const config = new Map().set(
+        `splashPath`,
+        `images/floppy_disk_icon-180x180.png`
+    )
 
     // DOSBox requires a valid IndexedDB
     // See: https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Using_IndexedDB
@@ -126,7 +141,7 @@ Module = null
     }
 
     const build_dosbox_arguments = function(emulator_start, files) {
-        console.log(`Initialisation of DOSee ` + doseeVersion)
+        console.log(`Initialisation of DOSee ` + version.get(`display`))
         let verbose = `with the following configuration:`
 
         // get guest program path
@@ -883,7 +898,7 @@ ${formatBytes(event.loaded)} of ${formatBytes(event.total)})`
         const drawsplash = function() {
             canvas.setAttribute(`moz-opaque`, ``)
             if (!splash.splashimg.src) {
-                splash.splashimg.src = `images/floppy_disk_icon-180x180.png`
+                splash.splashimg.src = `${config.get(`splashPath`)}`
             }
         }
 
@@ -988,54 +1003,54 @@ ${formatBytes(event.loaded)} of ${formatBytes(event.total)})`
     // This is such a hack. We're not calling the BrowserFS api
     // 'correctly', so we have to synthesize these flags ourselves
     const flag_r = {
-        isReadable: function() {
+        isReadable: () => {
             return true
         },
-        isWriteable: function() {
+        isWriteable: () => {
             return false
         },
-        isTruncating: function() {
+        isTruncating: () => {
             return false
         },
-        isAppendable: function() {
+        isAppendable: () => {
             return false
         },
-        isSynchronous: function() {
+        isSynchronous: () => {
             return false
         },
-        isExclusive: function() {
+        isExclusive: () => {
             return false
         },
-        pathExistsAction: function() {
+        pathExistsAction: () => {
             return 0
         },
-        pathNotExistsAction: function() {
+        pathNotExistsAction: () => {
             return 1
         }
     }
     const flag_w = {
-        isReadable: function() {
+        isReadable: () => {
             return false
         },
-        isWriteable: function() {
+        isWriteable: () => {
             return true
         },
-        isTruncating: function() {
+        isTruncating: () => {
             return false
         },
-        isAppendable: function() {
+        isAppendable: () => {
             return false
         },
-        isSynchronous: function() {
+        isSynchronous: () => {
             return false
         },
-        isExclusive: function() {
+        isExclusive: () => {
             return false
         },
-        pathExistsAction: function() {
+        pathExistsAction: () => {
             return 0
         },
-        pathNotExistsAction: function() {
+        pathNotExistsAction: () => {
             return 3
         }
     }
@@ -1101,9 +1116,9 @@ ${formatBytes(event.loaded)} of ${formatBytes(event.total)})`
         return b
     }
 
-    document.getElementById(
-        `doseeVersion`
-    ).innerHTML = ` version ${doseeVersion}`
+    document.getElementById(`doseeVersion`).innerHTML = ` version ${version.get(
+        `display`
+    )}`
     window.DoseeLoader = DoseeLoader
     window.Emulator = Emulator
 })(typeof Promise === `undefined` ? ES6Promise.Promise : Promise)

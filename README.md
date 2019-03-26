@@ -10,10 +10,14 @@ DOSee itself is a fork of [The Emularity](https://github.com/db48x/emularity) pr
 
 ![DOSee preview](images/preview.png)
 
+### What's new
+
+[Changes and updates can be found here](CHANGES.md)
+
 ### Dependencies and requirements
 
 - A web browser that supports JavaScript ES6 (ECMAScript 2015).
-- A local web server or a Docker installation.
+- A local web server or a Docker installation, instructions are below.
 
 ### Installation
 
@@ -23,14 +27,14 @@ Clone DOSee.
 git clone https://github.com/bengarrett/DOSee.git
 ```
 
-Download dependencies on **macOS** and **Linux**.
+Download dependencies on **macOS** or **Linux**.
 
 ```
 chmod +x libs/install.sh
 ./libs/install.sh
 ```
 
-Download dependencies on **Windows**
+Download dependencies on **Windows** or **PowerShell Core**
 
 ```
 .\libs\install.ps1

@@ -3,7 +3,7 @@
  * DOSee user interface functions
  */
 
-/* global saveAs screenfull */
+/* global saveAs */
 "use strict"
 
 // Returns the content data stored in a HTML <meta> tag
@@ -87,19 +87,24 @@ function storageAvailable(type) {
         })
     }
 
-    // Full screen button
-    if(typeof screenfull !== `undefined`) {
-        let element = document.getElementById(`doseeCanvas`)
-        if (screenfull.enabled) {
-            const chrome =
-                /Chrome/.test(navigator.userAgent) &&
-                /Google Inc/.test(navigator.vendor)
-            if (chrome) element = document.getElementById(`doseeContainer`)
-        }
+    // Fullscreen button
+    // uses the Fullscreen API (https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API)
+    if (typeof document.fullscreenElement === `undefined`) {
+        // disable and hide the button if API is not supported by the browser such as in Safari
+        const element = document.getElementById(`doseeFullScreen`)
+        element.style.display = `none`
+    } else {
         document
             .getElementById(`doseeFullScreen`)
             .addEventListener(`click`, () => {
-                if (screenfull.enabled) screenfull.request(element)
+                const element = document.getElementById(`doseeCanvas`)
+                if (!element.fullscreenElement) {
+                    element.requestFullscreen()
+                } else {
+                    if (element.exitFullscreen) {
+                        element.exitFullscreen()
+                    }
+                }
             })
     }
 
