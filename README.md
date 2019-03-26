@@ -1,10 +1,11 @@
 # DOSee
 
-An MS-DOS emulator for the web.
+## An MS-DOS emulator for the web.
 
-DOSee is a front-end for an MS-DOS emulation ecosystem created by many amazing people over many years. 
+DOSee is a front-end for an MS-DOS emulation ecosystem created by many amazing people over many years.
 
 DOSee itself is a fork of [The Emularity](https://github.com/db48x/emularity) project created by the Internet Archive.
+
 [EM-DOSBox](https://github.com/dreamlayers/em-dosbox/) is a JavaScript port of [DOSBox](https://www.dosbox.com), the world's most popular MS-DOS emulator in use today.
 
 ![DOSee preview](images/preview.png)
@@ -22,35 +23,44 @@ Clone DOSee.
 git clone https://github.com/bengarrett/DOSee.git
 ```
 
-Download the libraries and dependencies.
+Download dependencies on **macOS** and **Linux**.
 
 ```
-cd DOSee/libs
-chmod +x wget_libs.sh
-./wget_libs.sh
+chmod +x libs/install.sh
+./libs/install.sh
 ```
 
-__DOSee has to be served via a HTTP server, it can not be run using the browser `file:///` protocol.__
+Download dependencies on **Windows**
+
+```
+.\libs\install.ps1
+```
+
+**DOSee has to be served via a HTTP server, it can not be run using the browser `file:///` protocol.**
 
 #### Python 3
 
 ```
 cd DOSee
-python3 -m http.server 5555
+python3 -m http.server 5550
 ```
-Point a web browser to http://localhost:5555
+
+Point a web browser to http://localhost:5550
 
 #### Node.js
 
 ```
+npm install http-server -g
 cd DOSee
-http-server -p 5555
+http-server -p 5550
 ```
-Point a web browser to http://localhost:5555
+
+Point a web browser to http://localhost:5550
 
 #### Docker
 
 Requirement:
+
 - Docker engine: 17.04.0+
 - docker-compose: 3.2
 
@@ -61,7 +71,7 @@ cd DOSee
 docker-compose up -d
 ```
 
-Point a web browser to http://localhost:5555
+Point a web browser to http://localhost:5550
 
 Stop
 
@@ -75,14 +85,17 @@ docker-compose down
 You can easily customise DOSee to load your own MS-DOS programs using HTML5 `<meta>` elements. The [index.html](index.html) file is the entry point which contains 6 meta elements specifically used by DOSee for providing emulation information and customisations.
 
 ```html
-    <!-- DOSee initialisation options -->
-    <meta name="dosee:gamefilepath" content="dos_programs/program_4/agi_demo_pack_1.zip" />
-    <meta name="dosee:startexe" content="sierra.com" />
+<!-- DOSee initialisation options -->
+<meta
+  name="dosee:gamefilepath"
+  content="dos_programs/program_4/agi_demo_pack_1.zip"
+/>
+<meta name="dosee:startexe" content="sierra.com" />
 
-    <meta name="dosee:capname" content="screenshot.png" />
-    <meta name="dosee:utils" content="false" />
-    <meta name="dosee:gusaudio" content="false" />
-    <meta name="dosee:resolution" content="640, 480" />
+<meta name="dosee:capname" content="screenshot.png" />
+<meta name="dosee:utils" content="false" />
+<meta name="dosee:gusaudio" content="false" />
+<meta name="dosee:resolution" content="640, 480" />
 ```
 
 #### Required
@@ -126,30 +139,33 @@ This should adjust the pixel width and height of the EM-DOSBox emulator but it s
 There are three additional sample programs included in this repository that can be run by DOSee. In the [index.html](index.html) replace these `<meta>` elements.
 
 ```html
-    <!-- DOSee initialisation options -->
-    <meta name="dosee:gamefilepath" content="dos_programs/program_4/agi_demo_pack_1.zip" />
-    <meta name="dosee:startexe" content="sierra.com" />
+<!-- DOSee initialisation options -->
+<meta
+  name="dosee:gamefilepath"
+  content="dos_programs/program_4/agi_demo_pack_1.zip"
+/>
+<meta name="dosee:startexe" content="sierra.com" />
 ```
 
 Sample program 1 (fastest, VGA, Gravis Ultrasound)
 
 ```html
-    <meta name="dosee:gamefilepath" content="dos_programs/program_1/df2intro.zip" />
-    <meta name="dosee:startexe" content="DF2.EXE" />
+<meta name="dosee:gamefilepath" content="dos_programs/program_1/df2intro.zip" />
+<meta name="dosee:startexe" content="DF2.EXE" />
 ```
 
 Sample program 2 (fastest, VGA, Gravis Ultrasound)
 
 ```html
-    <meta name="dosee:gamefilepath" content="dos_programs/program_2/df2.zip" />
-    <meta name="dosee:startexe" content="df2.exe" />
+<meta name="dosee:gamefilepath" content="dos_programs/program_2/df2.zip" />
+<meta name="dosee:startexe" content="df2.exe" />
 ```
 
 Sample program 3 (fastest, VGA, Sound Blaster 16)
 
 ```html
-    <meta name="dosee:gamefilepath" content="dos_programs/program_3/hyb605.zip" />
-    <meta name="dosee:startexe" content="hyb605.exe" />
+<meta name="dosee:gamefilepath" content="dos_programs/program_3/hyb605.zip" />
+<meta name="dosee:startexe" content="hyb605.exe" />
 ```
 
 #### Add your own program example
@@ -170,7 +186,7 @@ wget -O dos_programs/program_5/sq3-demo.zip https://www.scummvm.org/frs/demos/sc
 Update the DOSee [index.html](index.html) to launch the demo and enjoy the confusing mess that was the MS-DOS era of gaming.
 
 ```html
-    <!-- DOSee initialisation options -->
-    <meta name="dosee:gamefilepath" content="dos_programs/program_5/sq3-demo.zip" />
-    <meta name="dosee:startexe" content="SQ3DEMO.BAT" />
+<!-- DOSee initialisation options -->
+<meta name="dosee:gamefilepath" content="dos_programs/program_5/sq3-demo.zip" />
+<meta name="dosee:startexe" content="SQ3DEMO.BAT" />
 ```
