@@ -5,3 +5,6 @@ package-lock.json
 libs/*.js
 libs/*.css
 libs/*.map
+
+# VSCode
+.vscode/tasks.json
