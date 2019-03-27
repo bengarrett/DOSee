@@ -566,7 +566,7 @@ Module = null
                 if (!game_data || splash.failed_loading) return null
                 if (options.waitAfterDownloading) {
                     return new Promise(function(resolve) {
-                        splash.setTitle(`✔ Click here to run`)
+                        splash.setTitle(`🖰 click to start`)
                         splash.spinning = false
                         // stashes these event listeners so that we can remove them after
                         window.addEventListener(
