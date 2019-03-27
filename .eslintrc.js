@@ -32,6 +32,7 @@ module.exports = {
         Module: true,
         newQueryString: true,
         Promise: true,
+        saveAs: true,
         setMetaContent: true,
         storageAvailable: true
     }

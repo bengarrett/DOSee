@@ -3,7 +3,6 @@
  * DOSee user interface functions
  */
 
-/* global saveAs */
 "use strict"
 
 // Returns the content data stored in a HTML <meta> tag

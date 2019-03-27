@@ -12,12 +12,9 @@
  *  No Web Assembly builds [to-do]
  */
 
-/* eslint strict: ["error", "safe"] */
-/* eslint no-global-assign: ["error", {"exceptions": ["Module"]}] */
-Module = null
+"use strict"
+window.Module = null
 ;(Promise => {
-    "use strict"
-
     const version = new Map()
         .set(`date`, new Date(`27,Mar,2019`))
         .set(`minor`, `11`)
