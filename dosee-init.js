@@ -124,8 +124,8 @@ const emulator = new Emulator(
 )
 emulator.start({ waitAfterDownloading: !config.get(`start`) })
 
-// Checks for and provides feedback for missing dependencies
-{
+// Checks for and provides feedback for missing dependencies after all other JS has been loaded
+window.addEventListener(`load`, () => {
     const checks = [`BrowserFS`, `saveAs`]
     let pass = true
     checks.forEach(objName => {
@@ -136,6 +136,8 @@ emulator.start({ waitAfterDownloading: !config.get(`start`) })
         const a = document.createElement(`a`)
         a.href = `https://github.com/bengarrett/DOSee`
         a.textContent = `Installation instructions?`
+        a.style.color = `white`
+        a.style.textDecoration = `underline`
         // error message
         const errMsg = `DOSee cannot load the required dependencies listed the Browser Console. Did you follow the `
         // error containers
@@ -146,6 +148,8 @@ emulator.start({ waitAfterDownloading: !config.get(`start`) })
         error.textContent = errMsg
         error.appendChild(a)
         // console output
-        throw `DOSee has aborted as it is missing the above dependencies.`
+        throw new Error(
+            `DOSee has aborted as it is missing the above dependencies.`
+        )
     }
-}
+})

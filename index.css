@@ -2,8 +2,13 @@
   white-space: nowrap;
 }
 
-#doseeContainer > canvas {
+#doseeContainer > div {
   min-width: 640px;
   min-height: 480px;
   background-color: #000;
+  border: 10px solid #000;
+}
+
+#doseeContainer > div > canvas {
+  border: 1px solid white;
 }
