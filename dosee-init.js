@@ -1,9 +1,8 @@
 /*
- * dosee-loader.js
+ * dosee-init.js
  * DOSee initialisation
  */
 
-/* global newQueryString setMetaContent */
 "use strict"
 
 // Relative file paths to DOSee emulation dependencies

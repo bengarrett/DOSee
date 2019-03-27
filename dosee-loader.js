@@ -12,7 +12,6 @@
  *  No Web Assembly builds [to-do]
  */
 
-/* global newQueryString storageAvailable Module BrowserFS ES6Promise FS Promise */
 /* eslint strict: ["error", "safe"] */
 /* eslint no-global-assign: ["error", {"exceptions": ["Module"]}] */
 Module = null
