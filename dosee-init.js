@@ -16,7 +16,7 @@ const paths = new Map()
 // Load configurations that are obtained from the <meta name="dosee:"> HTML tags
 const config = new Map()
     .set(`exe`, getMetaContent(`dosee:startexe`))
-    .set(`filename`, ``)
+    .set(`filename`, getMetaContent(`dosee:filename`))
     .set(`gus`, getMetaContent(`dosee:gusaudio`))
     .set(`path`, getMetaContent(`dosee:gamefilepath`))
     .set(`res`, getMetaContent(`dosee:resolution`))
@@ -26,8 +26,11 @@ const config = new Map()
 // Extract and save the filename from config path
 {
     const index = config.get(`path`).lastIndexOf(`/`)
-    if (index > -1) config.set(`filename`, config.get(`path`).slice(index + 1))
-    else config.set(`filename`, config.get(`path`))
+    if (config.get(`filename`) === null) {
+        if (index > -1)
+            config.set(`filename`, config.get(`path`).slice(index + 1))
+        else config.set(`filename`, config.get(`path`))
+    }
 }
 
 // Handle URL params special cases that need additional files to be loaded by DOSee

@@ -2,6 +2,10 @@
 
 ## Changes and updates
 
+### v1.13
+
+- Now will read and use `<meta data="dosee:filename">` element.
+
 ### v1.11
 
 - Added a PowerShell install script for Windows (and PowerShell Core) users.
