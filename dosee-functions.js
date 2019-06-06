@@ -4,56 +4,133 @@
  */
 
 "use strict"
+;(() => {
+    // Create a DOSee object prototype
+    function DOSee() {
+        return Array.prototype.reduce.call(arguments)
+    }
 
-// Returns the content data stored in a HTML <meta> tag
-function getMetaContent(name) {
-    const elm = document.getElementsByName(name)
-    if (elm[0] === undefined) return null
-    return elm[0].getAttribute(`content`)
-}
+    // Resize the DOSee canvas
+    DOSee.canvasResize = (width = 640, height = 480) => {
+        //window._emscripten_get_device_pixel_ratio()
+        console.log(`Resizing DOSee canvas to ${width}*${height}px`)
+        return window._emscripten_set_element_css_size(
+            document.getElementById(`doseeCanvas`),
+            parseInt(width),
+            parseInt(height)
+        )
+    }
 
-// Updates the content data stored in a HTML <meta> tag
-function setMetaContent(name, value) {
-    const elm = document.getElementsByName(name)
-    if (elm[0] === undefined || !elm[0].hasAttribute(`content`)) return null
-    return elm[0].setAttribute(`content`, `${value}`)
-}
-
-// Extracts the URL query string and run it through the URLSearchParams API
-function newQueryString() {
-    const wlh = window.location.href
-    // the API works best with only the URL query string rather than the whole URL
-    return new URLSearchParams(wlh.slice(wlh.indexOf(`?`), wlh.indexOf(`#`)))
-}
-
-// Test the local storage availability for the browser
-// Source: https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API
-function storageAvailable(type) {
-    const test = function(t) {
+    // Aborts DOSee and cleans up its event handlers
+    DOSee.exit = () => {
+        if (typeof Module === `undefined`) return
+        // Remove all the event listeners created by EMscripten
+        // to restore mouse and keyboard usage.
+        window.exitRuntime()
         try {
-            const storage = window[t],
-                x = `__storage_test__`
-            storage.setItem(x, `test data`)
-            storage.removeItem(x)
-            return true
-        } catch (e) {
-            return false
+            // Module is an global object created by Emscripten.
+            // abort() abruptly stops Emscripten and frees up browser resources.
+            Module.abort()
+        } catch (err) {
+            console.log(`DOSee has stopped.`)
         }
     }
-    switch (type) {
-        case `local`:
-        case `session`:
-            return test(`${type}Storage`)
-        default:
-            return false
-    }
-}
 
-(() => {
+    // Returns the content data stored in a HTML <meta> tag
+    DOSee.getMetaContent = name => {
+        const elm = document.getElementsByName(name)
+        if (elm[0] === undefined) return null
+        return elm[0].getAttribute(`content`)
+    }
+
+    // Extracts the URL query string and run it through the URLSearchParams API
+    DOSee.newQueryString = () => {
+        const wlh = window.location.href
+        // the API works best with only the URL query string rather than the whole URL
+        return new URLSearchParams(
+            wlh.slice(wlh.indexOf(`?`), wlh.indexOf(`#`))
+        )
+    }
+
+    // Updates the content data stored in a HTML <meta> tag
+    DOSee.setMetaContent = (name, value) => {
+        const elm = document.getElementsByName(name)
+        if (elm[0] === undefined || !elm[0].hasAttribute(`content`)) return null
+        return elm[0].setAttribute(`content`, `${value}`)
+    }
+
+    // Full screen toggle that uses the Fullscreen API
+    // (https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API)
+    DOSee.fullScreen = () => {
+        if (typeof document.fullscreenElement === `undefined`) return
+        const element = document.getElementById(`doseeCanvas`)
+        if (!element.fullscreenElement) {
+            element.requestFullscreen()
+        } else {
+            if (element.exitFullscreen) {
+                element.exitFullscreen()
+            }
+        }
+    }
+
+    // Capture and save the canvas to a PNG image file
+    DOSee.screenCapture = function() {
+        try {
+            if (typeof !!new Blob() === `undefined`) return
+        } catch (err) {
+            return
+        }
+        // note: arrow functions do not support `this`
+        const button = this
+        const canvas = document.getElementById(`doseeCanvas`)
+        const filename = DOSee.getMetaContent(`dosee:capname`)
+        // the default .toBlob() saved image type is image/png
+        // but it can be swapped: https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toBlob
+        canvas.toBlob(blob => {
+            // cycles the colours of the button when clicked
+            button.style.color = `green`
+            setTimeout(() => {
+                button.style.color = `black`
+            }, 750)
+            // uses FileSaver.js to save the image locally
+            FileSaver.saveAs(blob, filename)
+        })
+    }
+
+    // Test the local storage availability for the browser
+    // Source: https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API
+    DOSee.storageAvailable = type => {
+        const test = function(t) {
+            try {
+                const storage = window[t],
+                    x = `__storage_test__`
+                storage.setItem(x, `test data`)
+                storage.removeItem(x)
+                return true
+            } catch (e) {
+                return false
+            }
+        }
+        switch (type) {
+            case `local`:
+            case `session`:
+                return test(`${type}Storage`)
+            default:
+                return false
+        }
+    }
+
+    DOSee.reboot = () => {
+        location.reload(true)
+    }
+
+    // Make DOSee a global object to allow access by other scripts
+    window.DOSee = DOSee
+
     // 'Options' tab interactions
 
     // Restore existing and save new interactions that are kept after the browser is closed
-    if (storageAvailable(`local`)) {
+    if (DOSee.storageAvailable(`local`)) {
         // Automatically start DOS emulation
         const autoRun = document.getElementById(`doseeAutoRun`)
         autoRun.addEventListener(`click`, () => {
@@ -87,55 +164,32 @@ function storageAvailable(type) {
     }
 
     // Fullscreen button
-    // uses the Fullscreen API (https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API)
     if (typeof document.fullscreenElement === `undefined`) {
         // disable and hide the button if API is not supported by the browser such as in Safari
-        const element = document.getElementById(`doseeFullScreen`)
-        element.style.display = `none`
+        document.getElementById(`doseeFullScreen`).style.display = `none`
     } else {
         document
             .getElementById(`doseeFullScreen`)
-            .addEventListener(`click`, () => {
-                const element = document.getElementById(`doseeCanvas`)
-                if (!element.fullscreenElement) {
-                    element.requestFullscreen()
-                } else {
-                    if (element.exitFullscreen) {
-                        element.exitFullscreen()
-                    }
-                }
-            })
+            .addEventListener(`click`, DOSee.fullScreen)
     }
 
     // Screen capture button
     try {
         if (typeof !!new Blob() !== `undefined`) {
             const button = document.getElementById(`doseeCaptureScreen`)
-            // dosee screen capture button
-            button.addEventListener(`click`, () => {
-                const canvas = document.getElementById(`doseeCanvas`)
-                const filename = getMetaContent(`dosee:capname`)
-                // the default .toBlob() saved image type is image/png
-                // but it can be swapped: https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toBlob
-                canvas.toBlob(blob => {
-                    // cycles the colours of the button when clicked
-                    button.style.color = `green`
-                    setTimeout(() => {
-                        button.style.color = `black`
-                    }, 750)
-                    // uses FileSaver.js to save the image locally
-                    saveAs(blob, filename)
-                })
-            })
+            button.addEventListener(`click`, DOSee.screenCapture)
         }
     } catch (err) {
         console.error(err)
     }
 
+    // todo undefined error checks
+
     // Reboot button and links
     document.getElementsByName(`doseeReboot`).forEach(element => {
-        element.addEventListener(`click`, () => {
-            location.reload(true)
-        })
+        element.addEventListener(`click`, DOSee.reboot)
     })
+
+    // Stop, abort, quit button
+    document.getElementById(`doseeExit`).addEventListener(`click`, DOSee.exit)
 })()

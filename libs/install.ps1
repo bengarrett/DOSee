@@ -2,7 +2,8 @@
 
 $private:bfs = "https://github.com/jvilk/BrowserFS/releases/download/v1.4.3/browserfs.min.js"
 $private:zfs = "https://github.com/jvilk/browserfs-zipfs-extras/releases/download/v1.0.1/browserfs-zipfs-extras.js"
-$private:save = "https://raw.githubusercontent.com/eligrey/FileSaver.js/master/dist/FileSaver.min.js"
+# NOTE the src doesn't work, we need the dist version of 1.3.8
+$private:save = "https://raw.githubusercontent.com/eligrey/FileSaver.js/1.3.8/src/FileSaver.js"
 $private:ctb = "https://raw.githubusercontent.com/eligrey/canvas-toBlob.js/master/canvas-toBlob.js"
 $private:mini = "https://raw.githubusercontent.com/Chalarangelo/mini.css/v3.0.1/dist/mini-default.min.css"
 

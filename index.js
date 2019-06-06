@@ -43,11 +43,12 @@ function resetTabs(defaultTab) {
     {
         // set the <H2> element to show the running program and archive filename
         const h2 = document.getElementById(`doseeH2`)
-        const archive = `${getMetaContent(`dosee:gamefilepath`)}`
-        const exe = `${getMetaContent(`dosee:startexe`)}`
+        const archive = `${DOSee.getMetaContent(`dosee:gamefilepath`)}`
+        const exe = `${DOSee.getMetaContent(`dosee:startexe`)}`
         if (exe.length > 0) {
             h2.innerText = `${exe} ⭠ ${archive}`
         } else h2.innerText = `${archive}`
     }
     console.log(`Loaded index.js`)
+    console.log(window)
 })()

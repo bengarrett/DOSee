@@ -16,8 +16,8 @@
 window.Module = null
 ;(Promise => {
     const version = new Map()
-        .set(`date`, new Date(`21,Apr,2019`))
-        .set(`minor`, `13`)
+        .set(`date`, new Date(`6,Jun,2019`))
+        .set(`minor`, `20.0`)
         .set(`major`, `1`)
         .set(`display`, ``)
     version.set(
@@ -29,7 +29,7 @@ window.Module = null
 
     const config = new Map().set(
         `splashPath`,
-        `images/floppy_disk_icon-180x180.png`
+        `/images/floppy_disk_icon-180x180.png`
     )
 
     // DOSBox requires a valid IndexedDB
@@ -156,11 +156,11 @@ window.Module = null
             return args
         }
         // see dosee-function.js
-        const urlParams = newQueryString()
+        const urlParams = DOSee.newQueryString()
 
         // graphic engine scalers (https://www.dosbox.com/wiki/Scaler)
         let scaler = null
-        if (storageAvailable(`local`))
+        if (DOSee.storageAvailable(`local`))
             scaler = localStorage.getItem(`doseeScaler`) // look for saved option
         if (scaler === null) scaler = `none`
         switch (scaler) {
@@ -196,7 +196,7 @@ window.Module = null
 
         // impose aspect ratio correction
         let aspect = null
-        if (storageAvailable(`local`))
+        if (DOSee.storageAvailable(`local`))
             aspect = localStorage.getItem(`doseeAspect`) // look for saved option
         if (aspect === null) aspect = `true`
         if (aspect !== `false`) {
@@ -586,7 +586,6 @@ window.Module = null
                 // Don't let arrow, pg up/down, home, end affect page position
                 blockSomeKeys()
                 setupFullScreen()
-                disableRightClickContextMenu(canvas)
 
                 // Emscripten doesn't use the proper prefixed functions for fullscreen requests,
                 // so let's map the prefixed versions to the correct function.
@@ -609,16 +608,26 @@ window.Module = null
                     }
                 }
                 if (game_data.emulatorJS) {
-                    // enable the operator screenshot and upload button plus jump to the emulation canvas
-                    {
-                        const oscb = document.getElementById(
-                            `doseeCaptureUpload`
-                        )
-                        if (oscb !== null) {
-                            oscb.disabled = false
-                        }
-                        window.location.href = `#emulator`
-                    }
+                    // enable the operator screenshot and upload button
+                    const captureUpload = document.getElementById(
+                        `doseeCaptureUpload`
+                    )
+                    if (captureUpload !== null) captureUpload.disabled = false
+                    // reveal hidden buttons that require dosee to be running
+                    const hiddenButtons = [
+                        `doseeCaptureScreen`,
+                        `doseeExit`,
+                        `doseeFullScreen`,
+                        `doseeReboot`
+                    ]
+                    hiddenButtons.forEach(id => {
+                        const button = document.getElementById(`${id}`)
+                        if (button !== null)
+                            button.classList.remove(`hide-true`)
+                    })
+                    // auto-align browser tab to the emulation canvas
+                    window.location.href = `#emulator`
+                    // update the canvas and start the emulator
                     splash.setTitle(`Warping to DOS`)
                     attach_script(game_data.emulatorJS)
                 } else {
@@ -693,7 +702,7 @@ window.Module = null
                         ? ((event.loaded / event.total) * 100).toFixed(0)
                         : `100`
                 }% \
-${formatBytes(event.loaded)} of ${formatBytes(event.total)})`
+ ${formatBytes(event.loaded)} of ${formatBytes(event.total)})`
             return `(${formatBytes(event.loaded)})`
         }
 
@@ -781,10 +790,15 @@ ${formatBytes(event.loaded)} of ${formatBytes(event.total)})`
             })
         }
 
+        // Keyboard input event handler
         function keyevent(resolve) {
-            return function(e) {
-                if ((e.keycode || e.which) == 32) {
-                    e.preventDefault()
+            return keyboardEvent => {
+                // Space bar is used here as alternative to a mouse click
+                // to start DOSee
+                if (keyboardEvent.code === `Space`) {
+                    if (DOSee.getMetaContent(`dosee:spacekeystart`) === `false`)
+                        return
+                    keyboardEvent.preventDefault()
                     resolve()
                 }
             }
@@ -975,18 +989,6 @@ ${formatBytes(event.loaded)} of ${formatBytes(event.total)})`
             }
             window.onkeydown = keypress
         }
-
-        /**
-         * Disables the right click menu for the given element.
-         */
-        function disableRightClickContextMenu(element) {
-            element.addEventListener(`contextmenu`, function(e) {
-                if (e.button == 2) {
-                    // Block right-click menu thru preventing default action.
-                    e.preventDefault()
-                }
-            })
-        }
     }
 
     /**
@@ -1052,9 +1054,9 @@ ${formatBytes(event.loaded)} of ${formatBytes(event.total)})`
     }
 
     /**
-    * Searches  for dosbox.conf, and moves it to '/dosbox.conf'
-    so dosbox uses it.
-     */
+     * Searches  for dosbox.conf, and moves it to '/dosbox.conf'
+     so dosbox uses it.
+      */
     function moveConfigToRoot(fs) {
         let dosboxConfPath = null
         // Recursively search for dosbox.conf.

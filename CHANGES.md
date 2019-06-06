@@ -2,6 +2,16 @@
 
 ## Changes and updates
 
+### v1.20
+
+- Added `DOSee` prototype object that is accessible from `window.DOSee`. It is now used to access all the custom DOSee function additions.
+- Added `DOSee.exit()` that will end the emulation and remove all event listeners created by Emscripten.
+- Added `DOSee.canvasResize()` that uses Emscripten to resize the canvas element.
+- Added `dosee:spacekeystart` meta element to disable the Space key to start DOSee feature.
+- Removed the right-click menu over the canvas blocker that was used by The Emularity, there are a couple of screen capture items instead.
+- Isolated the variables and functions in `dosee-init.js` so they do not pollute the `window` global scope.
+- todo: Now requires [npm]() or [Docker]() for installation.
+
 ### v1.13
 
 - Now will read and use `<meta data="dosee:filename">` element.

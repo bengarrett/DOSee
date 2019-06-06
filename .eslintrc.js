@@ -24,16 +24,13 @@ module.exports = {
     },
     globals: {
         BrowserFS: true,
+        DOSee: true,
         DoseeLoader: true,
         Emulator: true,
         ES6Promise: true,
+        FileSaver: true,
         FS: true,
-        getMetaContent: true,
         Module: true,
-        newQueryString: true,
-        Promise: true,
-        saveAs: true,
-        setMetaContent: true,
-        storageAvailable: true
+        Promise: true
     }
 }
