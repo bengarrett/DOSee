@@ -35,7 +35,7 @@ Install dependencies.
 
 ```
 cd DOSee
-npm install --production --no-optional -only=prod
+npm install --only=prod
 ```
 
 Run a local web server.
