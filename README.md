@@ -62,16 +62,10 @@ git clone https://github.com/bengarrett/DOSee.git
 Build and run the DOSee container.
 
 ```
-docker-compose up -d
+docker-compose up
 ```
 
 Point a web browser to http://localhost:5550
-
-To shutdown the DOSee container.
-
-```
-docker-compose down
-```
 
 ### Usage & customisations
 
