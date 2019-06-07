@@ -133,7 +133,13 @@
 
     // Checks for and provides feedback for missing dependencies after all other JS has been loaded
     window.addEventListener(`load`, () => {
-        const checks = [`BrowserFS`, `FileSaver`]
+        const checks = [
+            `BrowserFS`,
+            `DOSee`,
+            `DoseeLoader`,
+            `FileSaver`,
+            `Module`
+        ]
         let pass = true
         checks.forEach(objName => {
             if (typeof window[objName] === `undefined`) {
