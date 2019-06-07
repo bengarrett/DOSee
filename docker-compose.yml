@@ -2,6 +2,10 @@
 #
 # Run: docker-compose up -d
 # Access in browser: http://localhost:5550
+#
+# Shell access: docker-compose exec web sh
+# Reset containers: docker-compose rm
+# Reset volumes: docker-compose down --volumes
 
 version: "3.2"
 
@@ -17,13 +21,17 @@ services:
     # expose nginx web port 80 as port 5550
     ports:
       - "5550:80"
+    depends_on:
+      - npm
     volumes:
       # DOSee dependencies installed by the npm service
       - type: volume
         source: node_modules
-        target: /home/node/dosee/node_modules
-      # bind your local DOSee directory to nginx's html hosting path
-      - .:/usr/share/nginx/html
+        target: /usr/share/nginx/html/node_modules
+      # bind your local cloned DOSee repo to nginx's html hosting path
+      - type: bind
+        source: .
+        target: /usr/share/nginx/html
 
   npm:
     labels:
@@ -34,21 +42,20 @@ services:
     container_name: "dosee-npm"
     environment:
       - NODE_ENV=production
-    # volumes can only share directories, not individual files
     volumes:
-      # this volume is will be shared with the `web` service
-      #- node_modules:/home/node/dosee/node_modules
+      # this `node_modules` volume is will be shared with the `web` service
       - type: volume
         source: node_modules
         target: /home/node/dosee/node_modules
-      # we only want package.json but everything within `.` is copied to the volume `/home/node/dosee`
-      - .:/home/node/dosee
+      # share the Dosee repo package.json with this container
+      - type: bind
+        source: ./package.json
+        target: /home/node/dosee/package.json
     working_dir: /home/node/dosee
     # `npm install ...` installs dependencies listed in package.json
-    # `rm ...` deletes everything in /home/node/dosee except `node_modules`
-    # `tail -f /dev/null` optional, keeps the container alive
-    command: /bin/sh -c 'npm install --only=prod && rm -Rf disk_drives/ dos_programs/ emulator/ images/ && rm -f . && tail -f /dev/null'
-#    command: /bin/sh -c 'npm install --only=prod && rm -R !(node_modules)'
+    # `; tail -f /dev/null` optional, append to keep the container alive and enable shell access
+    command: /bin/sh -c 'npm install --only=prod; ls -l node_modules'
+    #; tail -f /dev/null'
 
 volumes: 
   node_modules:
