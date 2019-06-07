@@ -1,7 +1,7 @@
 # DOSee Docker compose to load an nginx webhost server
 #
 # Run: docker-compose up -d
-# Access in browser: http://localhost:5555
+# Access in browser: http://localhost:5550
 
 version: "3.2"
 
@@ -16,7 +16,7 @@ services:
     volumes:
       - .:/usr/share/nginx/html:ro
 
-    # expose nginx web port 80 as port 5555
+    # expose nginx web port 80 as port 5550
     ports:
-      - "5555:80"
+      - "5550:80"
     
