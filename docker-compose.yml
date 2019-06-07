@@ -19,7 +19,9 @@ services:
       - "5550:80"
     volumes:
       # DOSee dependencies installed by the npm service
-      - node_modules:/usr/share/nginx/html/node_modules
+      - type: volume
+        source: node_modules
+        target: /home/node/dosee/node_modules
       # bind your local DOSee directory to nginx's html hosting path
       - .:/usr/share/nginx/html
 
@@ -35,7 +37,10 @@ services:
     # volumes can only share directories, not individual files
     volumes:
       # this volume is will be shared with the `web` service
-      - node_modules:/home/node/dosee/node_modules
+      #- node_modules:/home/node/dosee/node_modules
+      - type: volume
+        source: node_modules
+        target: /home/node/dosee/node_modules
       # we only want package.json but everything within `.` is copied to the volume `/home/node/dosee`
       - .:/home/node/dosee
     working_dir: /home/node/dosee
