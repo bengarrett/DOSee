@@ -144,8 +144,9 @@
         if (!pass) {
             // error link
             const a = document.createElement(`a`)
-            a.href = `https://github.com/bengarrett/DOSee`
+            a.href = `https://github.com/bengarrett/DOSee#readme`
             a.textContent = `Installation instructions?`
+            a.style.backgroundColor = `black`
             a.style.color = `white`
             a.style.textDecoration = `underline`
             // error message
