@@ -158,9 +158,13 @@
             error.textContent = errMsg
             error.appendChild(a)
             // console output
-            throw new Error(
-                `DOSee has aborted as it is missing the above dependencies.`
-            )
+            try {
+                throw new Error(
+                    `DOSee has aborted as it is missing the above dependencies.`
+                )
+            } catch (err) {
+                console.error(err)
+            }
         }
     })
 })()
