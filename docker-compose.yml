@@ -8,15 +8,42 @@ version: "3.2"
 services:
 
   web:
+    labels:
+      net.dosee.description: "DOSee - A MS-DOS emulator for the web"
+    container_name: "dosee"
     # nginx stable is used due to its less frequent updates
     # alpine is a tiny linux distribution
     image: nginx:stable-alpine
-
-    # read-only mount this local root directory to the nginx html share
-    volumes:
-      - .:/usr/share/nginx/html:ro
-
     # expose nginx web port 80 as port 5550
     ports:
       - "5550:80"
-    
+    volumes:
+      # DOSee dependencies installed by the npm service
+      - node_modules:/usr/share/nginx/html/node_modules
+      # bind your local DOSee directory to nginx's html hosting path
+      - .:/usr/share/nginx/html
+
+  npm:
+    labels:
+      net.defacto2.description: "DOSee npm dependencies"
+    image: "node:12-alpine"
+    # Docker on Windows can only handle root users
+    #user: "node"
+    container_name: "dosee-npm"
+    environment:
+      - NODE_ENV=production
+    # volumes can only share directories, not individual files
+    volumes:
+      # this volume is will be shared with the `web` service
+      - node_modules:/home/node/dosee/node_modules
+      # we only want package.json but everything within `.` is copied to the volume `/home/node/dosee`
+      - .:/home/node/dosee
+    working_dir: /home/node/dosee
+    # `npm install ...` installs dependencies listed in package.json
+    # `rm ...` deletes everything in /home/node/dosee except `node_modules`
+    # `tail -f /dev/null` optional, keeps the container alive
+    command: /bin/sh -c 'npm install --only=prod && rm -Rf disk_drives/ dos_programs/ emulator/ images/ && rm -f . && tail -f /dev/null'
+#    command: /bin/sh -c 'npm install --only=prod && rm -R !(node_modules)'
+
+volumes: 
+  node_modules:
