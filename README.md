@@ -38,9 +38,10 @@ cd DOSee
 npm install --only=prod
 ```
 
-Run a local web server.
+Install and run a local web server.
 
 ```
+npm install -g http-server
 http-server -p 5550
 ```
 
