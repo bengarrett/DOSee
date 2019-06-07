@@ -68,8 +68,6 @@ When set to `true` it tells DOSee to mount a collection of Gravis Ultrasound aud
 
 This should adjust the pixel width and height of the EM-DOSBox emulator but it seems to have no noticeable effect.
 
-todo: implement using DOSee.resize()
-
 #### Sample programs
 
 There are three additional sample programs included in this repository that you can try out. In the [index.html](index.html) update the following `<meta>` elements.
