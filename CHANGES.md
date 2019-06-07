@@ -11,6 +11,7 @@
 - Added `dosee:spacekeystart` meta element to disable the Space key to start DOSee feature.
 - Removed the right-click menu over the canvas blocker that was used by The Emularity, there are a couple of screen capture items instead.
 - Isolated the variables and functions in `dosee-init.js` so they do not pollute the `window` global scope.
+- Now gracefully handles missing, expected form elements.
 
 ### v1.13
 

@@ -19,6 +19,7 @@ const menuBtns = new Map()
 // Create mouse click events for each menu button
 function monitorTabs() {
     menuBtns.forEach(button => {
+        if (button === null) return
         button.addEventListener(`click`, event => {
             const srcId = event.srcElement.id
             // replace the trailing `Btn` from the srcElement Id with `Tab`

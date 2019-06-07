@@ -64,13 +64,8 @@
     DOSee.fullScreen = () => {
         if (typeof document.fullscreenElement === `undefined`) return
         const element = document.getElementById(`doseeCanvas`)
-        if (!element.fullscreenElement) {
-            element.requestFullscreen()
-        } else {
-            if (element.exitFullscreen) {
-                element.exitFullscreen()
-            }
-        }
+        if (!element.fullscreenElement) element.requestFullscreen()
+        else if (element.exitFullscreen) element.exitFullscreen()
     }
 
     // Capture and save the canvas to a PNG image file
@@ -133,20 +128,24 @@
     if (DOSee.storageAvailable(`local`)) {
         // Automatically start DOS emulation
         const autoRun = document.getElementById(`doseeAutoRun`)
-        autoRun.addEventListener(`click`, () => {
-            const chk = autoRun.checked
-            localStorage.setItem(`doseeAutoStart`, chk) // boolean value
-        })
-        const item1 = localStorage.getItem(`doseeAutoStart`)
-        if (item1 === `true`) autoRun.checked = true
+        if (autoRun !== null) {
+            autoRun.addEventListener(`click`, () => {
+                const chk = autoRun.checked
+                localStorage.setItem(`doseeAutoStart`, chk) // boolean value
+            })
+            const item1 = localStorage.getItem(`doseeAutoStart`)
+            if (item1 === `true`) autoRun.checked = true
+        }
         // For sharper DOS ASCII/ANSI text
         const aspect = document.getElementById(`doseeAspect`)
-        const item2 = localStorage.getItem(`doseeAspect`)
-        aspect.addEventListener(`click`, () => {
-            const dosAspect = aspect.checked
-            localStorage.setItem(`doseeAspect`, !dosAspect) // boolean value
-        })
-        if (item2 === `false`) aspect.checked = true
+        if (aspect !== null) {
+            const item2 = localStorage.getItem(`doseeAspect`)
+            aspect.addEventListener(`click`, () => {
+                const dosAspect = aspect.checked
+                localStorage.setItem(`doseeAspect`, !dosAspect) // boolean value
+            })
+            if (item2 === `false`) aspect.checked = true
+        }
         // Scaler engine
         const scaler = document.querySelectorAll(`input[name=dosscale]`)
         scaler.forEach(input => {
@@ -163,27 +162,27 @@
         })
     }
 
-    // Fullscreen button
-    if (typeof document.fullscreenElement === `undefined`) {
+    // Full screen button
+    const fullScreenButton = document.getElementById(`doseeFullScreen`)
+    if (fullScreenButton === null) {
+        // do nothing
+    } else if (typeof document.fullscreenElement === `undefined`) {
         // disable and hide the button if API is not supported by the browser such as in Safari
-        document.getElementById(`doseeFullScreen`).style.display = `none`
+        fullScreenButton.style.display = `none`
     } else {
-        document
-            .getElementById(`doseeFullScreen`)
-            .addEventListener(`click`, DOSee.fullScreen)
+        fullScreenButton.addEventListener(`click`, DOSee.fullScreen)
     }
 
     // Screen capture button
     try {
         if (typeof !!new Blob() !== `undefined`) {
             const button = document.getElementById(`doseeCaptureScreen`)
-            button.addEventListener(`click`, DOSee.screenCapture)
+            if (button !== null)
+                button.addEventListener(`click`, DOSee.screenCapture)
         }
     } catch (err) {
         console.error(err)
     }
-
-    // todo undefined error checks
 
     // Reboot button and links
     document.getElementsByName(`doseeReboot`).forEach(element => {
@@ -191,5 +190,7 @@
     })
 
     // Stop, abort, quit button
-    document.getElementById(`doseeExit`).addEventListener(`click`, DOSee.exit)
+    const exitButton = document.getElementById(`doseeExit`)
+    if (exitButton !== null)
+        return exitButton.addEventListener(`click`, DOSee.exit)
 })()
