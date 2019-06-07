@@ -50,5 +50,4 @@ function resetTabs(defaultTab) {
         } else h2.innerText = `${archive}`
     }
     console.log(`Loaded index.js`)
-    console.log(window)
 })()
