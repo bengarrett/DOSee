@@ -7,64 +7,64 @@ It is easy to customise DOSee to load other MS-DOS programs by using HTML5 `<met
 ```html
 <!-- DOSee initialisation options -->
 <meta
-  name="dosee:gamefilepath"
+  name="dosee:zip:path"
   content="dos_programs/program_4/agi_demo_pack_1.zip"
 />
-<meta name="dosee:startexe" content="sierra.com" />
+<meta name="dosee:run:filename" content="sierra.com" />
 
-<meta name="dosee:capname" content="screenshot.png" />
-<meta name="dosee:utils" content="false" />
-<meta name="dosee:gusaudio" content="false" />
-<meta name="dosee:resolution" content="640, 480" />
+<meta name="dosee:capture:filename" content="screenshot.png" />
+<meta name="dosee:utilities" content="false" />
+<meta name="dosee:audio:gus" content="false" />
+<meta name="dosee:width:height" content="640, 480" />
 ```
 
 #### Required
 
-#### `<meta name="dosee:gamefilepath">`
+#### `<meta name="dosee:zip:path">`
 
-DOSee uses ZIP file archives to simulate a hard disk drive. Any ZIP file provided to _dosee:gamefilepath_ will be mounted by the emulator as MS-DOS drive `C:`. The `C:` drive will be accessible to all DOS commands such as `dir C:` and any included DOS programs available to run.
+DOSee uses ZIP file archives to simulate a hard disk drive. Any ZIP file provided to _dosee:zip:path_ will be mounted by the emulator as MS-DOS drive `C:`. The `C:` drive will be accessible to all DOS commands such as `dir C:` and any included DOS programs available to run.
 
 The meta _content_ attribute must be a relative path from the web root and needs to point to a ZIP file archive.
 
-✓ `<meta name="dosee:gamefilepath" content="dos_programs/example/dosgame.zip" />`
+✓ `<meta name="dosee:zip:path" content="dos_programs/example/dosgame.zip" />`
 
-✗ `<meta name="dosee:gamefilepath" content="/home/me/DOSee/dos_programs/example/dosgame.zip" />`
+✗ `<meta name="dosee:zip:path" content="/home/me/DOSee/dos_programs/example/dosgame.zip" />`
 
-#### `<meta name="dosee:startexe">`
+#### `<meta name="dosee:run:filename">`
 
-The filename of the MS-DOS program DOSee should launch. The program file needs to exist in the ZIP archive provided to _dosee:gamefilepath_.
+The filename of the MS-DOS program DOSee should launch. The program file needs to exist in the ZIP archive provided to _dosee:zip:path_.
 
 DOS usually uses the following file extensions to identify a program: `.exe` `.com` `.bat`. Other than these there is no standard file naming convention to identify which file should be used to launch a piece of DOS software.
 
 If the content is left blank or the filename doesn't exist in the archive, DOSee will launch into an DOS `C:` prompt.
 
-✓ `<meta name="dosee:startexe" content="game.exe" />`
+✓ `<meta name="dosee:run:filename" content="game.exe" />`
 
 #### Optional
 
-#### `<meta name="dosee:capname">`
+#### `<meta name="dosee:capture:filename">`
 
 The filename used by the capture tool to save emulator screenshots. The PNG images should include the `.png` file extension.
 
-✓ `<meta name="dosee:capname" content="game.png" />`
+✓ `<meta name="dosee:capture:filename" content="game.png" />`
 
-✗ `<meta name="dosee:capname" content="game" />`
+✗ `<meta name="dosee:capture:filename" content="game" />`
 
-#### `<meta name="dosee:utils">`
+#### `<meta name="dosee:utilities">`
 
 When set to `true` it tells DOSee to mount a collection of MS-DOS utilities and tools that are accessible from the `U:` drive.
 
-✓ `<meta name="dosee:utils" content="true" />`
+✓ `<meta name="dosee:utilities" content="true" />`
 
-✓ `<meta name="dosee:utils" content="false" />`
+✓ `<meta name="dosee:utilities" content="false" />`
 
 #### Placeholders
 
-#### `<meta name="dosee:gusaudio">`
+#### `<meta name="dosee:audio:gus">`
 
 When set to `true` it tells DOSee to mount a collection of Gravis Ultrasound audio drivers and tools that are accessible from the `G:` drive. These drivers are always loaded by DOSee whenever the Gravis Ultrasound audio option is selected so this should always be left to `false`.
 
-#### `<meta name="dosee:resolution">`
+#### `<meta name="dosee:width:height">`
 
 This should adjust the pixel width and height of the EM-DOSBox emulator but it seems to have no noticeable effect.
 
@@ -75,31 +75,31 @@ There are three additional sample programs included in this repository that you 
 ```html
 <!-- DOSee initialisation options -->
 <meta
-  name="dosee:gamefilepath"
+  name="dosee:zip:path"
   content="dos_programs/program_4/agi_demo_pack_1.zip"
 />
-<meta name="dosee:startexe" content="sierra.com" />
+<meta name="dosee:run:filename" content="sierra.com" />
 ```
 
 Sample program 1 (fastest, VGA, Gravis Ultrasound)
 
 ```html
-<meta name="dosee:gamefilepath" content="dos_programs/program_1/df2intro.zip" />
-<meta name="dosee:startexe" content="DF2.EXE" />
+<meta name="dosee:zip:path" content="dos_programs/program_1/df2intro.zip" />
+<meta name="dosee:run:filename" content="DF2.EXE" />
 ```
 
 Sample program 2 (fastest, VGA, Gravis Ultrasound)
 
 ```html
-<meta name="dosee:gamefilepath" content="dos_programs/program_2/df2.zip" />
-<meta name="dosee:startexe" content="df2.exe" />
+<meta name="dosee:zip:path" content="dos_programs/program_2/df2.zip" />
+<meta name="dosee:run:filename" content="df2.exe" />
 ```
 
 Sample program 3 (fastest, VGA, Sound Blaster 16)
 
 ```html
-<meta name="dosee:gamefilepath" content="dos_programs/program_3/hyb605.zip" />
-<meta name="dosee:startexe" content="hyb605.exe" />
+<meta name="dosee:zip:path" content="dos_programs/program_3/hyb605.zip" />
+<meta name="dosee:run:filename" content="hyb605.exe" />
 ```
 
 #### Add new software example
@@ -121,8 +121,8 @@ Update the DOSee [index.html](index.html) to launch the demo and enjoy the confu
 
 ```html
 <!-- DOSee initialisation options -->
-<meta name="dosee:gamefilepath" content="dos_programs/program_5/sq3-demo.zip" />
-<meta name="dosee:startexe" content="SQ3DEMO.BAT" />
+<meta name="dosee:zip:path" content="dos_programs/program_5/sq3-demo.zip" />
+<meta name="dosee:run:filename" content="SQ3DEMO.BAT" />
 ```
 
 ![DOSee preview](images/sq3demo.png)

@@ -15,13 +15,13 @@
 
     // Load configurations that are obtained from the <meta name="dosee:"> HTML tags
     const config = new Map()
-        .set(`exe`, DOSee.getMetaContent(`dosee:startexe`))
+        .set(`exe`, DOSee.getMetaContent(`dosee:run:filename`))
         .set(`filename`, DOSee.getMetaContent(`dosee:filename`))
-        .set(`gus`, DOSee.getMetaContent(`dosee:gusaudio`))
-        .set(`path`, DOSee.getMetaContent(`dosee:gamefilepath`))
-        .set(`res`, DOSee.getMetaContent(`dosee:resolution`))
+        .set(`gus`, DOSee.getMetaContent(`dosee:audio:gus`))
+        .set(`path`, DOSee.getMetaContent(`dosee:zip:path`))
+        .set(`res`, DOSee.getMetaContent(`dosee:width:height`))
         .set(`start`, false)
-        .set(`utils`, DOSee.getMetaContent(`dosee:utils`))
+        .set(`utils`, DOSee.getMetaContent(`dosee:utilities`))
 
     // Extract and save the filename from config path
     {
@@ -41,13 +41,13 @@
         const audio = urlParams.get(`dosaudio`)
         if (audio === `gus`) {
             config.set(`gus`, `true`)
-            DOSee.setMetaContent(`dosee:gusaudio`, `true`)
+            DOSee.setMetaContent(`dosee:audio:gus`, `true`)
         }
         // DOSee Utilities (dosutils=true)
         const utils = urlParams.get(`dosutils`)
         if (utils === `true`) {
             config.set(`utils`, `true`)
-            DOSee.setMetaContent(`dosee:utils`, `true`)
+            DOSee.setMetaContent(`dosee:utilities`, `true`)
         }
     }
 

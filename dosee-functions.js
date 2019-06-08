@@ -78,7 +78,7 @@
         // note: arrow functions do not support `this`
         const button = this
         const canvas = document.getElementById(`doseeCanvas`)
-        const filename = DOSee.getMetaContent(`dosee:capname`)
+        const filename = DOSee.getMetaContent(`dosee:capture:filename`)
         // the default .toBlob() saved image type is image/png
         // but it can be swapped: https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toBlob
         canvas.toBlob(blob => {

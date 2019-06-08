@@ -2,6 +2,17 @@
 
 ## Changes and updates
 
+### v1.30
+
+Introduced breaking meta element name changes.
+
+- `dosee:capname` &rarr; `dosee:capture:filename`
+- `dosee:gamefilepath` &rarr; `dosee:zip:path`
+- `dosee:gusaudio` &rarr; `dosee:audio:gus`
+- `dosee:resolution` &rarr; `dosee:width:height`
+- `dosee:startexe` &rarr; `dosee:run:filename`
+- `dosee:utils` &rarr; `dosee:utilities`
+
 ### v1.20
 
 - Now requires [npm](https://www.npmjs.com/get-npm) or [Docker](https://www.docker.com/products/docker-desktop) for installation as the installation scripts have been removed.
