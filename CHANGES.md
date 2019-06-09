@@ -13,8 +13,9 @@ Introduced breaking meta element name changes.
 - `dosee:startexe` &rarr; `dosee:run:filename`
 - `dosee:utils` &rarr; `dosee:utilities`
 
-* Fixed glyph display issues on macOS
 * Help tab is implemented and functional
+* Fixed glyph display issues on macOS
+* Fixed `DOSee.newQueryString()` incorrectly handling URLs that lacked `#` symbols
 
 ### v1.20
 

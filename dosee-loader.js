@@ -16,8 +16,8 @@
 window.Module = null
 ;(Promise => {
     const version = new Map()
-        .set(`date`, new Date(`6,Jun,2019`))
-        .set(`minor`, `20.0`)
+        .set(`date`, new Date(`9,Jun,2019`))
+        .set(`minor`, `30`)
         .set(`major`, `1`)
         .set(`display`, ``)
     version.set(
@@ -234,6 +234,7 @@ window.Module = null
 
         // emulation sound cards
         const sound = urlParams.get(`dosaudio`)
+        console.log(`SOUND ======> `, sound)
         switch (sound) {
             case `none`:
                 verbose += ` No audio.`

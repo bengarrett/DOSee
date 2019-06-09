@@ -50,10 +50,13 @@
     // Extracts the URL query string and run it through the URLSearchParams API
     DOSee.newQueryString = () => {
         const wlh = window.location.href
-        // the API works best with only the URL query string rather than the whole URL
-        return new URLSearchParams(
-            wlh.slice(wlh.indexOf(`?`), wlh.indexOf(`#`))
-        )
+        const start = wlh.indexOf(`?`)
+        const end = wlh.indexOf(`#`)
+        // URLSearchParams API works best with only the URL query string rather than the whole URL
+        // slice string value between ? and #
+        if (end >= 0) return new URLSearchParams(wlh.slice(start, end))
+        // slice string value starting at ? to the end of the URL
+        else return new URLSearchParams(wlh.slice(start))
     }
 
     // Updates the content data stored in a HTML <meta> tag
