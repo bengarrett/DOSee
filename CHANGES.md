@@ -16,6 +16,8 @@ Introduced breaking meta element name changes.
 * Help tab is implemented and functional
 * Fixed glyph display issues on macOS
 * Fixed `DOSee.newQueryString()` incorrectly handling URLs that lacked `#` symbols
+* Replaced depreciated `onkeydown.which` property usage with `onkeydown.key`
+* Navigation keyboard keys will be restored if DOSee has been stopped
 
 ### v1.20
 

@@ -234,7 +234,6 @@ window.Module = null
 
         // emulation sound cards
         const sound = urlParams.get(`dosaudio`)
-        console.log(`SOUND ======> `, sound)
         switch (sound) {
             case `none`:
                 verbose += ` No audio.`
@@ -990,16 +989,35 @@ window.Module = null
         }
 
         // Don't allow the arrow keys, PgUp/PgDn, Home or End keys to affect the page position
-        // TODO: release these when STOP has been hit
         function blockNavigationKeys() {
-            function keypress(e) {
-                if (e.which >= 33 && e.which <= 40) {
-                    e.preventDefault()
-                    return false
+            function blockKeys(e) {
+                if (typeof Module === `undefined`) return
+                // cancel this preventDefault() event listener if EM-DOSBox has been aborted
+                if (
+                    typeof window.ABORT === `boolean` &&
+                    window.ABORT === true
+                ) {
+                    document.removeEventListener(`keydown`, blockKeys)
+                }
+                // monitor keyboard key presses
+                // list of e.key values
+                // https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values#Navigation_keys
+                switch (e.key) {
+                    case `ArrowDown`:
+                    case `ArrowLeft`:
+                    case `ArrowRight`:
+                    case `ArrowUp`:
+                    case `End`:
+                    case `Home`:
+                    case `PageDown`:
+                    case `PageUp`:
+                        // Blocks the browser's default key press handling
+                        e.preventDefault()
+                        return false
                 }
                 return true
             }
-            window.onkeydown = keypress
+            document.addEventListener(`keydown`, blockKeys)
         }
     }
 
