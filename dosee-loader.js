@@ -561,8 +561,21 @@ window.Module = null
             function loadBranding() {
                 if (!game_data || splash.failed_loading) return null
                 if (options.waitAfterDownloading) {
-                    return new Promise(function(resolve) {
-                        splash.setTitle(`🖰 click to start`)
+                    return new Promise(resolve => {
+                        let title = `🖰 click to start`
+                        // update title based on the browser platform
+                        switch (navigator.platform.slice(0, 3).toLowerCase()) {
+                            case `mac`: // macOS default font doesn't display the two-button-mouse
+                                title = `click to start`
+                                break
+                            case `and`: // android
+                            case `ipa`: // ipad
+                            case `iph`: // iphone
+                            case `ipo`: // ipod
+                                title = `tap to start`
+                                break
+                        }
+                        splash.setTitle(`${title}`)
                         splash.spinning = false
                         // stashes these event listeners so that we can remove them after
                         window.addEventListener(
@@ -583,8 +596,7 @@ window.Module = null
                 canvas.removeEventListener(`click`, c)
                 splash.splashElt.removeEventListener(`click`, c)
 
-                // Don't let arrow, pg up/down, home, end affect page position
-                blockSomeKeys()
+                blockNavigationKeys()
                 setupFullScreen()
 
                 // Emscripten doesn't use the proper prefixed functions for fullscreen requests,
@@ -972,14 +984,13 @@ window.Module = null
         }
 
         this.requestFullScreen = function() {
+            console.log(`FULLSCREEN REQUEST`)
             Module.requestFullScreen(1, 0)
         }
 
-        /**
-         * Prevents page navigation keys such as page up/page down from
-         * moving the page while the user is playing.
-         */
-        function blockSomeKeys() {
+        // Don't allow the arrow keys, PgUp/PgDn, Home or End keys to affect the page position
+        // TODO: release these when STOP has been hit
+        function blockNavigationKeys() {
             function keypress(e) {
                 if (e.which >= 33 && e.which <= 40) {
                     e.preventDefault()

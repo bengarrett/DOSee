@@ -47,7 +47,8 @@ function resetTabs(defaultTab) {
         const archive = `${DOSee.getMetaContent(`dosee:zip:path`)}`
         const exe = `${DOSee.getMetaContent(`dosee:run:filename`)}`
         if (exe.length > 0) {
-            h2.innerText = `${exe} ⭠ ${archive}`
+            // char-code 8592 is a leftward arrow
+            h2.innerText = `${exe} ${String.fromCharCode(8592)} ${archive}`
         } else h2.innerText = `${archive}`
     }
     console.log(`Loaded index.js`)

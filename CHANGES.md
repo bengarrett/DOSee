@@ -13,6 +13,8 @@ Introduced breaking meta element name changes.
 - `dosee:startexe` &rarr; `dosee:run:filename`
 - `dosee:utils` &rarr; `dosee:utilities`
 
+* Fixed glyph display issues on macOS
+
 ### v1.20
 
 - Now requires [npm](https://www.npmjs.com/get-npm) or [Docker](https://www.docker.com/products/docker-desktop) for installation as the installation scripts have been removed.
