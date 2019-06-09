@@ -23,7 +23,11 @@
 
     // Aborts DOSee and cleans up its event handlers
     DOSee.exit = () => {
-        if (typeof Module === `undefined`) return
+        if (
+            typeof Module === `undefined` ||
+            typeof window.exitRuntime === `undefined`
+        )
+            return
         // Remove all the event listeners created by EMscripten
         // to restore mouse and keyboard usage.
         window.exitRuntime()
