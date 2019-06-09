@@ -469,7 +469,7 @@ window.Module = null
             }
             let k, c, game_data
             setupSplash(canvas, splash)
-            drawsplash()
+            drawSplash()
 
             let loading
             if (typeof loadFiles === `function`) {
@@ -916,7 +916,7 @@ window.Module = null
             return [titleCell, statusCell]
         }
 
-        const drawsplash = function() {
+        const drawSplash = function() {
             canvas.setAttribute(`moz-opaque`, ``)
             if (!splash.splashimg.src) {
                 splash.splashimg.src = `${config.get(`splashPath`)}`
