@@ -14,6 +14,7 @@ Introduced breaking meta element name changes.
 - `dosee:utils` &rarr; `dosee:utilities`
 
 * Fixed glyph display issues on macOS
+* Help tab is implemented and functional
 
 ### v1.20
 

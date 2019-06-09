@@ -41,8 +41,8 @@ function resetTabs(defaultTab) {
 (() => {
     monitorTabs()
     resetTabs(`hardwareTab`)
+    // set the <H2> element to show the running program and archive filename
     {
-        // set the <H2> element to show the running program and archive filename
         const h2 = document.getElementById(`doseeH2`)
         const archive = `${DOSee.getMetaContent(`dosee:zip:path`)}`
         const exe = `${DOSee.getMetaContent(`dosee:run:filename`)}`
@@ -50,6 +50,21 @@ function resetTabs(defaultTab) {
             // char-code 8592 is a leftward arrow
             h2.innerText = `${exe} ${String.fromCharCode(8592)} ${archive}`
         } else h2.innerText = `${archive}`
+    }
+    // Update help tab example
+    {
+        const path = DOSee.getMetaContent(`dosee:zip:path`)
+        const na = document.getElementById(`helpTabNA`)
+        switch (path) {
+            case `dos_programs/program_4/agi_demo_pack_1.zip`:
+                document
+                    .getElementById(`helpProgram_4`)
+                    .classList.remove(`hide`)
+                na.classList.add(`hide`)
+                break
+            default:
+                na.classList.remove(`hide`)
+        }
     }
     console.log(`Loaded index.js`)
 })()

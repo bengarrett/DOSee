@@ -1,10 +1,18 @@
-.radio-inline {
-  white-space: nowrap;
-}
-
 #doseeContainer > div {
   min-width: 640px;
   min-height: 480px;
   background-color: #000;
   border: 10px solid #000;
+}
+
+#helpTab > .hide {
+  display: none;
+}
+
+.radio-inline {
+  white-space: nowrap;
+}
+
+span.asterisk {
+  color: red;
 }
