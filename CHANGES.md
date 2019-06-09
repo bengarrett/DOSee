@@ -14,6 +14,7 @@ Introduced breaking meta element name changes.
 - `dosee:utils` &rarr; `dosee:utilities`
 
 * Help tab is implemented and functional
+* Added a browser protocol check and user notification to handle [some cross-origin request issues](https://github.com/bengarrett/DOSee/issues/1)
 * Fixed glyph display issues on macOS
 * Fixed `DOSee.newQueryString()` incorrectly handling URLs that lacked `#` symbols
 * Replaced depreciated `onkeydown.which` property usage with `onkeydown.key`

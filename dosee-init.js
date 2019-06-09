@@ -87,6 +87,53 @@
         )
     }
 
+    // Check the browser protocol that DOSee is hosted on
+    // Modern browsers to not permit the loading of web resources using XMLHttpRequest()
+    // over `file:///` or `ftp://` as they do not support Cross-origin resource sharing.
+    // See: https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
+    const protocolCheck = () => {
+        const url = new URL(window.location.href)
+        switch (url.protocol) {
+            case `http:`:
+            case `https:`:
+                // valid protocols so do nothing
+                break
+            default:
+                // invalid protocols
+                try {
+                    throw new Error(
+                        `DOSee has aborted as it cannot be hosted over the '${
+                            url.protocol
+                        }' protocol.`
+                    )
+                } catch (err) {
+                    console.error(err)
+                }
+                return errorBox(
+                    `DOSee cannot run over the ${url.protocol} protocol`
+                )
+        }
+    }
+
+    // Displays an dark red error notice with custom `feedback` and a README link
+    const errorBox = feedback => {
+        const a = document.createElement(`a`)
+        a.href = `https://github.com/bengarrett/DOSee#readme`
+        a.textContent = ` setup instructions? `
+        a.style.backgroundColor = `red`
+        a.style.color = `white`
+        a.style.textDecoration = `underline`
+        // error message
+        const errMsg = `${feedback}. Have you follow these `
+        // error containers
+        document.getElementById(`doseeSlowLoad`).style.display = `none`
+        const crash = document.getElementById(`doseeCrashed`)
+        const error = document.getElementById(`doseeError`)
+        crash.classList.remove(`hidden`)
+        error.textContent = errMsg
+        error.appendChild(a)
+    }
+
     // Start DOSee without user interaction
     // NOTE: This may break audio support in Chrome 71+ due to its Web Audio autoplay policy?
     // https://goo.gl/7K7WLu
@@ -133,6 +180,7 @@
 
     // Checks for and provides feedback for missing dependencies after all other JS has been loaded
     window.addEventListener(`load`, () => {
+        protocolCheck()
         const checks = [
             `BrowserFS`,
             `DOSee`,
@@ -148,22 +196,6 @@
             } else console.log(`checking ${objName}, ${typeof window[objName]}`)
         })
         if (!pass) {
-            // error link
-            const a = document.createElement(`a`)
-            a.href = `https://github.com/bengarrett/DOSee#readme`
-            a.textContent = `Installation instructions?`
-            a.style.backgroundColor = `black`
-            a.style.color = `white`
-            a.style.textDecoration = `underline`
-            // error message
-            const errMsg = `DOSee cannot load the required dependencies listed the Browser Console. Did you follow the `
-            // error containers
-            document.getElementById(`doseeSlowLoad`).style.display = `none`
-            const crash = document.getElementById(`doseeCrashed`)
-            const error = document.getElementById(`doseeError`)
-            crash.classList.remove(`hidden`)
-            error.textContent = errMsg
-            error.appendChild(a)
             // console output
             try {
                 throw new Error(
@@ -172,6 +204,10 @@
             } catch (err) {
                 console.error(err)
             }
+            // error link
+            return errorBox(
+                `DOSee cannot load the required dependencies listed the Browser Console.`
+            )
         }
     })
 })()
