@@ -9,6 +9,10 @@
   display: none;
 }
 
+label {
+  white-space: nowrap;
+}
+
 .radio-inline {
   white-space: nowrap;
 }

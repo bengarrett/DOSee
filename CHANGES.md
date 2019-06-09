@@ -18,6 +18,7 @@ Introduced breaking meta element name changes.
 * Fixed `DOSee.newQueryString()` incorrectly handling URLs that lacked `#` symbols
 * Replaced depreciated `onkeydown.which` property usage with `onkeydown.key`
 * Navigation keyboard keys will be restored if DOSee has been stopped
+* Form labels now do not wrap over multiple lines
 
 ### v1.20
 
