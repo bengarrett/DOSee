@@ -124,7 +124,7 @@
         a.style.color = `white`
         a.style.textDecoration = `underline`
         // error message
-        const errMsg = `${feedback}. Have you follow these `
+        const errMsg = `${feedback}. Have you followed these `
         // error containers
         document.getElementById(`doseeSlowLoad`).style.display = `none`
         const crash = document.getElementById(`doseeCrashed`)
