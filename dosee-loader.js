@@ -597,11 +597,10 @@ window.Module = null
                 splash.splashElt.removeEventListener(`click`, c)
 
                 blockNavigationKeys()
-                setupFullScreen()
 
                 // Emscripten doesn't use the proper prefixed functions for fullscreen requests,
                 // so let's map the prefixed versions to the correct function.
-                canvas.requestPointerLock = getpointerlockenabler()
+                canvas.requestPointerLock = getPointerLockEnabler()
 
                 moveConfigToRoot(game_data.fs)
                 Module = init_module(
@@ -641,7 +640,7 @@ window.Module = null
                     window.location.href = `#emulator`
                     // update the canvas and start the emulator
                     splash.setTitle(`Warping to DOS`)
-                    attach_script(game_data.emulatorJS)
+                    attachScript(game_data.emulatorJS)
                 } else {
                     splash.setTitle(`Non-system disk or disk error`)
                 }
@@ -924,7 +923,7 @@ window.Module = null
             }
         }
 
-        function attach_script(js_url) {
+        function attachScript(js_url) {
             if (js_url) {
                 const head = document.getElementsByTagName(`head`)[0]
                 const newScript = document.createElement(`script`)
@@ -934,58 +933,12 @@ window.Module = null
             }
         }
 
-        function getpointerlockenabler() {
+        function getPointerLockEnabler() {
             return (
                 canvas.requestPointerLock ||
                 canvas.mozRequestPointerLock ||
                 canvas.webkitRequestPointerLock
             )
-        }
-
-        function getfullscreenenabler() {
-            return (
-                canvas.webkitRequestFullScreen ||
-                canvas.mozRequestFullScreen ||
-                canvas.requestFullScreen
-            )
-        }
-
-        this.isfullscreensupported = function() {
-            return !!getfullscreenenabler()
-        }
-
-        function setupFullScreen() {
-            const fullScreenChangeHandler = function() {
-                if (
-                    !(
-                        document.mozFullScreenElement ||
-                        document.fullScreenElement
-                    )
-                ) {
-                    resizeCanvas(canvas, scale, cssResolution, aspectRatio)
-                }
-            }
-            if (`onfullscreenchange` in document) {
-                document.addEventListener(
-                    `fullscreenchange`,
-                    fullScreenChangeHandler
-                )
-            } else if (`onmozfullscreenchange` in document) {
-                document.addEventListener(
-                    `mozfullscreenchange`,
-                    fullScreenChangeHandler
-                )
-            } else if (`onwebkitfullscreenchange` in document) {
-                document.addEventListener(
-                    `webkitfullscreenchange`,
-                    fullScreenChangeHandler
-                )
-            }
-        }
-
-        this.requestFullScreen = function() {
-            console.log(`FULLSCREEN REQUEST`)
-            Module.requestFullScreen(1, 0)
         }
 
         // Don't allow the arrow keys, PgUp/PgDn, Home or End keys to affect the page position
