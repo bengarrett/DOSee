@@ -1,8 +1,8 @@
 {
-  "capname": "agi_demo_pack_1.png",
-  "gamefilepath": "dos_programs/program_4/agi_demo_pack_1.zip",
-  "gusaudio": "false",
-  "resolution": "640, 480",
-  "startexe": "SIERRA.COM",
-  "utils": "false"
+  "capture:filename": "agi_demo_pack_1.png",
+  "zip:path": "dos_programs/program_4/agi_demo_pack_1.zip",
+  "audio:gus": "false",
+  "width:height": "640, 480",
+  "run:filename": "SIERRA.COM",
+  "utilities": "false"
 }

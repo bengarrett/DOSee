@@ -1,8 +1,8 @@
 {
-  "capname": "hyb605.png",
-  "gamefilepath": "dos_programs/program_3/hyb605.zip",
-  "gusaudio": "false",
-  "resolution": "640, 480",
-  "startexe": "hyb605.exe",
-  "utils": "false"
+  "capture:filename": "hyb605.png",
+  "zip:path": "dos_programs/program_3/hyb605.zip",
+  "audio:gus": "false",
+  "width:height": "640, 480",
+  "run:filename": "hyb605.exe",
+  "utilities": "false"
 }
