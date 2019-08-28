@@ -2,6 +2,11 @@
 
 ## Changes and updates
 
+### v1.40
+
+- Added basic offline support using [Workbox](https://workboxjs.org)
+- Rearranged the source files and subdirectories to require a `build` initialisation
+
 ### v1.30
 
 Introduced breaking meta element name changes.

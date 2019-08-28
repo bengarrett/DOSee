@@ -10,13 +10,14 @@
     "browserfs-zipfs-extras": "=1.0.1",
     "canvas-toBlob": "=1.0.0",
     "file-saver-fixed": "=1.3.8",
-    "http-server": "=0.11.1",
-    "mini.css": "=3.0.1"
+    "http-server": "^0.11.1",
+    "mini.css": "^3.0.1"
   },
   "description": "A DOSBox-based MS-DOS emulator for the web",
   "devDependencies": {
     "copyfiles": "^2.1.1",
-    "eslint": "^5.16.0"
+    "eslint": "^5.16.0",
+    "workbox-cli": "^4.3.1"
   },
   "homepage": "https://github.com/bengarrett/DOSee#readme",
   "license": "GPL-3.0-or-later",
@@ -27,7 +28,9 @@
     "url": "git+https://github.com/bengarrett/DOSee.git"
   },
   "scripts": {
-    "copy": "copyfiles -u 1 -s src/**/**/* src/**/* src/* build && copyup -sf node_modules/mini.css/dist/mini-default.css build/css && copyup -sf node_modules/browserfs/dist/browserfs.js node_modules/browserfs-zipfs-extras/dist/browserfs-zipfs-extras.js node_modules/file-saver-fixed/dist/FileSaver.js node_modules/canvas-toBlob/canvas-toBlob.js build/js"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "copy": "copyfiles -u 1 src/**/**/* src/**/* src/* build && copyup -f node_modules/mini.css/dist/mini-default.css build/css && copyup -f node_modules/browserfs/dist/browserfs.js node_modules/browserfs-zipfs-extras/dist/browserfs-zipfs-extras.js node_modules/file-saver-fixed/dist/FileSaver.js node_modules/canvas-toBlob/canvas-toBlob.js build/js",
+    "build": "npm run copy && workbox injectManifest workbox-config.js"
   },
   "version": "1.30.0"
 }
