@@ -10,7 +10,6 @@
 version: "3.2"
 
 services:
-
   web:
     labels:
       net.dosee.description: "DOSee - A MS-DOS emulator for the web"
@@ -30,7 +29,7 @@ services:
         target: /usr/share/nginx/html/node_modules
       # bind your local cloned DOSee repo to nginx's html hosting path
       - type: bind
-        source: .
+        source: ./src
         target: /usr/share/nginx/html
 
   npm:
@@ -57,5 +56,5 @@ services:
     command: /bin/sh -c 'npm install --only=prod; ls -l node_modules'
     #; tail -f /dev/null'
 
-volumes: 
+volumes:
   node_modules:

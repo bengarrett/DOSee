@@ -23,40 +23,21 @@
     <link rel="preload" href="dosee-loader.js" as="script" />
     <link rel="preload" href="index.js" as="script" />
 
-    <link
-      rel="preload"
-      href="node_modules/browserfs/dist/browserfs.js"
-      as="script"
-    />
-    <link
-      rel="preload"
-      href="node_modules/browserfs-zipfs-extras/dist/browserfs-zipfs-extras.js"
-      as="script"
-    />
-    <link
-      rel="preload"
-      href="node_modules/file-saver-fixed/dist/FileSaver.js"
-      as="script"
-    />
-    <link
-      rel="preload"
-      href="node_modules/canvas-toBlob/canvas-toBlob.js"
-      as="script"
-    />
+    <link rel="preload" href="js/browserfs.js" as="script" />
+    <link rel="preload" href="js/browserfs-zipfs-extras.js" as="script" />
+    <link rel="preload" href="js/FileSaver.js" as="script" />
+    <link rel="preload" href="js/canvas-toBlob.js" as="script" />
 
     <!-- JavaScripts -->
     <script defer src="index.js"></script>
     <!-- screen capture -->
-    <script
-      async
-      src="node_modules/file-saver-fixed/dist/FileSaver.js"
-    ></script>
-    <script async src="node_modules/canvas-toBlob/canvas-toBlob.js"></script>
+    <script async src="js/FileSaver.js"></script>
+    <script async src="js/canvas-toBlob.js"></script>
 
     <link rel="stylesheet" href="index.css" />
     <!-- "minimal, responsive, style-agnostic CSS framework" https://minicss.org/docs -->
     <!-- "mini-default.css" can be swapped with "mini-nord.css" or "mini-dark.css" -->
-    <link rel="stylesheet" href="node_modules/mini.css/dist/mini-default.css" />
+    <link rel="stylesheet" href="css/mini-default.css" />
   </head>
 
   <body>
@@ -285,12 +266,9 @@
     <!-- dosee loader -->
     <script src="dosee-loader.js"></script>
     <!-- browserfs -->
-    <script src="node_modules/browserfs/dist/browserfs.js"></script>
+    <script src="js/browserfs.js"></script>
     <!-- browserfs zip filesystem -->
-    <script
-      defer
-      src="node_modules/browserfs-zipfs-extras/dist/browserfs-zipfs-extras.js"
-    ></script>
+    <script defer src="js/browserfs-zipfs-extras.js"></script>
     <!-- dosee functions -->
     <script src="dosee-functions.js"></script>
     <!-- dosee initialisation -->
