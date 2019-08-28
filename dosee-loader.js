@@ -852,6 +852,7 @@ window.Module = null
             }
 
             splash.splashimg.setAttribute(`id`, `doseeSplashImg`)
+            splash.splashimg.setAttribute(`alt`,`DOSee floppy disk logo`)
             splash.splashimg.style.display = `block`
             splash.splashimg.style.marginLeft = `auto`
             splash.splashimg.style.marginRight = `auto`
