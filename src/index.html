@@ -19,9 +19,9 @@
     <meta name="dosee:audio:gus" content="false" />
     <meta name="dosee:width:height" content="640, 480" />
 
-    <link rel="preload" href="dosee-functions.js" as="script" />
-    <link rel="preload" href="dosee-loader.js" as="script" />
-    <link rel="preload" href="index.js" as="script" />
+    <link rel="preload" href="js/dosee-functions.js" as="script" />
+    <link rel="preload" href="js/dosee-loader.js" as="script" />
+    <link rel="preload" href="js/index.js" as="script" />
 
     <link rel="preload" href="js/browserfs.js" as="script" />
     <link rel="preload" href="js/browserfs-zipfs-extras.js" as="script" />
@@ -29,12 +29,12 @@
     <link rel="preload" href="js/canvas-toBlob.js" as="script" />
 
     <!-- JavaScripts -->
-    <script defer src="index.js"></script>
+    <script defer src="js/index.js"></script>
     <!-- screen capture -->
     <script async src="js/FileSaver.js"></script>
     <script async src="js/canvas-toBlob.js"></script>
 
-    <link rel="stylesheet" href="index.css" />
+    <link rel="stylesheet" href="css/index.css" />
     <!-- "minimal, responsive, style-agnostic CSS framework" https://minicss.org/docs -->
     <!-- "mini-default.css" can be swapped with "mini-nord.css" or "mini-dark.css" -->
     <link rel="stylesheet" href="css/mini-default.css" />
@@ -264,14 +264,14 @@
     <!-- they need to be loaded in this sequence and will not work with async or deferred loading -->
 
     <!-- dosee loader -->
-    <script src="dosee-loader.js"></script>
+    <script src="js/dosee-loader.js"></script>
     <!-- browserfs -->
     <script src="js/browserfs.js"></script>
     <!-- browserfs zip filesystem -->
     <script defer src="js/browserfs-zipfs-extras.js"></script>
     <!-- dosee functions -->
-    <script src="dosee-functions.js"></script>
+    <script src="js/dosee-functions.js"></script>
     <!-- dosee initialisation -->
-    <script src="dosee-init.js"></script>
+    <script src="js/dosee-init.js"></script>
   </body>
 </html>

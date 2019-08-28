@@ -2,9 +2,7 @@ node_modules
 package-lock.json
 
 # Hide dependencies
-libs/*.js
-libs/*.css
-libs/*.map
+build
 
 # VSCode
 .vscode/tasks.json
