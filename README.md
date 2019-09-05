@@ -7,7 +7,7 @@
 &nbsp;
 ![GitHub repo size](https://img.shields.io/github/repo-size/bengarrett/dosee?style=flat-square)
 
-#### ☕ [Finding DOSee useful, why not buy me a coffee?](https://www.buymeacoffee.com/4rtEGvUIY)
+#### [If you enjoy DOSee, consider buying me a cup of coffee?](https://www.buymeacoffee.com/4rtEGvUIY) ☕
 
 ## An MS-DOS emulator for the web.
 
