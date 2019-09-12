@@ -23,21 +23,25 @@
     <link rel="preload" href="js/dosee-loader.js" as="script" />
     <link rel="preload" href="js/index.js" as="script" />
 
-    <link rel="preload" href="js/browserfs.js" as="script" />
-    <link rel="preload" href="js/browserfs-zipfs-extras.js" as="script" />
-    <link rel="preload" href="js/FileSaver.js" as="script" />
-    <link rel="preload" href="js/canvas-toBlob.js" as="script" />
+    <link rel="preload" href="js/browserfs/browserfs.min.js" as="script" />
+    <link
+      rel="preload"
+      href="js/browserfs-zipfs-extras/browserfs-zipfs-extras.js"
+      as="script"
+    />
+    <link rel="preload" href="js/file-saver-fix/FileSaver.min.js" as="script" />
+    <link rel="preload" href="js/canvas-toBlob/canvas-toBlob.js" as="script" />
 
     <!-- JavaScripts -->
     <script defer src="js/index.js"></script>
     <!-- screen capture -->
-    <script async src="js/FileSaver.js"></script>
-    <script async src="js/canvas-toBlob.js"></script>
+    <script async src="js/file-saver-fix/FileSaver.min.js"></script>
+    <script async src="js/canvas-toBlob/canvas-toBlob.js"></script>
 
     <link rel="stylesheet" href="css/index.css" />
     <!-- "minimal, responsive, style-agnostic CSS framework" https://minicss.org/docs -->
     <!-- "mini-default.css" can be swapped with "mini-nord.css" or "mini-dark.css" -->
-    <link rel="stylesheet" href="css/mini-default.css" />
+    <link rel="stylesheet" href="css/mini.css/mini-default.min.css" />
   </head>
 
   <body>
@@ -266,9 +270,12 @@
     <!-- dosee loader -->
     <script src="js/dosee-loader.js"></script>
     <!-- browserfs -->
-    <script src="js/browserfs.js"></script>
+    <script src="js/browserfs/browserfs.min.js"></script>
     <!-- browserfs zip filesystem -->
-    <script defer src="js/browserfs-zipfs-extras.js"></script>
+    <script
+      defer
+      src="js/browserfs-zipfs-extras/browserfs-zipfs-extras.js"
+    ></script>
     <!-- dosee functions -->
     <script src="js/dosee-functions.js"></script>
     <!-- dosee initialisation -->
