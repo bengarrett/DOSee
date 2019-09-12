@@ -29,7 +29,7 @@ services:
         target: /usr/share/nginx/html/node_modules
       # bind your local cloned DOSee repo to nginx's html hosting path
       - type: bind
-        source: ./src
+        source: ./build
         target: /usr/share/nginx/html
 
   npm:
