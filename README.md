@@ -1,5 +1,14 @@
 # DOSee
 
+![GitHub](https://img.shields.io/github/license/bengarrett/dosee?style=flat-square)
+&nbsp;
+![GitHub package.json version](https://img.shields.io/github/package-json/v/bengarrett/dosee?style=flat-square)
+![GitHub last commit](https://img.shields.io/github/last-commit/bengarrett/dosee?style=flat-square)
+&nbsp;
+![GitHub repo size](https://img.shields.io/github/repo-size/bengarrett/dosee?style=flat-square)
+
+#### [If you enjoy DOSee, consider buying me a cup of coffee?](https://www.buymeacoffee.com/4rtEGvUIY) ☕
+
 ## An MS-DOS emulator for the web.
 
 DOSee is a front-end for an [MS-DOS](https://en.wikipedia.org/wiki/MS-DOS) emulation ecosystem to use on the web. The text-based MS-DOS was the dominant personal computer platform for much of the 1980s up until the mid-1990s before being superseded by Microsoft Windows. Emulating this platform allows the running of tens of thousands of games, demos and applications from this era to run on a web browser!
