@@ -1,7 +1,7 @@
 # DOSee Docker compose to load an nginx webhost server
 #
 # Run: docker-compose up -d
-# Access in browser: http://localhost:5550
+# Access in a browser: http://localhost:5550
 #
 # Shell access: docker-compose exec web sh
 # Reset containers: docker-compose rm

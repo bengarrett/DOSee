@@ -17,7 +17,6 @@
       content="dos_programs/program_4/agi_demo_pack_1.zip"
     />
     <meta name="dosee:run:filename" content="sierra.com" />
-
     <meta name="dosee:capture:filename" content="screenshot.png" />
     <meta name="dosee:utilities" content="false" />
     <meta name="dosee:audio:gus" content="false" />
@@ -36,6 +35,8 @@
     <link rel="preload" href="js/file-saver-fix/FileSaver.min.js" as="script" />
     <link rel="preload" href="js/canvas-toBlob/canvas-toBlob.js" as="script" />
 
+    <link rel="icon" href="favicon.ico" />
+    <link rel="license" href="//www.gnu.org/licenses/gpl-3.0.en.html" />
     <!-- JavaScripts -->
     <script defer src="js/index.js"></script>
     <!-- screen capture -->
@@ -49,256 +50,288 @@
   </head>
 
   <body>
-    <h2>
-      DOSee
-      <hr />
-      <small>Emulating … <span id="doseeH2">Something</span></small>
-    </h2>
-    <div class="row" id="doseeCrashed">
-      <div class="card fluid error">
-        <p id="doseeError">Oops the emulation crashed?</p>
+    <div>
+      <h2>
+        DOSee
+        <hr />
+        <small>Emulating … <span id="doseeH2">Something</span></small>
+      </h2>
+      <div class="row" id="doseeCrashed">
+        <div class="card fluid error">
+          <p id="doseeError">Oops the emulation crashed?</p>
+        </div>
       </div>
-    </div>
-    <div class="row" id="doseeSlowLoad">
-      <div class="card fluid warning">
-        <p>The emulator is taking a while to load</p>
+      <div class="row" id="doseeSlowLoad">
+        <div class="card fluid warning">
+          <p>The emulator is taking a while to load</p>
+        </div>
       </div>
-    </div>
-    <!-- DOSee canvas -->
-    <div class="row" id="doseeContainer">
-      <div class="card">
-        <canvas id="doseeCanvas" class="rounded"></canvas>
+      <!-- DOSee canvas -->
+      <div class="row" id="doseeContainer">
+        <div class="card">
+          <canvas id="doseeCanvas" class="rounded"></canvas>
+        </div>
       </div>
-    </div>
-    <!-- DOSee UI (menu) -->
-    <header id="doseeTabs">
-      <a href="#doseeTabs" id="hardwareBtn" class="button tabtoggle"
-        >Hardware</a
-      >
-      <a href="#doseeTabs" id="optionsBtn" class="button tabtoggle">Options</a>
-      <a href="#doseeTabs" id="helpBtn" class="button tabtoggle">Help</a>
-      <a href="#doseeTabs" id="doseeFullScreen" class="button">Fullscreen</a>
-      <a href="#doseeTabs" id="doseeCaptureScreen" class="button">Capture</a>
-      <a href="#doseeTabs" name="doseeReboot" class="button">Reboot</a>
-      <a href="#doseeTabs" id="doseeExit" class="button">STOP</a>
-    </header>
-    <form id="hardwareTab">
-      <fieldset>
-        <legend>CPU Speed</legend>
-        <label for="dosspeed2">
-          <input type="radio" name="dosspeed" id="dosspeed2" value="max" />
-          faster (80486)
-        </label>
-        <label for="dosspeed3">
-          <input type="radio" name="dosspeed" id="dosspeed3" value="386" />
-          medium (80386)
-        </label>
-        <label for="dosspeed4">
-          <input type="radio" name="dosspeed" id="dosspeed4" value="8086" />
-          slow (8086)
-        </label>
-        <label for="dosspeed1">
-          <input type="radio" name="dosspeed" id="dosspeed1" value="auto" />
-          <u>automatic</u>
-        </label>
-      </fieldset>
-      <fieldset>
-        <legend>Graphics</legend>
-        <label>
-          <input type="radio" name="dosmachine" id="dosmachine1" value="svga" />
-          SuperVGA
-        </label>
-        <label>
-          <input type="radio" name="dosmachine" id="dosmachine2" value="vga" />
-          <u>VGA</u>
-        </label>
-        <label>
-          <input type="radio" name="dosmachine" id="dosmachine3" value="ega" />
-          EGA
-        </label>
-        <label>
-          <input
-            type="radio"
-            name="dosmachine"
-            id="dosmachine4"
-            value="tandy"
-          />
-          Tandy
-        </label>
-        <label>
-          <input type="radio" name="dosmachine" id="dosmachine5" value="cga" />
-          CGA
-        </label>
-        <label>
-          <input type="radio" name="dosmachine" id="dosmachine6" value="herc" />
-          Hercules
-        </label>
-      </fieldset>
-      <fieldset>
-        <legend>Audio</legend>
-        <label>
-          <input type="radio" name="dosaudio" id="dosaudio1" value="gus" />
-          Gravis Ultrasound
-        </label>
-        <label>
-          <input type="radio" name="dosaudio" id="dosaudio4" value="covox" />
-          Covox
-          <small>also Disney Sound Source/DA Converter</small>
-        </label>
-        <label>
-          <input type="radio" name="dosaudio" id="dosaudio2" value="sb16" />
-          <u>Sound Blaster 16</u>
-        </label>
-        <label>
-          <input type="radio" name="dosaudio" id="dosaudio3" value="sb1" />
-          Sound Blaster 1.0
-        </label>
-        <label>
-          <input type="radio" name="dosaudio" id="dosaudio5" value="none" />
-          none
-        </label>
-      </fieldset>
-      <input type="submit" class="small primary" value="Apply changes" />
-    </form>
-    <form id="optionsTab">
-      <p><a href="#" name="doseeReboot">Reboot to apply changes</a></p>
-      <div>
-        <label>
-          <input type="checkbox" id="doseeAutoRun" /> Automatically start DOS
-          emulation
-        </label>
-      </div>
-      <div>
-        <label>
-          <input type="checkbox" id="doseeAspect" /> Disable aspect correction
-          <small>For sharper DOS ASCII/ANSI text</small>
-        </label>
-      </div>
-      <hr />
-      <fieldset>
-        <legend>SuperVGA real-time graphic effect</legend>
-        <input
-          type="hidden"
-          name="dosmachine"
-          id="passThroughDosmachine"
-          value="svga"
-        />
-        <label>
-          <input type="radio" name="dosscale" id="dosscale0" value="none" />
-          None
-        </label>
-        <br />
-        <label>
-          <input
-            type="radio"
-            name="dosscale"
-            id="dosscale5"
-            value="advinterp3x"
-          />
-          Advanced interpolation
-          <small>advinterp3x</small>
-        </label>
-        <label>
-          <input type="radio" name="dosscale" id="dosscale4" value="hq3x" />
-          High Quality 3 magnification
-          <small>hq3x</small>
-        </label>
-        <br />
-        <label>
-          <input type="radio" name="dosscale" id="dosscale3" value="rgb3x" />
-          RGB
-          <small>rgb3x</small>
-        </label>
-        <label>
-          <input
-            type="radio"
-            name="dosscale"
-            id="dosscale1"
-            value="super2xsai"
-          />
-          Super scale and interpolation
-          <small>super2xsai</small>
-        </label>
-        <label>
-          <input type="radio" name="dosscale" id="dosscale2" value="tv3x" />
-          Television
-          <small>tv3x</small>
-        </label>
-        <br />
+      <!-- DOSee UI (menu) -->
+      <header id="doseeTabs">
+        <a href="#doseeTabs" id="hardwareBtn" class="button tabtoggle"
+          >Hardware</a
+        >
+        <a href="#doseeTabs" id="optionsBtn" class="button tabtoggle"
+          >Options</a
+        >
+        <a href="#doseeTabs" id="helpBtn" class="button tabtoggle">Help</a>
+        <a href="#doseeTabs" id="doseeFullScreen" class="button">Fullscreen</a>
+        <a href="#doseeTabs" id="doseeCaptureScreen" class="button">Capture</a>
+        <a href="#doseeTabs" name="doseeReboot" class="button">Reboot</a>
+        <a href="#doseeTabs" id="doseeExit" class="button">STOP</a>
+      </header>
+      <form id="hardwareTab">
+        <fieldset>
+          <legend>CPU Speed</legend>
+          <label for="dosspeed2">
+            <input type="radio" name="dosspeed" id="dosspeed2" value="max" />
+            faster (80486)
+          </label>
+          <label for="dosspeed3">
+            <input type="radio" name="dosspeed" id="dosspeed3" value="386" />
+            medium (80386)
+          </label>
+          <label for="dosspeed4">
+            <input type="radio" name="dosspeed" id="dosspeed4" value="8086" />
+            slow (8086)
+          </label>
+          <label for="dosspeed1">
+            <input type="radio" name="dosspeed" id="dosspeed1" value="auto" />
+            <u>automatic</u>
+          </label>
+        </fieldset>
+        <fieldset>
+          <legend>Graphics</legend>
+          <label>
+            <input
+              type="radio"
+              name="dosmachine"
+              id="dosmachine1"
+              value="svga"
+            />
+            SuperVGA
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="dosmachine"
+              id="dosmachine2"
+              value="vga"
+            />
+            <u>VGA</u>
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="dosmachine"
+              id="dosmachine3"
+              value="ega"
+            />
+            EGA
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="dosmachine"
+              id="dosmachine4"
+              value="tandy"
+            />
+            Tandy
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="dosmachine"
+              id="dosmachine5"
+              value="cga"
+            />
+            CGA
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="dosmachine"
+              id="dosmachine6"
+              value="herc"
+            />
+            Hercules
+          </label>
+        </fieldset>
+        <fieldset>
+          <legend>Audio</legend>
+          <label>
+            <input type="radio" name="dosaudio" id="dosaudio1" value="gus" />
+            Gravis Ultrasound
+          </label>
+          <label>
+            <input type="radio" name="dosaudio" id="dosaudio4" value="covox" />
+            Covox
+            <small>also Disney Sound Source/DA Converter</small>
+          </label>
+          <label>
+            <input type="radio" name="dosaudio" id="dosaudio2" value="sb16" />
+            <u>Sound Blaster 16</u>
+          </label>
+          <label>
+            <input type="radio" name="dosaudio" id="dosaudio3" value="sb1" />
+            Sound Blaster 1.0
+          </label>
+          <label>
+            <input type="radio" name="dosaudio" id="dosaudio5" value="none" />
+            none
+          </label>
+        </fieldset>
         <input type="submit" class="small primary" value="Apply changes" />
-        <p id="svgaEffectsMsg">
-          Hardware 🡒 Graphics will be changed to <u>SuperVGA</u>
-        </p>
-      </fieldset>
-      <div id="helpBlock">
+      </form>
+      <form id="optionsTab">
+        <p><a href="#" name="doseeReboot">Reboot to apply changes</a></p>
+        <div>
+          <label>
+            <input type="checkbox" id="doseeAutoRun" /> Automatically start DOS
+            emulation
+          </label>
+        </div>
+        <div>
+          <label>
+            <input type="checkbox" id="doseeAspect" /> Disable aspect correction
+            <small>For sharper DOS ASCII/ANSI text</small>
+          </label>
+        </div>
+        <hr />
+        <fieldset>
+          <legend>SuperVGA real-time graphic effect</legend>
+          <input
+            type="hidden"
+            name="dosmachine"
+            id="passThroughDosmachine"
+            value="svga"
+          />
+          <label>
+            <input type="radio" name="dosscale" id="dosscale0" value="none" />
+            None
+          </label>
+          <br />
+          <label>
+            <input
+              type="radio"
+              name="dosscale"
+              id="dosscale5"
+              value="advinterp3x"
+            />
+            Advanced interpolation
+            <small>advinterp3x</small>
+          </label>
+          <label>
+            <input type="radio" name="dosscale" id="dosscale4" value="hq3x" />
+            High Quality 3 magnification
+            <small>hq3x</small>
+          </label>
+          <br />
+          <label>
+            <input type="radio" name="dosscale" id="dosscale3" value="rgb3x" />
+            RGB
+            <small>rgb3x</small>
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="dosscale"
+              id="dosscale1"
+              value="super2xsai"
+            />
+            Super scale and interpolation
+            <small>super2xsai</small>
+          </label>
+          <label>
+            <input type="radio" name="dosscale" id="dosscale2" value="tv3x" />
+            Television
+            <small>tv3x</small>
+          </label>
+          <br />
+          <input type="submit" class="small primary" value="Apply changes" />
+          <p id="svgaEffectsMsg">
+            Hardware 🡒 Graphics will be changed to <u>SuperVGA</u>
+          </p>
+        </fieldset>
+        <div id="helpBlock">
+          <p>
+            <span class="icon-help"></span>
+            <a href="//www.dosbox.com/wiki/Scaler"
+              >Graphic effect comparisons</a
+            >
+          </p>
+        </div>
+      </form>
+      <form id="helpTab">
+        <div id="helpProgram_4" class="hide">
+          <h4>Sierra - AGI Demo Pack 1</h4>
+          <p>Released: 1987</p>
+          <p>
+            Recommended hardware:
+            <a href="?dosspeed=386&dosmachine=tandy&dosaudio=none"
+              >CPU medium, Tandy graphics, no audio</a
+            ><span class="asterisk">*</span><br />
+            <small
+              ><span class="asterisk">*</span> audio will use an emulated
+              internal speaker</small
+            >
+          </p>
+        </div>
+        <div id="helpTabNA"><p>No help available</p></div>
+      </form>
+      <footer>
+        © 2019 - Ben Garrett |
+        <a href="//github.com/bengarrett/DOSee">GitHub</a>
         <p>
-          <span class="icon-help"></span>
-          <a href="//www.dosbox.com/wiki/Scaler">Graphic effect comparisons</a>
-        </p>
-      </div>
-    </form>
-    <form id="helpTab">
-      <div id="helpProgram_4" class="hide">
-        <h4>Sierra - AGI Demo Pack 1</h4>
-        <p>Released: 1987</p>
-        <p>
-          Recommended hardware:
-          <a href="?dosspeed=386&dosmachine=tandy&dosaudio=none"
-            >CPU medium, Tandy graphics, no audio</a
-          ><span class="asterisk">*</span><br />
           <small
-            ><span class="asterisk">*</span> audio will use an emulated internal
-            speaker</small
+            >DOSee <span id="doseeVersion"></span> built on
+            <a href="//github.com/db48x/emularity">The Emularity</a>,
+            <a href="//github.com/dreamlayers/em-dosbox">EM-DOSBox</a> and
+            <a href="//www.dosbox.com">DOSBox</a>. Capture and save function
+            uses
+            <a href="//github.com/eligrey/FileSaver.js">FileSaver.js</a>.</small
           >
         </p>
-      </div>
-      <div id="helpTabNA"><p>No help available</p></div>
-    </form>
-    <footer>
-      © 2019 - Ben Garrett |
-      <a href="//github.com/bengarrett/DOSee">GitHub</a>
-      <p>
-        <small
-          >DOSee <span id="doseeVersion"></span> built on
-          <a href="//github.com/db48x/emularity">The Emularity</a>,
-          <a href="//github.com/dreamlayers/em-dosbox">EM-DOSBox</a> and
-          <a href="//www.dosbox.com">DOSBox</a>. Capture and save function uses
-          <a href="//github.com/eligrey/FileSaver.js">FileSaver.js</a>.</small
-        >
-      </p>
-    </footer>
+      </footer>
 
-    <!-- these javascripts are placed at end of the page for a better user load page experience -->
-    <!-- they need to be loaded in this sequence and will not work with async or deferred loading -->
+      <!-- these javascripts are placed at end of the page for a better user load page experience -->
+      <!-- they need to be loaded in this sequence and will not work with async or deferred loading -->
 
-    <!-- dosee loader -->
-    <script src="js/dosee-loader.js"></script>
-    <!-- browserfs -->
-    <script src="js/browserfs/browserfs.min.js"></script>
-    <!-- browserfs zip filesystem -->
-    <script
-      defer
-      src="js/browserfs-zipfs-extras/browserfs-zipfs-extras.js"
-    ></script>
-    <!-- dosee functions -->
-    <script src="js/dosee-functions.js"></script>
-    <!-- dosee initialisation -->
-    <script src="js/dosee-init.js"></script>
-    <script>
-      if ("serviceWorker" in navigator) {
-        window.addEventListener("load", () => {
-          navigator.serviceWorker
-            .register("/sw.js")
-            .then(registration => {
-              console.log(
-                `Service Worker registered! Scope: ${registration.scope}`
-              )
-            })
-            .catch(err => {
-              console.log(`Service Worker registration failed: ${err}`)
-            })
-        })
-      }
-    </script>
+      <!-- dosee loader -->
+      <script src="js/dosee-loader.js"></script>
+      <!-- browserfs -->
+      <script src="js/browserfs/browserfs.min.js"></script>
+      <!-- browserfs zip filesystem -->
+      <script
+        defer
+        src="js/browserfs-zipfs-extras/browserfs-zipfs-extras.js"
+      ></script>
+      <!-- dosee functions -->
+      <script src="js/dosee-functions.js"></script>
+      <!-- dosee initialisation -->
+      <script src="js/dosee-init.js"></script>
+      <script>
+        if ("serviceWorker" in navigator) {
+          window.addEventListener("load", () => {
+            navigator.serviceWorker
+              .register("/sw.js")
+              .then(registration => {
+                console.log(
+                  `Service Worker registered! Scope: ${registration.scope}`
+                )
+              })
+              .catch(err => {
+                console.log(`Service Worker registration failed: ${err}`)
+              })
+          })
+        }
+      </script>
+    </div>
   </body>
 </html>

@@ -1,3 +1,13 @@
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+body > div {
+  max-width: 800px;
+}
+
 #doseeContainer > div {
   min-width: 640px;
   min-height: 480px;

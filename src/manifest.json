@@ -1,6 +1,12 @@
 {
   "short_name": "DOSee",
   "name": "DOSee",
+  "description": "A DOSBox-based, MS-DOS emulator for the web.",
+  "categories": ["emulation", "msdos", "retro"],
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "white",
+  "theme_color": "#1524eb",
   "icons": [
     {
       "src": "/images/dosee-icon-192x192.png",
@@ -13,9 +19,11 @@
       "sizes": "512x512"
     }
   ],
-  "start_url": "/",
-  "background_color": "white",
-  "display": "standalone",
-  "scope": "/maps/",
-  "theme_color": "#1524eb"
+  "screenshots": [
+    {
+      "src": "/images/preview.png",
+      "sizes": "719x936",
+      "type": "image/png"
+    }
+  ]
 }

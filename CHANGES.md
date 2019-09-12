@@ -4,8 +4,11 @@
 
 ### v1.40
 
-- Added basic offline support using [Workbox](https://workboxjs.org)
+- Made DOSee into a [Progressive Web App](https://developers.google.com/web/progressive-web-apps/desktop) that allows installation to a local operating system.
+- Added basic offline support using [Workbox](https://workboxjs.org).
 - Rearranged the source files and subdirectories to require a `build` initialisation
+- Changed page layout to center-align the canvas and form.
+- Added a favicon for bookmarks.
 
 ### v1.30
 
