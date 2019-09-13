@@ -66,15 +66,37 @@ function resetTabs(defaultTab) {
                 na.classList.remove(`hide`)
         }
     }
-    // Offline notification
+    // PWA offline notification
     {
         const offline = document.getElementById(`doseeOffline`)
-        window.addEventListener(`offline`, function(e) {
+        window.addEventListener(`offline`, () => {
             offline.classList.remove(`hidden`)
         })
-        window.addEventListener(`online`, function(e) {
+        window.addEventListener(`online`, () => {
             offline.classList.add(`hidden`)
         })
+    }
+    // Install (pwa) link
+    {
+        window.onappinstalled = () => {
+            console.log(`Thank you for installing DOSee`)
+        }
+        window.addEventListener(
+            `beforeinstallprompt`,
+            beforeInstallPromptEvent => {
+                let installButton = document.getElementById(`doseeInstall`)
+                // Prevents immediate prompt display
+                beforeInstallPromptEvent.preventDefault()
+                installButton.classList.remove(`hidden`)
+                installButton.addEventListener(`click`, () => {
+                    installButton.classList.add(`hidden`)
+                    // Display install prompt and catch any `Cancel` buttons
+                    beforeInstallPromptEvent.prompt().catch(() => {
+                        installButton.classList.add(`hidden`)
+                    })
+                })
+            }
+        )
     }
     console.log(`Loaded index.js`)
 })()

@@ -4,7 +4,7 @@
 
 ### v1.40
 
-- Made DOSee into a [Progressive Web App](https://developers.google.com/web/progressive-web-apps/desktop) that allows installation to a local operating system.
+- Made DOSee into a [Progressive Web App](https://developers.google.com/web/progressive-web-apps/desktop) that allows installation to a desktop.
 - Added basic offline support using [Workbox](https://workboxjs.org).
 - Rearranged the source files and subdirectories to require a `build` initialisation
 - Changed page layout to center-align the canvas and form.

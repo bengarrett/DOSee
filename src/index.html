@@ -27,11 +27,7 @@
     <link rel="preload" href="js/index.js" as="script" />
 
     <link rel="preload" href="js/browserfs.min.js" as="script" />
-    <link
-      rel="preload"
-      href="js/browserfs-zipfs-extras/browserfs-zipfs-extras.js"
-      as="script"
-    />
+    <link rel="preload" href="js/browserfs-zipfs-extras.js" as="script" />
     <link rel="preload" href="js/FileSaver.min.js" as="script" />
     <link rel="preload" href="js/canvas-toBlob.js" as="script" />
 
@@ -90,6 +86,7 @@
         <a href="#doseeTabs" id="doseeCaptureScreen" class="button">Capture</a>
         <a href="#doseeTabs" name="doseeReboot" class="button">Reboot</a>
         <a href="#doseeTabs" id="doseeExit" class="button">STOP</a>
+        <a href="#doseeTabs" id="doseeInstall" class="button hidden">INSTALL</a>
       </header>
       <form id="hardwareTab">
         <fieldset>
@@ -292,7 +289,9 @@
       </form>
       <footer>
         © 2019 - Ben Garrett |
-        <a href="//github.com/bengarrett/DOSee">GitHub</a>
+        <a href="//github.com/bengarrett/DOSee" target="_blank" rel="noopener"
+          >GitHub</a
+        >
         <p>
           <small
             >DOSee <span id="doseeVersion"></span> built on

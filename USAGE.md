@@ -125,6 +125,6 @@ Update the DOSee [index.html](index.html) to launch the demo and enjoy the confu
 <meta name="dosee:run:filename" content="SQ3DEMO.BAT" />
 ```
 
-![DOSee preview](images/sq3demo.png)
+![DOSee preview](src/images/sq3demo.png)
 
 [back to README.md](README.md)

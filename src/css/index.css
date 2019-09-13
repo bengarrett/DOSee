@@ -36,6 +36,8 @@ label {
 #helpTab {
   height: var(--max-height);
   width: var(--max-width);
+  overflow: visible;
+  white-space: normal;
 }
 
 .radio-inline {

@@ -7,7 +7,7 @@
 &nbsp;
 ![GitHub repo size](https://img.shields.io/github/repo-size/bengarrett/dosee?style=flat-square)
 
-#### [If you enjoy DOSee, consider buying me a cup of coffee?](https://www.buymeacoffee.com/4rtEGvUIY) ☕
+#### [If you enjoy DOSee, consider buying me a cup of coffee?](https://www.buymeacoffee.com/4rtEGvUIY)
 
 ## An MS-DOS emulator for the web.
 
@@ -15,7 +15,7 @@ DOSee is a front-end for an [MS-DOS](https://en.wikipedia.org/wiki/MS-DOS) emula
 
 DOSee is only a user interface and installation process for an incredible emulation ecosystem created by many amazing people over many years. DOSee itself is a fork of [The Emularity](https://github.com/db48x/emularity) project created by the Internet Archive. [EM-DOSBox](https://github.com/dreamlayers/em-dosbox/) the core of this emulation is a JavaScript port of [DOSBox](https://www.dosbox.com), the world's most popular MS-DOS emulator.
 
-![DOSee preview](images/preview.png)
+![DOSee preview](src/images/preview.png)
 
 ### What's new
 
@@ -40,11 +40,12 @@ Clone DOSee.
 git clone https://github.com/bengarrett/DOSee.git
 ```
 
-Install dependencies.
+Install and build dependencies.
 
 ```
 cd DOSee
 npm install --only=prod
+npm run build
 ```
 
 Install and run a local web server.

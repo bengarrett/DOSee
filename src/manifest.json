@@ -1,6 +1,6 @@
 {
   "short_name": "DOSee",
-  "name": "DOSee",
+  "name": "DOSee AGI Demo",
   "description": "A DOSBox-based, MS-DOS emulator for the web.",
   "categories": ["emulation", "msdos", "retro"],
   "start_url": ".",
