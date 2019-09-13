@@ -4,7 +4,7 @@ importScripts(
 )
 
 if (workbox) {
-    console.log(`Yay! Workbox is loaded 🎉`)
+    console.log(`Loaded Workbox service worker library`)
 
     workbox.precaching.precacheAndRoute([])
 
@@ -19,5 +19,5 @@ if (workbox) {
         })
     })
 } else {
-    console.log(`Boo! Workbox didn't load 😬`)
+    console.warn(`Failed to load Workbox service worker library`)
 }

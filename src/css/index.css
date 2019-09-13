@@ -23,6 +23,13 @@ label {
   white-space: nowrap;
 }
 
+#hardwareTab,
+#optionsTab,
+#helpTab {
+  height: 25em;
+  width: 40em;
+}
+
 .radio-inline {
   white-space: nowrap;
 }

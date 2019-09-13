@@ -16,8 +16,8 @@
 window.Module = null
 ;(Promise => {
     const version = new Map()
-        .set(`date`, new Date(`9,Jun,2019`))
-        .set(`minor`, `30`)
+        .set(`date`, new Date(`13,Sep,2019`))
+        .set(`minor`, `40`)
         .set(`major`, `1`)
         .set(`display`, ``)
     version.set(
@@ -852,7 +852,7 @@ window.Module = null
             }
 
             splash.splashimg.setAttribute(`id`, `doseeSplashImg`)
-            splash.splashimg.setAttribute(`alt`,`DOSee floppy disk logo`)
+            splash.splashimg.setAttribute(`alt`, `DOSee floppy disk logo`)
             splash.splashimg.style.display = `block`
             splash.splashimg.style.marginLeft = `auto`
             splash.splashimg.style.marginRight = `auto`
