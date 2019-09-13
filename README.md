@@ -42,6 +42,8 @@ git clone https://github.com/bengarrett/DOSee.git
 
 Install the dependencies and build DOSee.
 
+`npm` is the package manager for node.js and is included in that environment. [It's available for all major platforms](https://nodejs.org/en/download/).
+
 ```sh
 cd DOSee
 npm install
@@ -53,9 +55,7 @@ npm install
 npm run install
 ```
 
-### Instructions, **npm**
-
-npm is the package manager for node.js and is included in that environment. [It's available for all major platforms](https://nodejs.org/en/download/).
+### Server instruction, **npm**
 
 Serve the `build` directory over port _5550_.
 
@@ -65,7 +65,7 @@ npm run serve
 
 Point a web browser to http://localhost:5550
 
-### Instructions, **Docker**
+### Server instruction, **Docker**
 
 Requirements:
 
