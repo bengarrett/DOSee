@@ -1,8 +1,12 @@
 node_modules
 package-lock.json
+yarn.lock
 
 # Hide dependencies
 build
+
+# Packs
+*.tgz
 
 # VSCode
 .vscode/tasks.json

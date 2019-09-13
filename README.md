@@ -42,7 +42,7 @@ git clone https://github.com/bengarrett/DOSee.git
 
 Install the dependencies and build DOSee.
 
-```
+```sh
 cd DOSee
 npm install
 npm run build
@@ -87,6 +87,19 @@ docker-compose up
 
 Point a web browser to http://localhost:5550
 
+### Quick instructions, **Yarn**
+
+```sh
+git clone https://github.com/bengarrett/DOSee.git
+cd DOSee
+yarn
+yarn run build
+yarn install http-server
+npx http-server build -p 5550
+```
+
+Point a web browser to http://localhost:5550
+
 ### Usage & customisations
 
 [Can be found in USAGE.md](USAGE.md)
@@ -94,5 +107,5 @@ Point a web browser to http://localhost:5550
 ### License
 
 1. DOsee is released under GPL-3.0.
-2. Em-DOSBox located in `/emulator` is released under GPL-2.0.
-3. `/disk_drives` and `/dos_programs` contain non-free software binaries that are included for convenience.
+2. Em-DOSBox located in `src/emulator` is released under GPL-2.0.
+3. `src/disk_drives` and `src/dos_programs` contain non-free software binaries that are included for convenience.
