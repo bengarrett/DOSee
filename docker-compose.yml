@@ -20,8 +20,6 @@ services:
     # expose nginx web port 80 as port 5550
     ports:
       - "5550:80"
-    depends_on:
-      - npm
     volumes:
       # bind your local cloned DOSee repo to nginx's html hosting path
       - type: bind
