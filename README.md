@@ -11,7 +11,7 @@
 
 ## An MS-DOS emulator for the web.
 
-DOSee is a front-end for an [MS-DOS](https://en.wikipedia.org/wiki/MS-DOS) emulation ecosystem to use on the web. The text-based MS-DOS was the dominant personal computer platform for much of the 1980s up until the mid-1990s before being superseded by Microsoft Windows. Emulating this platform allows the running of tens of thousands of games, demos and applications from this era to run on a web browser!
+DOSee is a front-end for an [MS-DOS](https://en.wikipedia.org/wiki/MS-DOS) emulation ecosystem to use on the web. The text-based MS-DOS was the dominant personal computer platform for much of the 1980s up until the mid-1990s before being superseded by Microsoft Windows. Emulating this platform allows the running of tens of thousands of games, demos and applications from this era to run on a web browser both online or offline as a desktop web-app!
 
 DOSee is only a user interface and installation process for an incredible emulation ecosystem created by many amazing people over many years. DOSee itself is a fork of [The Emularity](https://github.com/db48x/emularity) project created by the Internet Archive. [EM-DOSBox](https://github.com/dreamlayers/em-dosbox/) the core of this emulation is a JavaScript port of [DOSBox](https://www.dosbox.com), the world's most popular MS-DOS emulator.
 
@@ -24,15 +24,15 @@ DOSee is only a user interface and installation process for an incredible emulat
 ### Requirements
 
 - A web browser that supports JavaScript ES6 (ECMAScript 2015).
-  Current Firefox, Chrome, Edge or Safari will work fine.
+  Current Firefox, Chrome, Brave, Edge or Safari will work fine.
 - A physical keyboard, as MS-DOS is a text-based operating system.
 - [npm](https://www.npmjs.com/get-npm) or a [Docker](https://www.docker.com/products/docker-desktop) installation with `docker-compose`, instructions are below.
 
 _DOSee has to be served over a HTTP server, it can not be run using the browser `file:///` protocol._
 
-### Instructions, **npm**
+### Instructions, **download and build**
 
-npm is the package manager for node.js and is included in that environment. [It's available for all major platforms](https://nodejs.org/en/download/).
+DOSee requires building before it is ready to serve to a web browser.
 
 Clone DOSee.
 
@@ -40,19 +40,34 @@ Clone DOSee.
 git clone https://github.com/bengarrett/DOSee.git
 ```
 
-Install and build dependencies.
+Install the dependencies and build DOSee.
 
 ```
 cd DOSee
-npm install --only=prod
+npm install
 npm run build
 ```
 
-Install and run a local web server.
+**If in the future, any edits are made by you to the source files in `src/`. You will need to rerun this build command.**
 
 ```
-npm install -g http-server
-http-server -p 5550
+npm run build
+```
+
+### Instructions, **npm**
+
+npm is the package manager for node.js and is included in that environment. [It's available for all major platforms](https://nodejs.org/en/download/).
+
+Install a web server.
+
+```
+npm install http-server
+```
+
+Serve the `build` directory over port _5550_.
+
+```
+npx http-server build -p 5550
 ```
 
 Point a web browser to http://localhost:5550
@@ -64,13 +79,7 @@ Requirements:
 - Docker engine: 17.04.0+
 - docker-compose: 3.2
 
-Clone DOSee.
-
-```
-git clone https://github.com/bengarrett/DOSee.git
-```
-
-Build and run the DOSee container.
+Run the DOSee container.
 
 ```
 docker-compose up

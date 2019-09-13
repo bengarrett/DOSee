@@ -23,38 +23,7 @@ services:
     depends_on:
       - npm
     volumes:
-      # DOSee dependencies installed by the npm service
-      - type: volume
-        source: node_modules
-        target: /usr/share/nginx/html/node_modules
       # bind your local cloned DOSee repo to nginx's html hosting path
       - type: bind
         source: ./build
         target: /usr/share/nginx/html
-
-  npm:
-    labels:
-      net.defacto2.description: "DOSee npm dependencies"
-    image: "node:12-alpine"
-    # Docker on Windows can only handle root users
-    #user: "node"
-    container_name: "dosee-npm"
-    environment:
-      - NODE_ENV=production
-    volumes:
-      # this `node_modules` volume is will be shared with the `web` service
-      - type: volume
-        source: node_modules
-        target: /home/node/dosee/node_modules
-      # share the Dosee repo package.json with this container
-      - type: bind
-        source: ./package.json
-        target: /home/node/dosee/package.json
-    working_dir: /home/node/dosee
-    # `npm install ...` installs dependencies listed in package.json
-    # `; tail -f /dev/null` optional, append to keep the container alive and enable shell access
-    command: /bin/sh -c 'npm install --only=prod; ls -l node_modules'
-    #; tail -f /dev/null'
-
-volumes:
-  node_modules:
