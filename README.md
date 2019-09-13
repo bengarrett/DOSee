@@ -26,7 +26,7 @@ DOSee is only a user interface and installation process for an incredible emulat
 - A web browser that supports JavaScript ES6 (ECMAScript 2015).
   Current Firefox, Chrome, Brave, Edge or Safari will work fine.
 - A physical keyboard, as MS-DOS is a text-based operating system.
-- [npm](https://www.npmjs.com/get-npm) or a [Docker](https://www.docker.com/products/docker-desktop) installation with `docker-compose`, instructions are below.
+- [Node.js](https://nodejs.org) with [npm](https://www.npmjs.com/get-npm) and [npx](https://www.npmjs.com/package/npx).
 
 _DOSee has to be served over a HTTP server, it can not be run using the browser `file:///` protocol._
 
@@ -45,24 +45,17 @@ Install the dependencies and build DOSee.
 ```sh
 cd DOSee
 npm install
-npm run build
 ```
 
 **If in the future, any edits are made by you to the source files in `src/`. You will need to rerun this build command.**
 
 ```
-npm run build
+npm run install
 ```
 
 ### Instructions, **npm**
 
 npm is the package manager for node.js and is included in that environment. [It's available for all major platforms](https://nodejs.org/en/download/).
-
-Install a web server.
-
-```
-npm install http-server
-```
 
 Serve the `build` directory over port _5550_.
 
@@ -89,12 +82,12 @@ Point a web browser to http://localhost:5550
 
 ### Quick instructions, **Yarn**
 
+_Yarn usage requires both `npm` and `npx` to be installed_
+
 ```sh
 git clone https://github.com/bengarrett/DOSee.git
 cd DOSee
 yarn
-yarn run build
-yarn install http-server
 npx http-server build -p 5550
 ```
 

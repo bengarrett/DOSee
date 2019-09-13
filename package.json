@@ -30,7 +30,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "copy": "npx copyfiles -u 1 src/**/**/* src/**/* src/* build && npx copyup -f node_modules/mini.css/dist/mini-default.min.css build/css && npx copyup -f node_modules/browserfs/dist/browserfs.min.js node_modules/browserfs-zipfs-extras/dist/browserfs-zipfs-extras.js node_modules/file-saver-fixed/dist/FileSaver.min.js node_modules/canvas-toBlob/canvas-toBlob.js build/js",
-    "build": "npm run copy && npx workbox injectManifest workbox-config.js"
+    "install": "npm run copy && npx workbox injectManifest workbox-config.js"
   },
   "version": "1.40.0"
 }
