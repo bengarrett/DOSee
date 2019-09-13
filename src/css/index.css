@@ -1,11 +1,19 @@
+:root {
+  --max-height: 25rem;
+  --max-width: 45rem;
+}
+
 body {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-body > div {
-  max-width: 800px;
+body > div > h2 {
+  max-width: var(--max-width);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 #doseeContainer > div {
@@ -26,8 +34,8 @@ label {
 #hardwareTab,
 #optionsTab,
 #helpTab {
-  height: 25em;
-  width: 40em;
+  height: var(--max-height);
+  width: var(--max-width);
 }
 
 .radio-inline {

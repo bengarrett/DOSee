@@ -66,5 +66,15 @@ function resetTabs(defaultTab) {
                 na.classList.remove(`hide`)
         }
     }
+    // Offline notification
+    {
+        const offline = document.getElementById(`doseeOffline`)
+        window.addEventListener(`offline`, function(e) {
+            offline.classList.remove(`hidden`)
+        })
+        window.addEventListener(`online`, function(e) {
+            offline.classList.add(`hidden`)
+        })
+    }
     console.log(`Loaded index.js`)
 })()
