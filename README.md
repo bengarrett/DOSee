@@ -47,7 +47,7 @@ cd DOSee
 npm install
 ```
 
-**If in the future, any edits are made by you to the source files in `src/`. You will need to rerun this build command.**
+**If in the future, any edits are made by you to the source files in `src/`. You will need to run this build command.**
 
 ```
 npm run install
@@ -60,7 +60,7 @@ npm is the package manager for node.js and is included in that environment. [It'
 Serve the `build` directory over port _5550_.
 
 ```
-npx http-server build -p 5550
+npm run serve
 ```
 
 Point a web browser to http://localhost:5550
@@ -88,7 +88,7 @@ _Yarn usage requires both `npm` and `npx` to be installed_
 git clone https://github.com/bengarrett/DOSee.git
 cd DOSee
 yarn
-npx http-server build -p 5550
+yarn run serve
 ```
 
 Point a web browser to http://localhost:5550
