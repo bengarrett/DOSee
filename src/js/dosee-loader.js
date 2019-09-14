@@ -549,12 +549,9 @@ window.Module = null
                 if (!game_data || splash.failed_loading) return null
                 if (options.waitAfterDownloading) {
                     return new Promise(resolve => {
-                        let title = `🖰 click to start`
+                        let title = `click to start`
                         // update title based on the browser platform
                         switch (navigator.platform.slice(0, 3).toLowerCase()) {
-                            case `mac`: // macOS default font doesn't display the two-button-mouse
-                                title = `click to start`
-                                break
                             case `and`: // android
                             case `ipa`: // ipad
                             case `iph`: // iphone
@@ -660,7 +657,7 @@ window.Module = null
                 arguments: args,
                 screenIsReadOnly: true,
                 print: function(text) {
-                    // feedback from em-dosbox
+                    // feedback from dosbox
                     console.log(text)
                 },
                 canvas: canvas,
@@ -803,6 +800,7 @@ window.Module = null
             if (!splash.splashElt) {
                 splash.splashElt = document.createElement(`div`)
                 splash.splashElt.setAttribute(`id`, `doseeSplashScreen`)
+                splash.splashElt.classList.add(`rounded`)
                 canvas.parentElement.appendChild(splash.splashElt)
             }
 
@@ -841,6 +839,7 @@ window.Module = null
             const p = document.createElement(`p`)
             p.classList.add(`toast`)
             const statusCell = document.createElement(`span`)
+            statusCell.classList.add(`splash-status`)
             const titleCell = document.createElement(`span`)
             p.appendChild(statusCell)
             p.appendChild(titleCell)

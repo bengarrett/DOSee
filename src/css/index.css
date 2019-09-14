@@ -26,6 +26,7 @@ label > small {
 }
 
 #doseeTabs {
+  margin-top: 0.1em;
   /* override mini-css */
   height: inherit;
   white-space: normal;
