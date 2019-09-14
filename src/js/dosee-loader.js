@@ -398,17 +398,10 @@ window.Module = null
             }
         }
         let has_started = false
-        const defaultSplashColors = {
-            foreground: `white`,
-            background: `black`,
-            failure: `red`,
-            success: `green`
-        }
         const splash = {
             loading_text: ``,
             spinning: true,
             finished_loading: false,
-            colors: defaultSplashColors,
             table: null,
             splashimg: new Image()
         }
@@ -673,7 +666,7 @@ window.Module = null
                 arguments: args,
                 screenIsReadOnly: true,
                 print: function(text) {
-                    // feedback from DOSBox
+                    // feedback from em-dosbox
                     console.log(text)
                 },
                 canvas: canvas,
@@ -773,29 +766,15 @@ window.Module = null
                 }
 
                 function success() {
+                    statusCell.classList.add(`text-success`)
                     statusCell.textContent = `✔`
-                    statusCell.style.color = splash.getColor(`success`)
                     titleCell.textContent = title
-                    titleCell.style.fontWeight = `bold`
-                    titleCell.parentNode.style.backgroundColor = splash.getColor(
-                        `foreground`
-                    )
-                    titleCell.parentNode.style.color = splash.getColor(
-                        `background`
-                    )
                 }
 
                 function failure() {
+                    statusCell.classList.add(`text-failure`)
                     statusCell.textContent = `✘`
-                    statusCell.style.color = splash.getColor(`failure`)
                     titleCell.textContent = title
-                    titleCell.style.fontWeight = `bold`
-                    titleCell.parentNode.style.backgroundColor = splash.getColor(
-                        `foreground`
-                    )
-                    titleCell.parentNode.style.color = splash.getColor(
-                        `failure`
-                    )
                 }
                 xhr.send()
             })
@@ -817,17 +796,7 @@ window.Module = null
 
         const resizeCanvas = function(canvas, scale, resolution) {
             if (scale && resolution) {
-                // optimizeSpeed is the standardized value. different
-                // browsers support different values they will all ignore
-                // values that they don't understand.
-                canvas.style.imageRendering = `-moz-crisp-edges`
-                canvas.style.imageRendering = `-o-crisp-edges`
-                canvas.style.imageRendering = `-webkit-optimize-contrast`
-                canvas.style.imageRendering = `optimize-contrast`
-                canvas.style.imageRendering = `crisp-edges`
-                canvas.style.imageRendering = `pixelated`
-                canvas.style.imageRendering = `optimizeSpeed`
-
+                canvas.classList.add(`dosee-crisp-render`)
                 canvas.style.width = `${resolution.width * scale}px`
                 canvas.style.height = `${resolution.height * scale}px`
                 canvas.width = resolution.width
@@ -840,46 +809,22 @@ window.Module = null
             if (!splash.splashElt) {
                 splash.splashElt = document.createElement(`div`)
                 splash.splashElt.setAttribute(`id`, `doseeSplashScreen`)
-                splash.splashElt.style.position = `absolute`
-                splash.splashElt.style.top = `${canvas.offsetTop}px`
-                splash.splashElt.style.left = `${canvas.offsetLeft}px`
-                splash.splashElt.style.width = `${canvas.offsetWidth}px`
-                splash.splashElt.style.color = splash.getColor(`foreground`)
-                splash.splashElt.style.backgroundColor = splash.getColor(
-                    `background`
-                )
                 canvas.parentElement.appendChild(splash.splashElt)
             }
 
             splash.splashimg.setAttribute(`id`, `doseeSplashImg`)
-            splash.splashimg.setAttribute(`alt`, `DOSee floppy disk logo`)
-            splash.splashimg.style.display = `block`
-            splash.splashimg.style.marginLeft = `auto`
-            splash.splashimg.style.marginRight = `auto`
+            splash.splashimg.setAttribute(`alt`, `DOSee logo`)
             splash.splashElt.appendChild(splash.splashimg)
 
             splash.titleElt = document.createElement(`span`)
             splash.titleElt.setAttribute(`id`, `doseeSplashTitle`)
-            splash.titleElt.style.display = `block`
-            splash.titleElt.style.width = `100%`
-            splash.titleElt.style.marginTop = `1em`
-            splash.titleElt.style.marginBottom = `1em`
-            splash.titleElt.style.textAlign = `center`
-            splash.titleElt.style.font = `24px sans-serif`
             splash.titleElt.textContent = ``
             splash.splashElt.appendChild(splash.titleElt)
 
             let table = document.getElementById(`doseeProgressIndicator`)
             if (!table) {
-                table = document.createElement(`table`)
+                table = document.createElement(`div`)
                 table.setAttribute(`id`, `doseeProgressIndicator`)
-                table.style.width = `50%`
-                table.style.color = splash.getColor(`foreground`)
-                table.style.backgroundColor = splash.getColor(`background`)
-                table.style.marginLeft = `auto`
-                table.style.marginRight = `auto`
-                table.style.borderCollapse = `separate`
-                table.style.borderSpacing = `2px`
                 splash.splashElt.appendChild(table)
             }
             splash.table = table
@@ -890,35 +835,21 @@ window.Module = null
         }
 
         splash.hide = function() {
-            splash.splashElt.style.display = `none`
-        }
-
-        splash.getColor = function(name) {
-            return name in splash.colors
-                ? splash.colors[name]
-                : defaultSplashColors[name]
+            splash.splashElt.classList.add(`hidden`)
+            document.getElementById(`doseeCanvas`).classList.remove(`hidden`)
         }
 
         const addRow = function(table) {
-            const row = table.insertRow(-1)
-            row.style.textAlign = `center`
-            const cell = row.insertCell(-1)
-            cell.style.position = `relative`
-            const titleCell = document.createElement(`span`)
-            titleCell.textContent = `—`
-            titleCell.style.verticalAlign = `center`
-            titleCell.style.minHeight = `24px`
-            cell.appendChild(titleCell)
+            const p = document.createElement(`p`)
             const statusCell = document.createElement(`span`)
-            statusCell.style.position = `absolute`
-            statusCell.style.left = `0`
-            statusCell.style.paddingLeft = `0.5em`
-            cell.appendChild(statusCell)
+            const titleCell = document.createElement(`span`)
+            p.appendChild(statusCell)
+            p.appendChild(titleCell)
+            table.appendChild(p)
             return [titleCell, statusCell]
         }
 
         const drawSplash = function() {
-            canvas.setAttribute(`moz-opaque`, ``)
             if (!splash.splashimg.src) {
                 splash.splashimg.src = `${config.get(`splashPath`)}`
             }

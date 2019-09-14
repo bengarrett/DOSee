@@ -2,6 +2,11 @@
 
 ## Changes and updates
 
+### v1.50
+
+- Migrated all static `styles` from the JavaScript into `dosee.css`.
+- DOSee forms are responsive.
+
 ### v1.40
 
 - Made DOSee into a [Progressive Web App](https://developers.google.com/web/progressive-web-apps/desktop) that allows installation to a desktop.

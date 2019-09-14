@@ -1,5 +1,4 @@
 :root {
-  --max-height: 25rem;
   --max-width: 45rem;
 }
 
@@ -9,35 +8,37 @@ body {
   justify-content: center;
 }
 
-body > div > h2 {
+body > div {
   max-width: var(--max-width);
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
 }
 
-#doseeContainer > div {
-  min-width: 640px;
-  min-height: 480px;
-  background-color: #000;
-  border: 10px solid #000;
-}
-
-#helpTab > .hide {
-  display: none;
+body > div > h2 {
+  overflow-wrap: break-word;
 }
 
 label {
   white-space: nowrap;
 }
 
+label > small {
+  white-space: normal;
+  overflow-wrap: break-word;
+}
+
+#doseeTabs {
+  /* override mini-css */
+  height: inherit;
+  white-space: normal;
+}
+
+#helpTab > .hide {
+  display: none;
+}
+
 #hardwareTab,
 #optionsTab,
 #helpTab {
-  height: var(--max-height);
-  width: var(--max-width);
-  overflow: visible;
-  white-space: normal;
+  max-width: var(--max-width);
 }
 
 .radio-inline {

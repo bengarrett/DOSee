@@ -20,7 +20,6 @@
             parseInt(height)
         )
     }
-
     // Aborts DOSee and cleans up its event handlers
     DOSee.exit = () => {
         if (

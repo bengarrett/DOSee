@@ -87,6 +87,15 @@
         )
     }
 
+    // Initialise canvas size
+    {
+        const canvas = document.getElementById(`doseeCanvas`)
+        canvas.width = nativeRes()[0]
+        canvas.height = nativeRes()[1]
+        canvas.style.width = `${nativeRes()[0]}px`
+        canvas.style.height = `${nativeRes()[1]}px`
+    }
+
     // Check the browser protocol that DOSee is hosted on
     // Modern browsers to not permit the loading of web resources using XMLHttpRequest()
     // over `file:///` or `ftp://` as they do not support Cross-origin resource sharing.
@@ -102,9 +111,7 @@
                 // invalid protocols
                 try {
                     throw new Error(
-                        `DOSee has aborted as it cannot be hosted over the '${
-                            url.protocol
-                        }' protocol.`
+                        `DOSee has aborted as it cannot be hosted over the '${url.protocol}' protocol.`
                     )
                 } catch (err) {
                     console.error(err)

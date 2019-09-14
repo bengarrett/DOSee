@@ -20,7 +20,7 @@
     <meta name="dosee:capture:filename" content="screenshot.png" />
     <meta name="dosee:utilities" content="false" />
     <meta name="dosee:audio:gus" content="false" />
-    <meta name="dosee:width:height" content="640, 480" />
+    <meta name="dosee:width:height" content="640, 400" />
 
     <link rel="preload" href="js/dosee-functions.js" as="script" />
     <link rel="preload" href="js/dosee-loader.js" as="script" />
@@ -40,6 +40,7 @@
     <script async src="js/canvas-toBlob.js"></script>
 
     <link rel="stylesheet" href="css/index.css" />
+    <link rel="stylesheet" href="css/dosee.css" />
     <!-- "minimal, responsive, style-agnostic CSS framework" https://minicss.org/docs -->
     <!-- "mini-default.css" can be swapped with "mini-nord.css" or "mini-dark.css" -->
     <link rel="stylesheet" href="css/mini-default.min.css" />
@@ -68,10 +69,8 @@
         </div>
       </div>
       <!-- DOSee canvas -->
-      <div class="row" id="doseeContainer">
-        <div class="card">
-          <canvas id="doseeCanvas" class="rounded"></canvas>
-        </div>
+      <div class="row" id="doseeContainer" style="border: 1px solid blue;">
+        <canvas id="doseeCanvas" class="rounded hidden"></canvas>
       </div>
       <!-- DOSee UI (menu) -->
       <header id="doseeTabs">

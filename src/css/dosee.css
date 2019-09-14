@@ -1,0 +1,75 @@
+:root {
+  --max-height: 25rem;
+  --max-width: 45rem;
+
+  --dosee-width: 640px;
+  --dosee-height: 480px;
+  --dosee-border: 3px solid var(--background);
+
+  --foreground: white;
+  --background: black;
+  --failure: red;
+  --success: green;
+}
+
+#doseeContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#doseeCanvas {
+  background-color: #000;
+  border: var(--dosee-border);
+}
+
+#doseeProgressIndicator {
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+  border-collapse: separate;
+  border-spacing: 2px;
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+#doseeSplashImg {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#doseeSplashScreen {
+  width: var(--dosee-width);
+  height: var(--dosee-height);
+  border: var(--dosee-border);
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+#doseeSplashTitle {
+  display: block;
+  font: 24px sans-serif;
+  width: 100%;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  text-align: center;
+}
+
+.dosee-crisp-render {
+  /* FF 3 */
+  image-rendering: -moz-crisp-edges;
+  /* Safari 6 */
+  image-rendering: -webkit-optimize-contrast;
+  /* Chrome: 13, FF 65*/
+  image-rendering: crisp-edges;
+  /* Chrome: 41, Safari 10 */
+  image-rendering: pixelated;
+}
+
+.text-failure {
+  color: var(--failure);
+}
+.text-success {
+  color: var(--success);
+}
