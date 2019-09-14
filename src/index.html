@@ -40,10 +40,11 @@
     <script async src="js/canvas-toBlob.js"></script>
 
     <link rel="stylesheet" href="css/index.css" />
-    <link rel="stylesheet" href="css/dosee.css" />
     <!-- "minimal, responsive, style-agnostic CSS framework" https://minicss.org/docs -->
     <!-- "mini-default.css" can be swapped with "mini-nord.css" or "mini-dark.css" -->
     <link rel="stylesheet" href="css/mini-default.min.css" />
+    <!-- dosee.css needs to load after mini-default.css -->
+    <link rel="stylesheet" href="css/dosee.css" />
   </head>
 
   <body>
@@ -69,7 +70,7 @@
         </div>
       </div>
       <!-- DOSee canvas -->
-      <div class="row" id="doseeContainer" style="border: 1px solid blue;">
+      <div class="row" id="doseeContainer">
         <canvas id="doseeCanvas" class="rounded hidden"></canvas>
       </div>
       <!-- DOSee UI (menu) -->

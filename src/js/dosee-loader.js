@@ -27,11 +27,6 @@ window.Module = null
             .toLocaleDateString()})`
     )
 
-    const config = new Map().set(
-        `splashPath`,
-        `/images/floppy_disk_icon-180x180.png`
-    )
-
     // DOSBox requires a valid IndexedDB
     // See: https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Using_IndexedDB
     if (window.indexedDB) {
@@ -462,7 +457,6 @@ window.Module = null
             }
             let k, c, game_data
             setupSplash(canvas, splash)
-            drawSplash()
 
             let loading
             if (typeof loadFiles === `function`) {
@@ -812,9 +806,13 @@ window.Module = null
                 canvas.parentElement.appendChild(splash.splashElt)
             }
 
-            splash.splashimg.setAttribute(`id`, `doseeSplashImg`)
-            splash.splashimg.setAttribute(`alt`, `DOSee logo`)
-            splash.splashElt.appendChild(splash.splashimg)
+            splash.splashimg = document.getElementById(`doseeSplashImg`)
+            if (!splash.splashimg) {
+                splash.splashimg = document.createElement(`span`)
+                splash.splashimg.setAttribute(`id`, `doseeSplashImg`)
+                splash.splashimg.setAttribute(`alt`, `DOSee logo`)
+                splash.splashElt.appendChild(splash.splashimg)
+            }
 
             splash.titleElt = document.createElement(`span`)
             splash.titleElt.setAttribute(`id`, `doseeSplashTitle`)
@@ -841,18 +839,13 @@ window.Module = null
 
         const addRow = function(table) {
             const p = document.createElement(`p`)
+            p.classList.add(`toast`)
             const statusCell = document.createElement(`span`)
             const titleCell = document.createElement(`span`)
             p.appendChild(statusCell)
             p.appendChild(titleCell)
             table.appendChild(p)
             return [titleCell, statusCell]
-        }
-
-        const drawSplash = function() {
-            if (!splash.splashimg.src) {
-                splash.splashimg.src = `${config.get(`splashPath`)}`
-            }
         }
 
         function attachScript(js_url) {

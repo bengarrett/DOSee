@@ -34,6 +34,9 @@
 }
 
 #doseeSplashImg {
+  background-image: url("/images/floppy_disk_icon-180x180.png");
+  width: 180px;
+  height: 180px;
   display: block;
   margin-left: auto;
   margin-right: auto;
@@ -72,4 +75,12 @@
 }
 .text-success {
   color: var(--success);
+}
+
+.toast {
+  /* override mini-css */
+  position: initial;
+  transform: none;
+  bottom: 0;
+  left: 0;
 }
