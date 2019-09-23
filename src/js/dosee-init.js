@@ -10,8 +10,8 @@
         .set(`driveG`, `/disk_drives/g_drive.zip`)
         .set(`driveS`, `/disk_drives/s_drive.zip`)
         .set(`driveU`, `/disk_drives/u_drive.zip`)
-        .set(`core`, `/emulator/dosee-core.js`)
-        .set(`mem`, `/emulator/dosee-core.mem`)
+        .set(`core`, `/emulator/dosbox-sync.js`)
+        .set(`mem`, `/emulator/dosbox-sync.mem`)
 
     // Load configurations that are obtained from the <meta name="dosee:"> HTML tags
     const config = new Map()
