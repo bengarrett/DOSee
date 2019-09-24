@@ -126,6 +126,9 @@ window.Module = null
     }
 
     const build_dosbox_arguments = function(emulator_start, files) {
+        // dosbox command line parameters https://www.dosbox.com/wiki/Usage
+        // dosbox.conf https://www.dosbox.com/wiki/Dosbox.conf
+
         console.log(`Initialisation of DOSee ` + version.get(`display`))
         let verbose = `with the following configuration:`
 
@@ -148,10 +151,9 @@ window.Module = null
         const urlParams = DOSee.newQueryString()
 
         // graphic engine scalers (https://www.dosbox.com/wiki/Scaler)
-        let scaler = null
+        let scaler = null || `none`
         if (DOSee.storageAvailable(`local`))
             scaler = localStorage.getItem(`doseeScaler`) // look for saved option
-        if (scaler === null) scaler = `none`
         switch (scaler) {
             case `advinterp3x`:
                 verbose += ` Advanced interpolation engine (advinterp3x).`
@@ -184,10 +186,9 @@ window.Module = null
         }
 
         // impose aspect ratio correction
-        let aspect = null
+        let aspect = null || `true`
         if (DOSee.storageAvailable(`local`))
             aspect = localStorage.getItem(`doseeAspect`) // look for saved option
-        if (aspect === null) aspect = `true`
         if (aspect !== `false`) {
             verbose += ` With aspect correction.`
             args.push(`-conf`, `/dos/s/render.con`) // aspect=true
