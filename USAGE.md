@@ -15,7 +15,7 @@ It is easy to customise DOSee to load other MS-DOS programs by using HTML5 `<met
 <meta name="dosee:capture:filename" content="screenshot.png" />
 <meta name="dosee:utilities" content="false" />
 <meta name="dosee:audio:gus" content="false" />
-<meta name="dosee:width:height" content="640, 480" />
+<meta name="dosee:width:height" content="640, 400" />
 ```
 
 #### Required
@@ -52,21 +52,25 @@ The filename used by the capture tool to save emulator screenshots. The PNG imag
 
 #### `<meta name="dosee:utilities">`
 
-When set to `true` it tells DOSee to mount a collection of MS-DOS utilities and tools that are accessible from the `U:` drive.
+When set to `true` it tells DOSee to mount a collection of MS-DOS utilities and tools that are accessible from the `U:` drive. The default option is false.
 
 ✓ `<meta name="dosee:utilities" content="true" />`
 
 ✓ `<meta name="dosee:utilities" content="false" />`
+
+#### `<meta name="dosee:width:height">`
+
+Configures the initial pixel width and height of the emulation loading screen and canvas. The canvas may readjust itself after the emulator runs depending on the graphics hardware selection, scale options and aspect correction settings. The default canvas and screen size is 640px x 480px.
+
+✓ `<meta name="dosee:width:height" content="640,400" />`
+
+✗ `<meta name="dosee:width:height" content="640px, 400px" />`
 
 #### Placeholders
 
 #### `<meta name="dosee:audio:gus">`
 
 When set to `true` it tells DOSee to mount a collection of Gravis Ultrasound audio drivers and tools that are accessible from the `G:` drive. These drivers are always loaded by DOSee whenever the Gravis Ultrasound audio option is selected so this should always be left to `false`.
-
-#### `<meta name="dosee:width:height">`
-
-This should adjust the pixel width and height of the EM-DOSBox emulator but it seems to have no noticeable effect.
 
 #### Sample programs
 

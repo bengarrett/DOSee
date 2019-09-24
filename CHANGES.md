@@ -7,6 +7,9 @@
 - Fixed malformed, tiny canvas rendering on high DPR devices such as Retina laptops.
 - Migrated all static `styles` from the JavaScript into `dosee.css`.
 - DOSee forms are responsive.
+- Added _DOSee_ and _DOSBox_ prefixes to console logging.
+- `dosee:width:height` now applies to splash screen.
+- Dropped `aspectRatio` API call as it wasn't used.
 
 ### v1.40
 

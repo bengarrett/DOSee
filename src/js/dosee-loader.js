@@ -8,7 +8,7 @@
  * Major differences:
  *  Requires ES6 compatible browser
  *  Only DOS emulation
- *  No local save game states
+ *  No local save states
  *  No Web Assembly builds [to-do]
  */
 
@@ -16,8 +16,8 @@
 window.Module = null
 ;(Promise => {
     const version = new Map()
-        .set(`date`, new Date(`13,Sep,2019`))
-        .set(`minor`, `40`)
+        .set(`date`, new Date(`24,Sep,2019`))
+        .set(`minor`, `45`)
         .set(`major`, `1`)
         .set(`display`, ``)
     version.set(
@@ -63,12 +63,6 @@ window.Module = null
                 height: Math.floor(height)
             }
         }
-    }
-
-    DoseeAPI.aspectRatio = function(ratio) {
-        if (typeof ratio !== `number`)
-            throw new Error(`Aspect ratio must be a number`)
-        return { aspectRatio: ratio }
     }
 
     DoseeAPI.mountZip = function(drive, file) {
@@ -401,7 +395,6 @@ window.Module = null
             splashimg: new Image()
         }
 
-        let cssResolution, scale, aspectRatio
         // right off the bat we set the canvas's inner dimensions to
         // whatever it's current css dimensions are this isn't likely to be
         // the same size that dosbox will set it to, but it avoids
@@ -411,6 +404,9 @@ window.Module = null
             canvas.width = parseInt(style.width, 10)
             canvas.height = parseInt(style.height, 10)
         }
+
+        let cssResolution = { width: canvas.width, height: canvas.height },
+            scale = 1
 
         this.setSplashImage = function(_splashimg) {
             if (_splashimg) {
@@ -456,7 +452,7 @@ window.Module = null
                 options = { waitAfterDownloading: false }
             }
             let k, c, game_data
-            setupSplash(canvas, splash)
+            setupSplash(canvas, splash, cssResolution)
 
             let loading
             if (typeof loadFiles === `function`) {
@@ -591,8 +587,7 @@ window.Module = null
                     game_data.emulator_arguments,
                     game_data.fs,
                     game_data.locateAdditionalJS,
-                    game_data.nativeResolution,
-                    game_data.aspectRatio
+                    game_data.nativeResolution
                 )
 
                 if (callbacks && callbacks.before_emulator) {
@@ -650,15 +645,18 @@ window.Module = null
             args,
             fs,
             locateAdditionalJS,
-            nativeResolution,
-            aspectRatio
+            nativeResolution
         ) {
             return {
                 arguments: args,
                 screenIsReadOnly: true,
                 print: function(text) {
                     // feedback from dosbox
-                    console.log(text)
+                    console.log(
+                        `%cDOSBox`,
+                        `color:dimgray;font-weight:bold`,
+                        text
+                    )
                 },
                 canvas: canvas,
                 noInitialRun: false,
@@ -677,8 +675,7 @@ window.Module = null
                         resizeCanvas(
                             canvas,
                             (scale = scale || scale),
-                            (cssResolution = nativeResolution || cssResolution),
-                            (aspectRatio = aspectRatio || aspectRatio)
+                            (cssResolution = nativeResolution || cssResolution)
                         )
                     })
                     if (callbacks && callbacks.before_run) {
@@ -790,26 +787,31 @@ window.Module = null
                 canvas.classList.add(`dosee-crisp-render`)
                 canvas.style.width = `${resolution.width * scale}px`
                 canvas.style.height = `${resolution.height * scale}px`
-                canvas.width = resolution.width
-                canvas.height = resolution.height
+                canvas.width = resolution.width * scale
+                canvas.height = resolution.height * scale
             }
         }
 
-        function setupSplash(canvas, splash) {
+        function setupSplash(canvas, splash, resolution) {
             splash.splashElt = document.getElementById(`doseeSplashScreen`)
             if (!splash.splashElt) {
-                splash.splashElt = document.createElement(`div`)
-                splash.splashElt.setAttribute(`id`, `doseeSplashScreen`)
-                splash.splashElt.classList.add(`rounded`)
-                canvas.parentElement.appendChild(splash.splashElt)
+                const div = document.createElement(`div`)
+                div.setAttribute(`id`, `doseeSplashScreen`)
+                div.classList.add(`rounded`)
+                div.style.width = `${resolution.width * scale}px`
+                div.style.height = `${resolution.height * scale}px`
+                canvas.parentElement.appendChild(div)
+                splash.splashElt = div
             }
 
             splash.splashimg = document.getElementById(`doseeSplashImg`)
             if (!splash.splashimg) {
-                splash.splashimg = document.createElement(`span`)
-                splash.splashimg.setAttribute(`id`, `doseeSplashImg`)
-                splash.splashimg.setAttribute(`alt`, `DOSee logo`)
-                splash.splashElt.appendChild(splash.splashimg)
+                const img = document.createElement(`img`)
+                img.src = `/images/floppy_disk_icon-180x180.png`
+                img.classList.add(`dosee-crisp-render`)
+                img.setAttribute(`id`, `doseeSplashImg`)
+                img.setAttribute(`alt`, `DOSee logo`)
+                splash.splashElt.appendChild(img)
             }
 
             splash.titleElt = document.createElement(`span`)

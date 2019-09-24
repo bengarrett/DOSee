@@ -200,7 +200,12 @@
             if (typeof window[objName] === `undefined`) {
                 console.error(`checking ${objName}, ${typeof window[objName]}`)
                 pass = false
-            } else console.log(`checking ${objName}, ${typeof window[objName]}`)
+            } else
+                console.log(
+                    `%cDOSee`,
+                    `color:dimgray;font-weight:bold`,
+                    `checking ${objName}, ${typeof window[objName]}`
+                )
         })
         if (!pass) {
             // console output
