@@ -4,6 +4,7 @@
 
 ### v1.50
 
+- Added experimental _WASM_ WebAssembly DOSBox port support.
 - Fixed malformed, tiny canvas rendering on high DPR devices such as Retina laptops.
 - Migrated all static `styles` from the JavaScript into `dosee.css`.
 - DOSee forms are responsive.

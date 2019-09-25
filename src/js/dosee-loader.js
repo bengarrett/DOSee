@@ -50,6 +50,10 @@ window.Module = null
         return { emulatorJS: url }
     }
 
+    DoseeAPI.emulatorWASM = function(url) {
+        return { emulatorWASM: url }
+    }
+
     DoseeAPI.locateAdditionalEmulatorJS = function(func) {
         return { locateAdditionalJS: func }
     }
@@ -526,6 +530,21 @@ window.Module = null
                                 }
                             }
 
+                            if (
+                                `emulatorWASM` in game_data &&
+                                game_data.emulatorWASM &&
+                                `WebAssembly` in window
+                            ) {
+                                game_data.files.push(
+                                    fetch({
+                                        title: `WASM Binary`,
+                                        url: game_data.emulatorWASM
+                                    }).then(function(data) {
+                                        game_data.wasmBinary = data
+                                    })
+                                )
+                            }
+
                             Promise.all(
                                 game_data.files.map(function(f) {
                                     if (f && f.file) {
@@ -588,6 +607,7 @@ window.Module = null
                     game_data.emulator_arguments,
                     game_data.fs,
                     game_data.locateAdditionalJS,
+                    game_data.wasmBinary,
                     game_data.nativeResolution
                 )
 
@@ -646,6 +666,7 @@ window.Module = null
             args,
             fs,
             locateAdditionalJS,
+            wasmBinary,
             nativeResolution
         ) {
             return {
@@ -662,6 +683,7 @@ window.Module = null
                 canvas: canvas,
                 noInitialRun: false,
                 locateFile: locateAdditionalJS,
+                wasmBinary: wasmBinary,
                 preInit: function() {
                     splash.setTitle(`Loading program into the file system`)
                     // Re-initialize BFS to just use the writeable in-memory storage.

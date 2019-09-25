@@ -10,8 +10,10 @@
         .set(`driveG`, `/disk_drives/g_drive.zip`)
         .set(`driveS`, `/disk_drives/s_drive.zip`)
         .set(`driveU`, `/disk_drives/u_drive.zip`)
-        .set(`core`, `/emulator/dosbox-sync.js`)
+        .set(`sync`, `/emulator/dosbox-sync.js`)
         .set(`mem`, `/emulator/dosbox-sync.mem`)
+        .set(`core`, `/emulator/dosbox.js`)
+        .set(`wasm`, `/emulator/dosbox.wasm`)
 
     // Load configurations that are obtained from the <meta name="dosee:"> HTML tags
     const config = new Map()
@@ -66,8 +68,12 @@
     // Load the Emscripten static memory initialization code external file
     // https://kripken.github.io/emscripten-site/docs/optimizing/Optimizing-Code.html#code-size
     const locateFiles = filename => {
-        if (filename === `dosbox.html.mem`) return `${paths.get(`mem`)}`
-        return `libs/${filename}`
+        switch (filename) {
+            case `dosbox.html.mem`:
+                return `${paths.get(`mem`)}`
+            default:
+                return `/emulator/${filename}`
+        }
     }
 
     // Initialise the resolution of the DOS program - width, height
@@ -154,8 +160,11 @@
     // Initialise DOSee
     // Note order of these DoseeLoader values are important and swapping them could cause failures
     // dosee-core.js is the compiled Emscripten edition of DOSBox and should not be minified
+    const wantsWASM = `WebAssembly` in window
+
     const init = new DoseeLoader(
-        DoseeLoader.emulatorJS(`${paths.get(`core`)}`),
+        DoseeLoader.emulatorJS(`${paths.get(wantsWASM ? `core` : `sync`)}`),
+        DoseeLoader.emulatorWASM(`${paths.get(`wasm`)}`),
         DoseeLoader.locateAdditionalEmulatorJS(locateFiles),
         DoseeLoader.nativeResolution(nativeRes()[0], nativeRes()[1]),
         DoseeLoader.mountZip(
