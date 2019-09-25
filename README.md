@@ -102,3 +102,7 @@ Point a web browser to http://localhost:5550
 1. DOsee is released under GPL-3.0.
 2. Em-DOSBox located in `src/emulator` is released under GPL-2.0.
 3. `src/disk_drives` and `src/dos_programs` contain non-free software binaries that are included for convenience.
+
+### Similar projects
+
+- [js-dos](https://github.com/caiiiycuk/js-dos) _The best API for running dos programs in browser_
