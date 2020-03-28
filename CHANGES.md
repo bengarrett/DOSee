@@ -11,6 +11,7 @@
 - Added _DOSee_ and _DOSBox_ prefixes to console logging.
 - `dosee:width:height` now applies to splash screen.
 - Dropped `aspectRatio` API call as it wasn't used.
+- Updated `http-server` to fix `yarn run serve` connection failures on some browsers.
 
 ### v1.40
 

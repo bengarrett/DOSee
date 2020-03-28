@@ -11,7 +11,7 @@
     "canvas-toBlob": "=1.0.0",
     "copyfiles": "^2.1.1",
     "file-saver-fixed": "=1.3.8",
-    "http-server": "^0.11.1",
+    "http-server": "^0.12.1",
     "mini.css": "^3.0.1",
     "workbox-cli": "^4.3.1"
   },
@@ -30,7 +30,7 @@
   "scripts": {
     "copy": "npx copyfiles -u 1 src/**/**/* src/**/* src/* build && npx copyup -f node_modules/mini.css/dist/mini-default.min.css build/css && npx copyup -f node_modules/browserfs/dist/browserfs.min.js node_modules/browserfs-zipfs-extras/dist/browserfs-zipfs-extras.js node_modules/file-saver-fixed/dist/FileSaver.min.js node_modules/canvas-toBlob/canvas-toBlob.js build/js",
     "install": "npm run copy && npx workbox injectManifest workbox-config.js",
-    "serve": "npx http-server build -p 5550",
+    "serve": "npx http-server build -p 5550 -c-1",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "version": "1.50.0"
