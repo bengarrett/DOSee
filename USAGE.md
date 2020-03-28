@@ -2,7 +2,7 @@
 
 ## Usage & customisations
 
-It is easy to customise DOSee to load other MS-DOS programs by using HTML5 `<meta>` elements. A [index.html](index.html) file is the identifier which contains 6 meta elements used by DOSee for handling emulation information and customisation.
+It is easy to customise DOSee to load other MS-DOS programs by using HTML5 `<meta>` elements. An [index.html](index.html) file is an identifier which contains six meta elements used by DOSee for handling emulation information and customisation.
 
 ```html
 <!-- DOSee initialisation options -->
@@ -18,13 +18,13 @@ It is easy to customise DOSee to load other MS-DOS programs by using HTML5 `<met
 <meta name="dosee:width:height" content="640, 400" />
 ```
 
-#### Required
+### Required elements
 
 #### `<meta name="dosee:zip:path">`
 
-DOSee uses ZIP file archives to simulate a hard disk drive. Any ZIP file provided to _dosee:zip:path_ will be mounted by the emulator as MS-DOS drive `C:`. The `C:` drive will be accessible to all DOS commands such as `dir C:` and any included DOS programs available to run.
+DOSee uses ZIP file archives to simulate a hard disk drive. Any ZIP file provided to the _dosee:zip:path_ is the emulator mount path to MS-DOS drive `C:`. The `C:` drive will be accessible to all DOS commands such as `dir C:` and any included DOS programs available to run.
 
-The meta _content_ attribute must be a relative path from the web root and needs to point to a ZIP file archive.
+The meta _content_ attribute must be a relative path from the webroot and needs to point to a ZIP file archive.
 
 ✓ `<meta name="dosee:zip:path" content="dos_programs/example/dosgame.zip" />`
 
@@ -34,17 +34,17 @@ The meta _content_ attribute must be a relative path from the web root and needs
 
 The filename of the MS-DOS program DOSee should launch. The program file needs to exist in the ZIP archive provided to _dosee:zip:path_.
 
-DOS usually uses the following file extensions to identify a program: `.exe` `.com` `.bat`. Other than these there is no standard file naming convention to identify which file should be used to launch a piece of DOS software.
+DOS usually uses the following file extensions to identify a program: `.exe` `.com` `.bat`. Other than these, there is no standard file naming convention to identify which file should launch a piece of DOS software.
 
-If the content is left blank or the filename doesn't exist in the archive, DOSee will launch into an DOS `C:` prompt.
+If the content is left blank or the filename doesn't exist in the archive, DOSee launches into a DOS `C:` prompt.
 
 ✓ `<meta name="dosee:run:filename" content="game.exe" />`
 
-#### Optional
+### Optional elements
 
 #### `<meta name="dosee:capture:filename">`
 
-The filename used by the capture tool to save emulator screenshots. The PNG images should include the `.png` file extension.
+Capture filename is used by the screenshot tool to save emulator screenshots. The PNG images should include the `.png` file extension.
 
 ✓ `<meta name="dosee:capture:filename" content="game.png" />`
 
@@ -52,7 +52,7 @@ The filename used by the capture tool to save emulator screenshots. The PNG imag
 
 #### `<meta name="dosee:utilities">`
 
-When set to `true` it tells DOSee to mount a collection of MS-DOS utilities and tools that are accessible from the `U:` drive. The default option is false.
+When set to `true`, it tells DOSee to mount a collection of MS-DOS utilities and tools that are accessible from the `U:` drive. The default option is false.
 
 ✓ `<meta name="dosee:utilities" content="true" />`
 
@@ -60,19 +60,19 @@ When set to `true` it tells DOSee to mount a collection of MS-DOS utilities and 
 
 #### `<meta name="dosee:width:height">`
 
-Configures the initial pixel width and height of the emulation loading screen and canvas. The canvas may readjust itself after the emulator runs depending on the graphics hardware selection, scale options and aspect correction settings. The default canvas and screen size is 640px x 480px.
+Width and height configure the initial pixel size of the emulation loading screen and canvas. The canvas may readjust itself after the emulator runs depending on the graphics hardware selection, scale options and aspect correction settings. The default canvas and screen size is 640px x 480px.
 
 ✓ `<meta name="dosee:width:height" content="640,400" />`
 
 ✗ `<meta name="dosee:width:height" content="640px, 400px" />`
 
-#### Placeholders
+### Placeholder elements
 
 #### `<meta name="dosee:audio:gus">`
 
-When set to `true` it tells DOSee to mount a collection of Gravis Ultrasound audio drivers and tools that are accessible from the `G:` drive. These drivers are always loaded by DOSee whenever the Gravis Ultrasound audio option is selected so this should always be left to `false`.
+When set to `true`, it tells DOSee to mount a collection of Gravis Ultrasound audio drivers and tools that are accessible from the `G:` drive. These drivers are always loaded by DOSee whenever the Gravis Ultrasound audio option is selected so this should always be `false`.
 
-#### Sample programs
+### Sample programs
 
 There are three additional sample programs included in this repository that you can try out. In the [index.html](index.html) update the following `<meta>` elements.
 
@@ -85,30 +85,30 @@ There are three additional sample programs included in this repository that you 
 <meta name="dosee:run:filename" content="sierra.com" />
 ```
 
-Sample program 1 (fastest, VGA, Gravis Ultrasound)
+#### Sample program 1 (fastest, VGA, Gravis Ultrasound)
 
 ```html
 <meta name="dosee:zip:path" content="dos_programs/program_1/df2intro.zip" />
 <meta name="dosee:run:filename" content="DF2.EXE" />
 ```
 
-Sample program 2 (fastest, VGA, Gravis Ultrasound)
+#### Sample program 2 (fastest, VGA, Gravis Ultrasound)
 
 ```html
 <meta name="dosee:zip:path" content="dos_programs/program_2/df2.zip" />
 <meta name="dosee:run:filename" content="df2.exe" />
 ```
 
-Sample program 3 (fastest, VGA, Sound Blaster 16)
+#### Sample program 3 (fastest, VGA, Sound Blaster 16)
 
 ```html
 <meta name="dosee:zip:path" content="dos_programs/program_3/hyb605.zip" />
 <meta name="dosee:run:filename" content="hyb605.exe" />
 ```
 
-#### Add new software example
+### Add new software example
 
-Create a new program subdirectory. For your own implementation, there is no requirement to follow this `dos_programs/` directory naming structure.
+Create a new program subdirectory. For your implementation, there is no requirement to follow this `dos_programs/` directory naming structure.
 
 ```
 cd DOSee

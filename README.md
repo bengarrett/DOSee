@@ -11,24 +11,28 @@
 
 ## An MS-DOS emulator for the web.
 
-DOSee is a front-end for an [MS-DOS](https://en.wikipedia.org/wiki/MS-DOS) emulation ecosystem to use on the web. The text-based MS-DOS was the dominant personal computer platform for much of the 1980s up until the mid-1990s before being superseded by Microsoft Windows. Emulating this platform allows the running of tens of thousands of games, demos and applications from this era to run on a web browser both online or offline as a desktop web-app!
+DOSee is a front-end for an [MS-DOS](https://en.wikipedia.org/wiki/MS-DOS) emulation ecosystem to use on the web.
 
-DOSee is only a user interface and installation process for an incredible emulation ecosystem created by many amazing people over many years. DOSee itself is a fork of [The Emularity](https://github.com/db48x/emularity) project created by the Internet Archive. [EM-DOSBox](https://github.com/dreamlayers/em-dosbox/) the core of this emulation is a JavaScript port of [DOSBox](https://www.dosbox.com), the world's most popular MS-DOS emulator.
+The text-based MS-DOS was the dominant personal computer platform for much of the 1980s up until the mid-1990s before being superseded by Microsoft Windows. Emulating this platform allows the running of tens of thousands of games, demos and applications from this era to run on a web browser both online or offline as a desktop web-app!
+
+DOSee is an interface and installation process for an incredible emulation ecosystem created by many amazing people over the years.
+
+The application itself is a fork of [The Emularity](https://github.com/db48x/emularity) project created by the Internet Archive. [EM-DOSBox](https://github.com/dreamlayers/em-dosbox/), the core of this emulation, is a JavaScript port of [DOSBox](https://www.dosbox.com), the world's most popular MS-DOS emulator.
 
 ![DOSee preview](src/images/preview.png)
 
 ### What's new
 
-[Changes and updates can be found in CHANGES.md](CHANGES.md)
+[Changes and updates are in CHANGES.md](CHANGES.md)
 
 ### Requirements
 
-- A web browser that supports JavaScript ES6 (ECMAScript 2015).
-  Current Firefox, Chrome, Brave, Edge or Safari will work fine.
+- A web browser that supports JavaScript ES6 (ECMAScript 2015),
+  current Firefox, Chrome, Edge or Safari are good.
 - A physical keyboard, as MS-DOS is a text-based operating system.
-- [Node.js](https://nodejs.org) with [npm](https://www.npmjs.com/get-npm) and [npx](https://www.npmjs.com/package/npx).
+- [Node.js](https://nodejs.org), with [yarn](https://yarnpkg.com/) or [npm](https://www.npmjs.com/get-npm) and [npx](https://www.npmjs.com/package/npx).
 
-_DOSee has to be served over a HTTP server, it can not be run using the browser `file:///` protocol._
+_DOSee requires an HTTP server, it can not run using the `file:///` browser protocol._
 
 ### Instructions, **download and build**
 
@@ -36,36 +40,36 @@ DOSee requires building before it is ready to serve to a web browser.
 
 Clone DOSee.
 
-```
+```bash
 git clone https://github.com/bengarrett/DOSee.git
 ```
 
 Install the dependencies and build DOSee.
 
-`npm` is the package manager for node.js and is included in that environment. [It's available for all major platforms](https://nodejs.org/en/download/).
+`npm` is the included package manager for node.js that [is available for all major platforms](https://nodejs.org/en/download/). `yarn` [is an alternative](https://yarnpkg.com/), easier package manager for node.js.
 
-```sh
+```bash
 cd DOSee
-npm install
+yarn # npm install
 ```
 
-**If in the future, any edits are made by you to the source files in `src/`. You will need to run this build command.**
+**Any future edits to the source files in `src/` require this build command to apply the changes.**
 
-```
-npm run install
+```bash
+yarn run install # npm run install
 ```
 
-### Server instruction, **npm**
+### Serve, **yarn**
 
 Serve the `build` directory over port _5550_.
 
-```
-npm run serve
+```bash
+yarn run serve # npm run serve
 ```
 
 Point a web browser to http://localhost:5550
 
-### Server instruction, **Docker**
+### Serve, **Docker**
 
 Requirements:
 
@@ -74,35 +78,22 @@ Requirements:
 
 Run the DOSee container.
 
-```
+```bash
 docker-compose up
 ```
 
 Point a web browser to http://localhost:5550
 
-### Quick instructions, **Yarn**
+### Usage and customisations
 
-_Yarn usage requires both `npm` and `npx` to be installed_
+[Can be found in USAGE.md](USAGE.md).
 
-```sh
-git clone https://github.com/bengarrett/DOSee.git
-cd DOSee
-yarn
-yarn run serve
-```
+### Licenses
 
-Point a web browser to http://localhost:5550
-
-### Usage & customisations
-
-[Can be found in USAGE.md](USAGE.md)
-
-### License
-
-1. DOsee is released under GPL-3.0.
-2. Em-DOSBox located in `src/emulator` is released under GPL-2.0.
-3. `src/disk_drives` and `src/dos_programs` contain non-free software binaries that are included for convenience.
+1. DOSee is under GPL-3.0.
+2. Em-DOSBox located in `src/emulator` is under GPL-2.0.
+3. `src/disk_drives` and `src/dos_programs` contain non-free software binaries that are there for convenience.
 
 ### Similar projects
 
-- [js-dos](https://github.com/caiiiycuk/js-dos) _The best API for running dos programs in browser_
+- [js-dos](https://github.com/caiiiycuk/js-dos) - _The best API for running dos programs in the browser._
