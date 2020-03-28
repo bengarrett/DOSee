@@ -1,6 +1,5 @@
 {
   "eslint.alwaysShowStatus": true,
-  "prettier.eslintIntegration": true,
   "spellright.documentTypes": [
     "markdown",
     "latex",
