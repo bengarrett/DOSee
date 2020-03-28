@@ -23,7 +23,7 @@ The application itself is a fork of [The Emularity](https://github.com/db48x/emu
 
 ### What's new
 
-[Changes and updates are in CHANGES.md](CHANGES.md)
+[Changes and updates are in CHANGES.md](CHANGES.md).
 
 ### Requirements
 
@@ -38,13 +38,13 @@ _DOSee requires an HTTP server, it can not run using the `file:///` browser prot
 
 DOSee requires building before it is ready to serve to a web browser.
 
-Clone DOSee.
+#### Clone DOSee.
 
 ```bash
 git clone https://github.com/bengarrett/DOSee.git
 ```
 
-Install the dependencies and build DOSee.
+#### Install the dependencies and build DOSee.
 
 `npm` is the included package manager for node.js that [is available for all major platforms](https://nodejs.org/en/download/). `yarn` [is an alternative](https://yarnpkg.com/), easier package manager for node.js.
 
@@ -53,7 +53,7 @@ cd DOSee
 yarn # npm install
 ```
 
-**Any future edits to the source files in `src/` require this build command to apply the changes.**
+#### Any future edits to the source files in `src/` require this build command to apply the changes.
 
 ```bash
 yarn run install # npm run install
