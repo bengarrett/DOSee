@@ -2,7 +2,7 @@
 
 ## Changes and updates
 
-### v1.50
+### v1.5.0
 
 - Added experimental _WASM_ WebAssembly DOSBox port support.
 - Fixed malformed, tiny canvas rendering on high DPR devices such as Retina laptops.
