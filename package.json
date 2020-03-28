@@ -33,5 +33,5 @@
     "serve": "npx http-server build -p 5550",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "version": "1.40.0"
+  "version": "1.50.0"
 }
