@@ -1,7 +1,7 @@
 # DOSee Docker compose to load an nginx webhost server
 #
 # Run: docker-compose up -d
-# Access in a browser: http://localhost:5550
+# Access in a browser: http://localhost:8086
 #
 # Shell access: docker-compose exec web sh
 # Reset containers: docker-compose rm
@@ -12,14 +12,14 @@ version: "3.2"
 services:
   web:
     labels:
-      net.dosee.description: "DOSee - A MS-DOS emulator for the web"
+      net.dosee.description: "DOSee an MS-DOS emulator for the web"
     container_name: "dosee"
     # nginx stable is used due to its less frequent updates
     # alpine is a tiny linux distribution
     image: nginx:stable-alpine
-    # expose nginx web port 80 as port 5550
+    # expose nginx web port 80 as port 8086
     ports:
-      - "5550:80"
+      - "8086:80"
     volumes:
       # bind your local cloned DOSee repo to nginx's html hosting path
       - type: bind
