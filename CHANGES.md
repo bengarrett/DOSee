@@ -12,6 +12,7 @@
 - `dosee:width:height` now applies to splash screen.
 - Dropped `aspectRatio` API call as it wasn't used.
 - Updated `http-server` to fix `yarn run serve` connection failures on some browsers.
+- Changed the behaviour of DOSee.exit() to better handle eventlisteners.
 
 ### v1.40
 

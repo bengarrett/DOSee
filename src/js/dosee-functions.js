@@ -22,20 +22,24 @@
   }
   // Aborts DOSee and cleans up its event handlers
   DOSee.exit = () => {
-    if (
-      typeof Module === `undefined` ||
-      typeof window.exitRuntime === `undefined`
-    )
-      return
-    // Remove all the event listeners created by EMscripten
-    // to restore mouse and keyboard usage.
-    window.exitRuntime()
+    if (typeof Module === `undefined`) return
     try {
       // Module is an global object created by Emscripten.
       // abort() abruptly stops Emscripten and frees up browser resources.
       Module.abort()
+      console.error(`DOSee has failed to stop.`)
     } catch (err) {
-      console.log(`DOSee has stopped.`)
+      console.info(`DOSee has stopped.`)
+    }
+    // Remove all registered event handlers to release the mouse and keyboard controls.
+    // DOSee v1.4 used window.exitRuntime() but this breaks with the current em-dosbox.
+    try {
+      JSEvents.removeAllEventListeners()
+      console.info(`DOSee has released control of the keyboard and mouse.`)
+    } catch (err) {
+      console.error(
+        `DOSee has failed release the keyboard and mouse event handlers.`
+      )
     }
   }
 
