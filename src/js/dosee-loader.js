@@ -16,8 +16,8 @@
 window.Module = null
 ;(Promise => {
   const version = new Map()
-    .set(`date`, new Date(`24,Sep,2019`))
-    .set(`minor`, `45`)
+    .set(`date`, new Date(`28,Mar,2020`))
+    .set(`minor`, `5.0`)
     .set(`major`, `1`)
     .set(`display`, ``)
   version.set(
