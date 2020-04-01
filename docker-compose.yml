@@ -13,7 +13,7 @@ services:
   web:
     labels:
       net.dosee.description: "DOSee an MS-DOS emulator for the web"
-    container_name: "dosee"
+    container_name: "dosee_web"
     # nginx stable is used due to its less frequent updates
     # alpine is a tiny linux distribution
     image: nginx:stable-alpine
