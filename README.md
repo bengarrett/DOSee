@@ -61,20 +61,15 @@ yarn run install # npm run install
 
 ### Serve, **yarn**
 
-Serve the `build` directory over port _5550_.
+Serve the `build` directory over port _8086_.
 
 ```bash
 yarn run serve # npm run serve
 ```
 
-Point a web browser to http://localhost:5550
+Point a web browser to http://localhost:8086
 
-### Serve, **Docker**
-
-Requirements:
-
-- Docker engine: 17.04.0+
-- docker-compose: 3.2
+### Serve, **Docker Compose**
 
 Run the DOSee container.
 
@@ -82,7 +77,27 @@ Run the DOSee container.
 docker-compose up
 ```
 
-Point a web browser to http://localhost:5550
+Point a web browser to http://localhost:8086
+
+### Serve, **Docker**
+
+Build DOSee using the included Dockerfile.
+
+```bash
+docker build -t dosee .
+```
+
+Run the DOSee image as a container.
+
+```bash
+docker run --name dosee_app -i -p 8086:80 dosee
+```
+
+Point a web browser to http://localhost:8086
+
+```bash
+docker stop dosee_app # to stop the container
+```
 
 ### Usage and customisations
 
