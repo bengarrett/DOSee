@@ -1,8 +1,20 @@
 # DOSee
 
+## Rebuild edits
+
+Any edits to the source files in `src/` require this build command to apply the changes.
+
+```bash
+yarn run install # npm run install
+```
+
+> #### Chrome's service worker cache may also need reconfiguring.
+>
+> In an active DOSee browser tab, press `Ctrl` `Shift` `I` and select the **Application** tab; under **Service Workers** enable the **Update on Refresh** checkbox.
+
 ## Usage & customisations
 
-It is easy to customise DOSee to load other MS-DOS programs by using HTML5 `<meta>` elements. An [index.html](index.html) file is an identifier which contains six meta elements used by DOSee for handling emulation information and customisation.
+It is easy to customise DOSee to load other MS-DOS programs by using HTML5 `<meta>` elements. An [src/index.html](src/index.html) file is an identifier which contains six meta elements used by DOSee for handling emulation information and customisation.
 
 ```html
 <!-- DOSee initialisation options -->

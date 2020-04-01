@@ -53,11 +53,15 @@ cd DOSee
 yarn # npm install
 ```
 
-#### Any future edits to the source files in `src/` require this build command to apply the changes.
+### All edits to the source files in `src/` require this build command to apply the changes
 
 ```bash
 yarn run install # npm run install
 ```
+
+#### Chrome's service worker cache may also need reconfiguring.
+
+In an active DOSee browser tab, press `Ctrl` `Shift` `I` and select the **Application** tab; under **Service Workers** enable the **Update on Refresh** checkbox.
 
 ### Serve, **yarn**
 
