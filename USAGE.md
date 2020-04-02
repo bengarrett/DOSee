@@ -143,4 +143,55 @@ Update the DOSee [index.html](index.html) to launch the demo and enjoy the confu
 
 ![DOSee preview](src/images/sq3demo.png)
 
+## Hosting
+
+Since DOSee usages several modern web technologies that complicate the hosting of the app, the configuration isn't as apparent as you might assume.
+Being a [Progressive Web Application](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps) requires serving over an HTTPS connection.
+While HTTPS serving on modern browsers also demand the use of a complicated [Content Security Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP).
+Below is an example nginx configuration to serve DOSee [over a proxy](https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/). It assumes DOSee is also running on the same host listening on port 8086.
+
+A few things to note.
+
+- All `server_name`, `ssl_certificate` and `ssl_certificate_key` selections which contain `dosee.site` get swapped with your own domain name.
+- The `Content-Security-Policy` header must not have any newlines.
+- The `location` selections need `[[HOST IP ADDRESS]]` replaced with the host server's IP address.
+
+> `/etc/nginx/conf.d/dosee.conf`
+
+```nginx
+##
+# DOSee proxy example on nginx
+#
+server {
+    listen 80;
+    server_name www.dosee.site dosee.site;
+    server_tokens off;
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+server {
+    listen 443 ssl http2;
+    server_name www.dosee.site dosee.site;
+    server_tokens off;
+    add_header Content-Security-Policy
+        "default-src 'self';img-src 'self' data:;frame-ancestors 'none';font-src 'self' data:;script-src 'self' 'unsafe-eval' data:;script-src-elem 'self' https://storage.googleapis.com/workbox-cdn/ data:";
+    # 0, one day: 86400, two years: 63072000:
+    add_header Cache-Control "public, max-age=86400";
+    add_header X-Frame-Options "DENY";
+    add_header X-Content-Type-Options "nosniff";
+    add_header Strict-Transport-Security
+        "max-age=63072000; includeSubDomains"
+        always;
+    ssl_certificate /etc/letsencrypt/live/dosee.site/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/dosee.site/privkey.pem;
+    location ~ .(css|js)$ {
+        proxy_pass http://[[HOST IP ADDRESS]]:8086;
+    }
+    location / {
+        proxy_pass http://[[HOST IP ADDRESS]]:8086;
+    }
+}
+```
+
 [back to README.md](README.md)
