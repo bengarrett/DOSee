@@ -15,6 +15,8 @@ DOSee is a front-end for an [MS-DOS](https://en.wikipedia.org/wiki/MS-DOS) emula
 
 The text-based MS-DOS was the dominant personal computer platform for much of the 1980s up until the mid-1990s before being superseded by Microsoft Windows. Emulating this platform allows the running of tens of thousands of games, demos and applications from this era to run on a web browser both online or offline as a desktop web-app!
 
+**[Try it online at dosee.site](https://dosee.site)**
+
 DOSee is an interface and installation process for an incredible emulation ecosystem created by many amazing people over the years.
 
 The application itself is a fork of [The Emularity](https://github.com/db48x/emularity) project created by the Internet Archive. [EM-DOSBox](https://github.com/dreamlayers/em-dosbox/), the core of this emulation, is a JavaScript port of [DOSBox](https://www.dosbox.com), the world's most popular MS-DOS emulator.
