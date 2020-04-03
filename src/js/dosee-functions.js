@@ -73,9 +73,22 @@
   // (https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API)
   DOSee.fullScreen = () => {
     if (typeof document.fullscreenElement === `undefined`) return;
-    const element = document.getElementById(`doseeCanvas`);
-    if (!element.fullscreenElement) element.requestFullscreen();
-    else if (element.exitFullscreen) element.exitFullscreen();
+    if (!document.fullscreenEnabled) return;
+    if (
+      navigator.userAgent.includes(`Chrome/`) &&
+      navigator.userAgent.includes(`Mac OS X`)
+    )
+      return;
+    const elem = document.getElementById(`doseeCanvas`);
+    if (!document.fullscreenElement) {
+      elem.requestFullscreen().catch((err) => {
+        console.error(
+          `Error attempting to enable full-screen mode: ${err.message} (${err.name})`
+        );
+      });
+    } else {
+      document.exitFullscreen();
+    }
   };
 
   // Capture and save the canvas to a PNG image file
@@ -175,6 +188,12 @@
     // do nothing
   } else if (typeof document.fullscreenElement === `undefined`) {
     // disable and hide the button if API is not supported by the browser such as in Safari
+    fullScreenButton.style.display = `none`;
+  } else if (
+    navigator.userAgent.includes(`Chrome/`) &&
+    navigator.userAgent.includes(`Mac OS X`)
+  ) {
+    // chrome on macos behaves erratically
     fullScreenButton.style.display = `none`;
   } else {
     fullScreenButton.addEventListener(`click`, DOSee.fullScreen);
