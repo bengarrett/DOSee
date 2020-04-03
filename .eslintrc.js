@@ -4,15 +4,15 @@ module.exports = {
     browser: true,
     es6: true
   },
-  extends: "eslint:recommended",
-  parserOptions: {
-    ecmaVersion: 6,
-    impliedStrict: true
-  },
+  extends: ['plugin:prettier/recommended'],
+  plugins: ['prettier'],
   rules: {
-    quotes: ["error", "backtick"],
-    semi: ["error", "never"],
-    strict: ["error", "global"]
+    'no-console': ['off'],
+    'prettier/prettier': ['error'],
+    quotes: ['error', 'backtick'],
+  },
+  parserOptions: {
+    ecmaVersion: 2016,
   },
   globals: {
     BrowserFS: true,
