@@ -8,9 +8,13 @@ Any changes to the files or assets in [`src/`](src/) require an install command 
 yarn run install # npm run install
 ```
 
-> #### Chrome's service worker cache may also need reconfiguring.
->
-> In an active DOSee browser tab, press `Ctrl` `Shift` `I` and select the **Application** tab; under **Service Workers** enable the **Update on Refresh** checkbox.
+#### Chrome, [Update on Reload](https://developers.google.com/web/tools/workbox/guides/troubleshoot-and-debug#update_on_reload)
+
+> The "update on reload" toggle will force Chrome to check for a new service worker every time you refresh the page.
+
+#### Chrome, [Clear Storage](https://developers.google.com/web/tools/workbox/guides/troubleshoot-and-debug#clear_storage)
+
+> There will come a point where you'll want to start from a clean state. No service workers, not caching, nothing. You can clear everything with the "Clear site data" button.
 
 ## Usage & customisations
 

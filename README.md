@@ -63,10 +63,6 @@ Any updates to the files in `src/` require an install command to apply the chang
 yarn run install # npm run install
 ```
 
-##### Chrome's service worker cache may also need reconfiguring.
-
-In an active DOSee browser tab, press `Ctrl` `Shift` `I` and select the **Application** tab; under **Service Workers** enable the **Update on Refresh** checkbox.
-
 ### Serve, **yarn**
 
 Serve the `build` directory over port _8086_.
@@ -107,7 +103,7 @@ Point a web browser to http://localhost:8086
 docker stop dosee_app # to stop the container
 ```
 
-### Usage and customisations
+### Usage, hosting and troubleshooting.
 
 [Can be found in USAGE.md](USAGE.md).
 
