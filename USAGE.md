@@ -1,8 +1,8 @@
 # DOSee
 
-## Rebuild edits
+## Your updates
 
-Any edits to the source files in `src/` require this build command to apply the changes.
+Any changes to the files or assets in [`src/`](src/) require an install command for the updates to apply.
 
 ```bash
 yarn run install # npm run install

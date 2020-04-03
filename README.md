@@ -55,9 +55,9 @@ cd DOSee
 yarn # npm install
 ```
 
-#### Rebuild.
+#### Future updates.
 
-All edits to the source files in `src/` require this build command to apply the changes
+Any updates to the files in `src/` require an install command to apply the changes.
 
 ```bash
 yarn run install # npm run install
