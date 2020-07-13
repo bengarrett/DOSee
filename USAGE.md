@@ -156,7 +156,7 @@ Below is an example nginx configuration to serve DOSee [over a proxy](https://do
 
 A few things to note.
 
-- All `server_name`, `ssl_certificate` and `ssl_certificate_key` selections which contain `dosee.site` get swapped with your own domain name.
+- All `server_name`, `ssl_certificate` and `ssl_certificate_key` selections which contain `dosee.link` get swapped with your own domain name.
 - The `Content-Security-Policy` header must not have any newlines.
 - The `location` selections need `[[HOST IP ADDRESS]]` replaced with the host server's IP address.
 
@@ -168,7 +168,7 @@ A few things to note.
 #
 server {
     listen 80;
-    server_name www.dosee.site dosee.site;
+    server_name www.dosee.link dosee.link;
     server_tokens off;
     location / {
         return 301 https://$host$request_uri;
@@ -176,7 +176,7 @@ server {
 }
 server {
     listen 443 ssl http2;
-    server_name www.dosee.site dosee.site;
+    server_name www.dosee.link dosee.link;
     server_tokens off;
     add_header Content-Security-Policy
         "default-src 'self';img-src 'self' data:;frame-ancestors 'none';font-src 'self' data:;script-src 'self' 'unsafe-eval' data:;script-src-elem 'self' https://storage.googleapis.com/workbox-cdn/ data:";
@@ -187,8 +187,8 @@ server {
     add_header Strict-Transport-Security
         "max-age=63072000; includeSubDomains"
         always;
-    ssl_certificate /etc/letsencrypt/live/dosee.site/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/dosee.site/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/dosee.link/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/dosee.link/privkey.pem;
     location ~ .(css|js)$ {
         proxy_pass http://[[HOST IP ADDRESS]]:8086;
     }
