@@ -23,5 +23,5 @@ services:
     volumes:
       # bind your local cloned DOSee repo to nginx's html hosting path
       - type: bind
-        source: ./build
+        source: ./src
         target: /usr/share/nginx/html
