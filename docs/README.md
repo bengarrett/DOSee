@@ -21,7 +21,7 @@ DOSee is an interface and installation process for an incredible emulation ecosy
 
 The application itself is a fork of [The Emularity](https://github.com/db48x/emularity) project created by the Internet Archive. [EM-DOSBox](https://github.com/dreamlayers/em-dosbox/), the core of this emulation, is a JavaScript port of [DOSBox](https://www.dosbox.com), the world's most popular MS-DOS emulator.
 
-![DOSee preview](src/images/preview.png)
+![DOSee preview](/src/images/preview.png)
 
 ### What's new
 
