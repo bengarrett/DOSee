@@ -18,4 +18,4 @@
 # alpine is a tiny linux distribution
 FROM nginx:stable-alpine
 LABEL net.dosee.description="DOSee an MS-DOS emulator for the web"
-COPY build/ /usr/share/nginx/html/
+COPY src/ /usr/share/nginx/html/
