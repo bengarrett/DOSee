@@ -27,7 +27,7 @@ RUN mkdir -p /home/nginx/src
 WORKDIR /home/nginx/
 RUN apk add --update nodejs npm && \
     npm install --global yarn && \
-    yarn && \
+    yarn --production && \
     cp -r /home/nginx/build/* /usr/share/nginx/html/
 
 WORKDIR /usr/share/nginx/html/
