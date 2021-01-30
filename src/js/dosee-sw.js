@@ -3,9 +3,10 @@
  * DOSee service worker
  */
 
-"use strict";
 if (`serviceWorker` in navigator) {
+  `use strict`;
   window.addEventListener(`load`, () => {
+    "use strict";
     navigator.serviceWorker
       .register(`/sw.js`)
       .then((registration) => {

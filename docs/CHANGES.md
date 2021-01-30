@@ -2,7 +2,14 @@
 
 ## Changes and updates
 
-### v1.5.0
+### v1.60
+
+- Fixed broken stop button.
+- Code refactor to be ES2017 and ESlint compliant.
+- Updated Workbox to v6.
+- Fixed the broken Dockerfile and dropped docker-compose.yml.
+
+### v1.50
 
 - Added experimental _WASM_ WebAssembly DOSBox port support.
 - Fixed malformed, tiny canvas rendering on high DPR devices such as Retina laptops.
@@ -11,8 +18,7 @@
 - Added _DOSee_ and _DOSBox_ prefixes to console logging.
 - `dosee:width:height` now applies to splash screen.
 - Dropped `aspectRatio` API call as it wasn't used.
-- Updated `http-server` to fix `yarn run serve` connection failures on some browsers.
-- Changed the behaviour of DOSee.exit() to better handle eventlisteners.
+- Migrated to Workbox v5.
 
 ### v1.40
 

@@ -2,8 +2,10 @@
  * index.js
  * DOSee index.html example menu user-interactions
  */
-"use strict";
+
 (() => {
+  "use strict";
+
   // Menu containers
   const menuTabs = new Map()
     .set(`hardware`, document.getElementById(`hardwareTab`))
@@ -11,48 +13,50 @@
     .set(`help`, document.getElementById(`helpTab`));
 
   // Menu buttons
-  const menuBtns = new Map()
+  const menuButtons = new Map()
     .set(`hardware`, document.getElementById(`hardwareBtn`))
     .set(`options`, document.getElementById(`optionsBtn`))
     .set(`help`, document.getElementById(`helpBtn`));
 
+  // Hides all menu containers, if a defaultTab is provided then it will be displayed
+  function resetTabs(defaultTab) {
+    menuTabs.forEach((tab) => {
+      tab.id === `${defaultTab}`
+        ? tab.classList.remove(`hidden`)
+        : tab.classList.add(`hidden`);
+    });
+  }
+
   // Create mouse click events for each menu button
   function monitorTabs() {
-    menuBtns.forEach((button) => {
+    menuButtons.forEach((button) => {
       if (button === null) return;
       button.addEventListener(`click`, (event) => {
-        const srcId = event.srcElement.id;
+        const srcId = event.srcElement.id,
+          threeChars = -3;
         // replace the trailing `Btn` from the srcElement Id with `Tab`
-        const newId = `${srcId.slice(0, -3)}Tab`;
+        const newId = `${srcId.slice(0, threeChars)}Tab`;
         resetTabs(newId);
       });
     });
   }
 
-  // Hides all menu containers, if a defaultTab is provided then it will be displayed
-  function resetTabs(defaultTab) {
-    menuTabs.forEach((tab) => {
-      if (tab.id === `${defaultTab}`) tab.classList.remove(`hidden`);
-      else tab.classList.add(`hidden`);
-    });
+  // Set the <H2> element to show the running program and archive filename
+  function setHeader() {
+    const h2 = document.getElementById(`doseeH2`),
+      archive = `${DOSee.getMetaContent(`dosee:zip:path`)}`,
+      executable = `${DOSee.getMetaContent(`dosee:run:filename`)}`,
+      leftwardArrow = 8592;
+    h2.innerText =
+      executable.length > 0
+        ? `${executable} ${String.fromCharCode(leftwardArrow)} ${archive}`
+        : `${archive}`;
   }
 
-  monitorTabs();
-  resetTabs(`hardwareTab`);
-  // set the <H2> element to show the running program and archive filename
-  {
-    const h2 = document.getElementById(`doseeH2`);
-    const archive = `${DOSee.getMetaContent(`dosee:zip:path`)}`;
-    const exe = `${DOSee.getMetaContent(`dosee:run:filename`)}`;
-    if (exe.length > 0) {
-      // char-code 8592 is a leftward arrow
-      h2.innerText = `${exe} ${String.fromCharCode(8592)} ${archive}`;
-    } else h2.innerText = `${archive}`;
-  }
   // Update help tab example
-  {
-    const path = DOSee.getMetaContent(`dosee:zip:path`);
-    const na = document.getElementById(`helpTabNA`);
+  function example() {
+    const path = DOSee.getMetaContent(`dosee:zip:path`),
+      na = document.getElementById(`helpTabNA`);
     switch (path) {
       case `dos_programs/program_4/agi_demo_pack_1.zip`:
         document.getElementById(`helpProgram_4`).classList.remove(`hide`);
@@ -62,8 +66,9 @@
         na.classList.remove(`hide`);
     }
   }
+
   // PWA offline notification
-  {
+  function pwa() {
     const offline = document.getElementById(`doseeOffline`);
     window.addEventListener(`offline`, () => {
       offline.classList.remove(`hidden`);
@@ -72,27 +77,29 @@
       offline.classList.add(`hidden`);
     });
   }
+
+  monitorTabs();
+  resetTabs(`hardwareTab`);
+  setHeader();
+  example();
+  pwa();
+
   // Install (pwa) link
-  {
-    window.onappinstalled = () => {
-      console.log(`Thank you for installing DOSee`);
-    };
-    window.addEventListener(
-      `beforeinstallprompt`,
-      (beforeInstallPromptEvent) => {
-        let installButton = document.getElementById(`doseeInstall`);
-        // Prevents immediate prompt display
-        beforeInstallPromptEvent.preventDefault();
-        installButton.classList.remove(`hidden`);
-        installButton.addEventListener(`click`, () => {
-          installButton.classList.add(`hidden`);
-          // Display install prompt and catch any `Cancel` buttons
-          beforeInstallPromptEvent.prompt().catch(() => {
-            installButton.classList.add(`hidden`);
-          });
-        });
-      }
-    );
-  }
+  window.onappinstalled = () => {
+    console.log(`Thank you for installing DOSee`);
+  };
+  window.addEventListener(`beforeinstallprompt`, (beforeInstallPromptEvent) => {
+    const installButton = document.getElementById(`doseeInstall`);
+    // Prevents immediate prompt display
+    beforeInstallPromptEvent.preventDefault();
+    installButton.classList.remove(`hidden`);
+    installButton.addEventListener(`click`, () => {
+      installButton.classList.add(`hidden`);
+      // Display install prompt and catch any `Cancel` buttons
+      beforeInstallPromptEvent.prompt().catch(() => {
+        installButton.classList.add(`hidden`);
+      });
+    });
+  });
   console.log(`Loaded index.js`);
 })();

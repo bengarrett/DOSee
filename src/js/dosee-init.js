@@ -2,9 +2,8 @@
  * dosee-init.js
  * DOSee initialisation
  */
-
-"use strict";
 (() => {
+  "use strict";
   // Relative file paths to DOSee emulation dependencies
   const paths = new Map()
     .set(`driveG`, `/disk_drives/g_drive.zip`)
@@ -17,27 +16,33 @@
 
   // Load configurations that are obtained from the <meta name="dosee:"> HTML tags
   const config = new Map()
-    .set(`exe`, DOSee.getMetaContent(`dosee:run:filename`))
-    .set(`filename`, DOSee.getMetaContent(`dosee:filename`))
-    .set(`gus`, DOSee.getMetaContent(`dosee:audio:gus`))
     .set(`path`, DOSee.getMetaContent(`dosee:zip:path`))
+    .set(`exe`, DOSee.getMetaContent(`dosee:run:filename`))
+    .set(`utils`, DOSee.getMetaContent(`dosee:utilities`))
+    .set(`gus`, DOSee.getMetaContent(`dosee:audio:gus`))
     .set(`res`, DOSee.getMetaContent(`dosee:width:height`))
-    .set(`start`, false)
-    .set(`utils`, DOSee.getMetaContent(`dosee:utilities`));
+    .set(`filename`, DOSee.getMetaContent(`dosee:loading:name`))
+    .set(`start`, false);
+
+  const checks = () => {
+    const err = `html page is missing the required meta tag`;
+    if (config.get(`path`) === null) throw Error(`${err} "dosee:zip:path"`);
+    if (config.get(`exe`) === null) throw Error(`${err} "dosee:run:filename"`);
+  };
 
   // Extract and save the filename from config path
-  {
-    const index = config.get(`path`).lastIndexOf(`/`);
-    const filename = config.get(`filename`);
-    if (filename === null || config.get(`filename`).length == 0) {
-      if (index > -1)
-        config.set(`filename`, config.get(`path`).slice(index + 1));
-      else config.set(`filename`, config.get(`path`));
-    }
-  }
+  const extractSave = () => {
+    const index = config.get(`path`).lastIndexOf(`/`),
+      filename = config.get(`filename`);
+    console.log(typeof filename, filename);
+    if (filename !== null) return;
+    if (index)
+      return config.set(`filename`, config.get(`path`).slice(index + 1));
+    config.set(`filename`, config.get(`path`));
+  };
 
   // Handle URL params special cases that need additional files to be loaded by DOSee
-  {
+  const specialCaseURLs = () => {
     const urlParams = DOSee.newQueryString();
     // Gravis Ultrasound Audio drivers (dosaudio=gus)
     const audio = urlParams.get(`dosaudio`);
@@ -51,10 +56,10 @@
       config.set(`utils`, `true`);
       DOSee.setMetaContent(`dosee:utilities`, `true`);
     }
-  }
+  };
 
   // Load the GUS (Gravis UltraSound) driver
-  const gusDriver = (load) => {
+  const gravisDriver = (load) => {
     if (load !== `true`) return null;
     return DoseeLoader.mountZip(
       `g`,
@@ -76,16 +81,20 @@
     }
   };
 
+  checks();
+  extractSave();
+  specialCaseURLs();
+
   // Initialise the resolution of the DOS program - width, height
-  const nativeRes = () => {
-    const defaults = [640, 480];
-    const arr = config.get(`res`).split(`,`);
-    if (arr.length < 1) return defaults;
-    return [parseInt(arr[0]), parseInt(arr[1])];
+  const nativeResolution = () => {
+    const defaults = [DOSee.gfx.mode13h.width, DOSee.gfx.mode13h.height],
+      resolutions = config.get(`res`).split(`,`);
+    if (!resolutions.length) return defaults;
+    return [parseInt(resolutions[0]), parseInt(resolutions[1])];
   };
 
   // Load additional DOS tools and utilities
-  const utils = (load) => {
+  const utilities = (load) => {
     if (load !== `true`) return null;
     return DoseeLoader.mountZip(
       `u`,
@@ -94,16 +103,15 @@
   };
 
   // Initialise canvas size
-  {
+  const canvasSize = () => {
     const canvas = document.getElementById(`doseeCanvas`);
-    canvas.width = nativeRes()[0];
-    canvas.height = nativeRes()[1];
-    canvas.style.width = `${nativeRes()[0]}px`;
-    canvas.style.height = `${nativeRes()[1]}px`;
-  }
+    canvas.width = nativeResolution()[0];
+    canvas.height = nativeResolution()[1];
+  };
+  canvasSize();
 
   // Check the browser protocol that DOSee is hosted on
-  // Modern browsers to not permit the loading of web resources using XMLHttpRequest()
+  // Modern browsers to not permit the loading of web resources using fetch API
   // over `file:///` or `ftp://` as they do not support Cross-origin resource sharing.
   // See: https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
   const protocolCheck = () => {
@@ -111,13 +119,12 @@
     switch (url.protocol) {
       case `http:`:
       case `https:`:
-        // valid protocols so do nothing
-        break;
+        return;
       default:
         // invalid protocols
         try {
           throw new Error(
-            `DOSee has aborted as it cannot be hosted over the '${url.protocol}' protocol.`
+            `DOSee has aborted as it cannot be hosted over the "${url.protocol}" protocol.`
           );
         } catch (err) {
           console.error(err);
@@ -128,21 +135,19 @@
 
   // Displays an dark red error notice with custom `feedback` and a README link
   const errorBox = (feedback) => {
-    const a = document.createElement(`a`);
+    const a = document.createElement(`a`),
+      errMsg = `${feedback}. Have you followed these `,
+      crash = document.getElementById(`doseeCrashed`),
+      error = document.getElementById(`doseeError`);
     a.href = `https://github.com/bengarrett/DOSee#readme`;
     a.textContent = ` setup instructions? `;
     a.style.backgroundColor = `red`;
     a.style.color = `white`;
     a.style.textDecoration = `underline`;
-    // error message
-    const errMsg = `${feedback}. Have you followed these `;
-    // error containers
     document.getElementById(`doseeSlowLoad`).style.display = `none`;
-    const crash = document.getElementById(`doseeCrashed`);
-    const error = document.getElementById(`doseeError`);
     crash.classList.remove(`hidden`);
     error.textContent = errMsg;
-    error.appendChild(a);
+    error.append(a);
   };
 
   // Start DOSee without user interaction
@@ -160,50 +165,57 @@
   // dosee-core.js is the compiled Emscripten edition of DOSBox and should not be minified
   const wantsWASM = `WebAssembly` in window;
 
-  const init = new DoseeLoader(
-    DoseeLoader.emulatorJS(`${paths.get(wantsWASM ? `core` : `sync`)}`),
-    DoseeLoader.emulatorWASM(`${paths.get(`wasm`)}`),
-    DoseeLoader.locateAdditionalEmulatorJS(locateFiles),
-    DoseeLoader.nativeResolution(nativeRes()[0], nativeRes()[1]),
-    DoseeLoader.mountZip(
-      `c`,
-      DoseeLoader.fetchFile(
-        `'${config.get(`filename`)}'`,
-        `${config.get(`path`)}`
-      )
-    ),
-    DoseeLoader.mountZip(
-      `s`,
-      DoseeLoader.fetchFile(`DOSee configurations`, `${paths.get(`driveS`)}`)
-    ),
-    gusDriver(config.get(`gus`)),
-    utils(config.get(`utils`)),
-    DoseeLoader.startExe(config.get(`exe`))
-  );
+  const driveC = `c`,
+    driveS = `s`,
+    init = new DoseeLoader(
+      DoseeLoader.emulatorJS(`${paths.get(wantsWASM ? `core` : `sync`)}`),
+      DoseeLoader.emulatorWASM(`${paths.get(`wasm`)}`),
+      DoseeLoader.locateAdditionalEmulatorJS(locateFiles),
+      DoseeLoader.nativeResolution(
+        nativeResolution()[0],
+        nativeResolution()[1]
+      ),
+      DoseeLoader.mountZip(
+        driveC,
+        DoseeLoader.fetchFile(
+          `'${config.get(`filename`)}'`,
+          `${config.get(`path`)}`
+        )
+      ),
+      DoseeLoader.mountZip(
+        driveS,
+        DoseeLoader.fetchFile(`DOSee configurations`, `${paths.get(`driveS`)}`)
+      ),
+      gravisDriver(config.get(`gus`)),
+      utilities(config.get(`utils`)),
+      DoseeLoader.startExe(config.get(`exe`))
+    );
 
   // Start DOSee!
-  const emulator = new Emulator(
-    document.querySelector(`#doseeCanvas`),
-    null,
-    init
-  );
+  const emulator = new Emulator(document.querySelector(`#doseeCanvas`), init);
   emulator.start({ waitAfterDownloading: !config.get(`start`) });
 
   // Checks for and provides feedback for missing dependencies after all other JS has been loaded
   window.addEventListener(`load`, () => {
     protocolCheck();
-    const checks = [`BrowserFS`, `DOSee`, `DoseeLoader`, `FileSaver`, `Module`];
+    const doseeObjects = [
+      `BrowserFS`,
+      `DOSee`,
+      `DoseeLoader`,
+      `FileSaver`,
+      `Module`,
+    ];
     let pass = true;
-    checks.forEach((objName) => {
+    doseeObjects.forEach((objName) => {
       if (typeof window[objName] === `undefined`) {
         console.error(`checking ${objName}, ${typeof window[objName]}`);
-        pass = false;
-      } else
-        console.log(
-          `%cDOSee`,
-          `color:dimgray;font-weight:bold`,
-          `checking ${objName}, ${typeof window[objName]}`
-        );
+        return (pass = false);
+      }
+      console.log(
+        `%cDOSee`,
+        `color:dimgray;font-weight:bold`,
+        `checking ${objName}, ${typeof window[objName]}`
+      );
     });
     if (!pass) {
       // console output

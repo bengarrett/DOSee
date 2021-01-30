@@ -32,11 +32,6 @@ label > small {
   white-space: normal;
 }
 
-/* override mini-css */
-#doseeTabs a {
-  text-transform: none;
-}
-
 #helpTab > .hide {
   display: none;
 }

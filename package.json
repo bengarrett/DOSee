@@ -6,21 +6,25 @@
     "email": "code.by.ben@gmail.com"
   },
   "dependencies": {
-    "browserfs": "=1.4.3",
-    "browserfs-zipfs-extras": "=1.0.1",
-    "canvas-toBlob": "=1.0.0",
-    "copyfiles": "^2.1.1",
-    "file-saver-fixed": "=1.3.8",
-    "http-server": "^0.12.1",
-    "mini.css": "^3.0.1",
-    "workbox-cli": "^4.3.1"
+    "browserfs": "1.4.x",
+    "browserfs-zipfs-extras": "1.0.x",
+    "canvas-toBlob": "1.0.x",
+    "copyfiles": "2.x",
+    "file-saver-fixed": "1.3.8",
+    "http-server": "0.x",
+    "mini.css": "3.x",
+    "workbox-cli": "6.x"
   },
   "description": "A DOSBox-based MS-DOS emulator for the web",
   "devDependencies": {
-    "eslint": "^6.8.0",
-    "eslint-config-prettier": "^6.10.1",
-    "eslint-plugin-prettier": "^3.1.2",
-    "prettier": "^2.0.2"
+    "eslint": "7.x",
+    "eslint-config-prettier": "7.x",
+    "prettier": "2.x",
+    "grunt": "1.x",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-eol": "^1.1.3",
+    "grunt-image": "^6.4.0",
+    "load-grunt-tasks": "^5.1.0"
   },
   "homepage": "https://github.com/bengarrett/DOSee#readme",
   "license": "GPL-3.0-or-later",
@@ -31,10 +35,10 @@
     "url": "git+https://github.com/bengarrett/DOSee.git"
   },
   "scripts": {
-    "copy": "npx copyfiles -u 1 src/**/**/* src/**/* src/* build && npx copyup -f node_modules/mini.css/dist/mini-default.min.css build/css && npx copyup -f node_modules/browserfs/dist/browserfs.min.js node_modules/browserfs-zipfs-extras/dist/browserfs-zipfs-extras.js node_modules/file-saver-fixed/dist/FileSaver.min.js node_modules/canvas-toBlob/canvas-toBlob.js build/js",
+    "copy": "npx copyfiles -u 1 src/**/**/* src/**/* src/* build && npx copyup -f node_modules/workbox-sw/build/workbox-sw.js build/js && npx copyup -f node_modules/mini.css/dist/mini-default.min.css build/css && npx copyup -f node_modules/browserfs/dist/browserfs.min.js node_modules/browserfs-zipfs-extras/dist/browserfs-zipfs-extras.js node_modules/file-saver-fixed/dist/FileSaver.min.js node_modules/canvas-toBlob/canvas-toBlob.js build/js",
     "install": "npm run copy && npx workbox injectManifest workbox-config.js",
-    "serve": "npx http-server build -p 8086 -c-1",
+    "serve": "npx http-server build -p 8086",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "version": "1.5.0"
+  "version": "1.6.0"
 }

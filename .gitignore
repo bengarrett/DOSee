@@ -4,6 +4,7 @@ yarn.lock
 
 # Hide dependencies
 build
+pub
 
 # Packs
 *.tgz
