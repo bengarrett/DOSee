@@ -2,9 +2,9 @@ name: Docker Hub
 
 on:
   push:
-    branches: [master]
-  pull_request:
-    branches: [master]
+    # Publish `v1.2.3` tags as releases.
+    tags:
+      - v*
 
 jobs:
   build:
