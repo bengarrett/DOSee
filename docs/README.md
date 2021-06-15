@@ -48,7 +48,9 @@ yarn run serve # npm run serve
 
 Point a web browser to http://localhost:8086
 
-### Docker container instructions
+### Docker instructions
+
+There is a [DOSee repository at Docker Hub](https://hub.docker.com/repository/docker/bengarrett/dosee), or you can build locally using these instructions.
 
 ```bash
 # clone DOSee
