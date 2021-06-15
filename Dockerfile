@@ -1,46 +1,42 @@
-# DOSee Dockerfile to load an nginx webhost server
-
-# Instructions to build and run:
+# DOSee Dockerfile
+#
+# Instructions for use:
+#
+# docker build -t dosee .
+# docker run --name dosee_app -i -p 8086:80 dosee
 #
 # docker build --tag dosee:latest .
 # docker run --name dosee_app --interactive --publish 8086:80 dosee:latest
 #
-# Or in short form:
-# docker build -t dosee .
-# docker run --name dosee_app -i -p 8086:80 dosee
 #
-# Instruction to remove and cleanup:
+# To remove and cleanup:
+#
 # docker stop dosee_app
 # docker container rm dosee_app
 # docker image rm dosee
 
-# nginx stable is used due to its less frequent updates
-# alpine is a tiny linux distribution
-FROM nginx:stable-alpine AS dosee
-LABEL net.dosee.description="DOSee - A MS-DOS emulator for the web"
+# Multi-stage Docker build to reduce the overall image size
+# DOSee will be built in this temporary Node.JS image
+FROM node:current-alpine AS build
 
-COPY src/ /home/nginx/src
-COPY package.json workbox-config.js /home/nginx/
+# Install and update the build dependencies
+RUN apk update &&  \
+    apk add --update yarn && \
+    npm update --global npm
 
-# install dependencies and build the site
-RUN mkdir -p /home/nginx/src
-WORKDIR /home/nginx/
-RUN apk add --update nodejs npm && \
-    npm install --global yarn && \
-    yarn --production && \
-    cp -r /home/nginx/build/* /usr/share/nginx/html/
+# Copy source files
+COPY . /dosee
 
-WORKDIR /usr/share/nginx/html/
+# Compile and build DOSee
+WORKDIR /dosee
+RUN yarn install --audit --production
 
-# cleanup to reduce the image from 250M down to 56M.
-RUN rm -R /home/nginx && \
-    yarn cache clean && \
-    npm -g uninstall yarn && \
-    npm cache clean --force && \
-    apk del nodejs npm && \
-    du -hs /
+# DOSee will be served on this permanent nginx image
+# It should only ammount to around 50 MB in size
+# The nginx stable image is used due to its less frequent updates
+FROM nginx:stable-alpine
+LABEL net.dosee.description="DOSee an MS-DOS emulator for the web"
 
-# optional cleanup
-
-# serve internally over HTTP port 80
-EXPOSE 80
+# Copy DOSee from the build image to the nginx webroot
+RUN rm /usr/share/nginx/html/*
+COPY --from=build /dosee/build/ /usr/share/nginx/html

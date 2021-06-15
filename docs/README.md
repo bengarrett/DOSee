@@ -26,9 +26,9 @@ DOSee is only a user interface and installation process for an incredible emulat
 - A web browser that supports JavaScript ES6 (ECMAScript 2015).<br>
   Current Firefox, Chrome, Edge, Brave or Safari will work fine.
 - A physical keyboard, as MS-DOS is a text-based operating system.
-- [Node.js](https://nodejs.org) with [yarn](https://yarnpkg.com) or [npm](https://www.npmjs.com).
+- [Node.js](https://nodejs.org) plus [yarn](https://yarnpkg.com)/[npm](https://www.npmjs.com) or [Docker](https://www.docker.com/get-started)
 
-**DOSee runs over an HTTP server**, and it can not function using the `file:///` browser protocol.
+**DOSee runs over an HTTP server**, and it can not function over the `file:///` browser protocol.
 
 ### Instructions, _download, build and serve_
 
@@ -42,15 +42,41 @@ cd DOSee
  # install dependencies & build
 yarn # npm install
 
-# serve dosee over port 8086
+# serve DOSee over port 8086
 yarn run serve # npm run serve
 ```
 
 Point a web browser to http://localhost:8086
 
+### Docker container instructions
+
+```bash
+# clone DOSee
+git clone https://github.com/bengarrett/DOSee.git
+cd DOSee
+
+# run the container (tap Ctrl-C to exit)
+docker compose up
+```
+Point a web browser to http://localhost:8086
+
+```bash
+# alternative manual build and run
+docker build -t dosee .
+docker run --name dosee_app -i -p 8086:80 dosee
+
+# clean up and remove
+docker container rm dosee_app
+docker image rm dosee
+```
+
+### Usage & customisations
+
+[Are in the USAGE document](USAGE.md)
+
 ### Editing the JS or HTML
 
-If you edit the source files in `src/` you will need to clear the application storage and unregister the service workers.
+If you edit the source files in `src/` you will need to clear the application storage and unregister the service workers in your web browser.
 
 - In Chrome/Edge bring up the browser Dev Tools in using <kbd>Ctrl</kbd> <kbd>Shift</kbd> <kbd>J</kbd>.<br>
   Select the Application and Storage tab.<br>
@@ -62,33 +88,12 @@ If you edit the source files in `src/` you will need to clear the application st
   Press the Unregister button.
 
 ```bash
-# re-build
+# change to the repo directory
+cd DOSee
+# re-build DOSee
 yarn # npm run install
 ```
 
-### Docker container instructions
-
-```bash
-# clone DOSee
-git clone https://github.com/bengarrett/DOSee.git
-cd DOSee
-
-# build
-docker build -t dosee .
-
-# serve dosee over port 8086, press Ctrl-C to exit
-docker run --name dosee_app -i -p 8086:80 dosee
-
-# cleanup and remove
-docker container rm dosee_app
-docker image rm dosee
-```
-
-Point a web browser to http://localhost:8086
-
-### Usage & customisations
-
-[Is in USAGE](USAGE.md)
 
 ### License
 
