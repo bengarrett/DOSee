@@ -76,9 +76,24 @@ docker image rm dosee
 
 [Are in the USAGE document](USAGE.md)
 
-### Editing the JS or HTML
+### Editing the source JS or HTML
 
-If you edit the source files in `src/` you will need to clear the application storage and unregister the service workers in your web browser.
+If you edit the source files in `src/` you will need to rebuild the application.
+
+```bash
+# change to the repo directory
+cd DOSee
+
+# re-build DOSee using your edits
+yarn # npm run install
+
+# serve the modified DOSee over port 8086
+yarn run serve # npm run serve
+```
+
+Point a web browser to http://localhost:8086
+
+Due to a PWA offline caching feature, web browsers must clear the application storage and unregister the service workers to reflect changes to the application code.
 
 - In Chrome/Edge bring up the browser Dev Tools in using <kbd>Ctrl</kbd> <kbd>Shift</kbd> <kbd>J</kbd>.<br>
   Select the Application and Storage tab.<br>
@@ -88,14 +103,6 @@ If you edit the source files in `src/` you will need to clear the application st
 - In Firefox bring up the browser Developer Tools in using <kbd>Ctrl</kbd> <kbd>Shift</kbd> <kbd>I</kbd>.<br>
   Select the Application and Service Workers tab.<br>
   Press the Unregister button.
-
-```bash
-# change to the repo directory
-cd DOSee
-# re-build DOSee
-yarn # npm run install
-```
-
 
 ### License
 
