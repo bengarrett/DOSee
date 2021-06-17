@@ -59,7 +59,19 @@
       na = document.getElementById(`helpTabNA`);
     switch (path) {
       case `dos_programs/program_0/agi_demo_pack_1.zip`:
-        document.getElementById(`helpProgram_4`).classList.remove(`hide`);
+        document.getElementById(`helpProgram_0`).classList.remove(`hide`);
+        na.classList.add(`hide`);
+        break;
+      case `dos_programs/program_1/loom.zip`:
+        document.getElementById(`helpProgram_1`).classList.remove(`hide`);
+        na.classList.add(`hide`);
+        break;
+      case `dos_programs/program_2/emf_vrs2.zip`:
+        document.getElementById(`helpProgram_2`).classList.remove(`hide`);
+        na.classList.add(`hide`);
+        break;
+      case `dos_programs/program_3/hyb605.zip`:
+        document.getElementById(`helpProgram_3`).classList.remove(`hide`);
         na.classList.add(`hide`);
         break;
       default:
