@@ -4,5 +4,8 @@
   "audio:gus": "false",
   "width:height": "640, 480",
   "run:filename": "hyb605.exe",
-  "utilities": "false"
+  "utilities": "false",
+  "speed": "max",
+  "graphic": "vga",
+  "audio": "sb16"
 }

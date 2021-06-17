@@ -4,5 +4,8 @@
   "audio:gus": "false",
   "width:height": "640, 480",
   "run:filename": "SAMPLER.EXE",
-  "utilities": "false"
+  "utilities": "false",
+  "speed": "386",
+  "graphic": "ega",
+  "audio": "sb1"
 }
