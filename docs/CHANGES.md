@@ -7,6 +7,7 @@
 - New meta initialisation options, `dosee:speed`, `dosee:graphic` and `dosee:audio`.
 - Renamed Hardware tab headers to improve their clarity.
 - Replaced two of the sample demos to better show off the variety of emulated hardware.
+- Emulating ... header shows the archive filename instead of file path.
 - Fixed broken SVGA Graphic option, `dosmachine=svga`.
 - Fixed broken _Automatically start DOS emulation_ option.
 

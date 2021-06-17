@@ -44,13 +44,14 @@
   // Set the <H2> element to show the running program and archive filename
   function setHeader() {
     const h2 = document.getElementById(`doseeH2`),
-      archive = `${DOSee.getMetaContent(`dosee:zip:path`)}`,
+      archive = DOSee.getMetaContent(`dosee:zip:path`).split(`/`),
       executable = `${DOSee.getMetaContent(`dosee:run:filename`)}`,
       leftwardArrow = 8592;
+    const fileName = archive[archive.length - 1];
     h2.innerText =
       executable.length > 0
-        ? `${executable} ${String.fromCharCode(leftwardArrow)} ${archive}`
-        : `${archive}`;
+        ? `${executable} ${String.fromCharCode(leftwardArrow)} ${fileName}`
+        : `${fileName}`;
   }
 
   // Update help tab example
