@@ -551,20 +551,28 @@ window.Module = null;
                   fetch({
                     title: `WASM Binary`,
                     url: gameData.emulatorWASM,
-                  }).then((binary) => {
-                    gameData.wasmBinary = binary;
                   })
+                    .then((binary) => {
+                      gameData.wasmBinary = binary;
+                    })
+                    .then(() => {
+                      Promise.all(
+                        gameData.files.map((f) => {
+                          if (!f) return null;
+                          if (!f.file) return null;
+                          if (!f.drive) return null;
+                          return fetch(f.file).then(mountAt(f.drive));
+                        })
+                      ).then(resolve, reject);
+                      console.log(
+                        `%cDOSee`,
+                        `color:dimgray;font-weight:bold`,
+                        `loading WASM binary complete`
+                      );
+                    })
                 );
               };
               wasm();
-              Promise.all(
-                gameData.files.map((f) => {
-                  if (!f) return null;
-                  if (!f.file) return null;
-                  if (!f.drive) return null;
-                  return fetch(f.file).then(mountAt(f.drive));
-                })
-              ).then(resolve, reject);
             });
           });
         }
@@ -613,6 +621,7 @@ window.Module = null;
           // so let's map the prefixed versions to the correct function.
           canvas.requestPointerLock = getPointerLockEnabler(canvas);
           moveConfigToRoot(gameData.fileSystem);
+          console.log(gameData);
           Module = initializeModule(
             gameData.emulatorArguments,
             gameData.fileSystem,

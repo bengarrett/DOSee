@@ -8,6 +8,7 @@
 - Renamed Hardware tab headers to improve their clarity.
 - Replaced two of the sample demos to better show off the variety of emulated hardware.
 - Fixed broken SVGA Graphic option, `dosmachine=svga`.
+- Fixed broken _Automatically start DOS emulation_ option.
 
 ### v1.60
 
