@@ -271,8 +271,10 @@ window.Module = null;
       if (loadConfig === ``)
         throw Error(`graphicMode loadConfig argument cannot be empty`);
       const alerts = () => {
-        document.getElementById(`svgaEffectsMsg`).classList.add(`hidden`);
-        document.getElementById(`highResRequired`).classList.remove(`hidden`);
+        const s = document.getElementById(`svgaEffectsMsg`);
+        if (s !== null) s.classList.add(`hidden`);
+        const h = document.getElementById(`highResRequired`);
+        if (h !== null) h.classList.remove(`hidden`);
       };
       // emulation graphics or machine type
       const machine =
