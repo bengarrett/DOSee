@@ -65,8 +65,10 @@
         witch: 120,
       })
     );
-    document.getElementById(`doseeExit`).classList.add(`hide-true`);
-    document.getElementById(`doseeHalted`).classList.remove(`hide-true`);
+    const e = document.getElementById(`doseeExit`);
+    if (e !== null) e.classList.add(`hide-true`);
+    const h = document.getElementById(`doseeHalted`);
+    if (h !== null) h.classList.remove(`hide-true`);
   };
 
   // Returns the content data stored in a HTML <meta> tag
