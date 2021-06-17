@@ -621,7 +621,6 @@ window.Module = null;
           // so let's map the prefixed versions to the correct function.
           canvas.requestPointerLock = getPointerLockEnabler(canvas);
           moveConfigToRoot(gameData.fileSystem);
-          console.log(gameData);
           Module = initializeModule(
             gameData.emulatorArguments,
             gameData.fileSystem,

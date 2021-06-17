@@ -34,7 +34,6 @@
   const extractSave = () => {
     const index = config.get(`path`).lastIndexOf(`/`),
       filename = config.get(`filename`);
-    console.log(typeof filename, filename);
     if (filename !== null) return;
     if (index)
       return config.set(`filename`, config.get(`path`).slice(index + 1));
