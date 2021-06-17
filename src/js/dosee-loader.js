@@ -397,6 +397,8 @@ window.Module = null;
       if (urlParams.get(`dosutils`) === `true`)
         this.commandLine.push(loadConfig, `/dos/s/utils.con`);
       // some programs don't run correctly unless the current active directory is root
+      // pop() removes the last element from path.
+      let executable = path.pop();
       if (path && path.length) {
         const newPath = path.toString().replace(`,`, `\\`);
         console.log(`Execute path "${newPath}"`);
@@ -405,7 +407,6 @@ window.Module = null;
       // automatically run the program executable
       if (urlParams.get(`dosautorun`) === `false`) return;
       // hack to implement program options
-      let executable = path.pop();
       executable = executable.replace(` :`, ` /`);
       this.verbose = `Will execute \`${executable}\` ${this.verbose}`;
       this.commandLine.push(runCommand, executable);
