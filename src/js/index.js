@@ -58,7 +58,7 @@
     const path = DOSee.getMetaContent(`dosee:zip:path`),
       na = document.getElementById(`helpTabNA`);
     switch (path) {
-      case `dos_programs/program_4/agi_demo_pack_1.zip`:
+      case `dos_programs/program_0/agi_demo_pack_1.zip`:
         document.getElementById(`helpProgram_4`).classList.remove(`hide`);
         na.classList.add(`hide`);
         break;

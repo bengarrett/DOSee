@@ -8,7 +8,7 @@ It is easy to customise DOSee to load other MS-DOS programs by using HTML5 `<met
 <!-- DOSee initialisation options -->
 <meta
   name="dosee:zip:path"
-  content="dos_programs/program_4/agi_demo_pack_1.zip"
+  content="dos_programs/program_0/agi_demo_pack_1.zip"
 />
 <meta name="dosee:run:filename" content="sierra.com" />
 <meta name="dosee:capture:filename" content="screenshot.png" />
@@ -183,7 +183,7 @@ There are three additional sample programs included in this repository that you 
 <!-- DOSee initialisation options -->
 <meta
   name="dosee:zip:path"
-  content="dos_programs/program_4/agi_demo_pack_1.zip"
+  content="dos_programs/program_0/agi_demo_pack_1.zip"
 />
 <meta name="dosee:run:filename" content="sierra.com" />
 <meta name="dosee:speed" content="auto" />
