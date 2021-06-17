@@ -2,7 +2,7 @@
 
 ## Usage & customisations
 
-It is easy to customise DOSee to load other MS-DOS programs by using HTML5 `<meta>` elements. An `index.html` file is an identifier which contains six meta elements used by DOSee for handling emulation information and customisation.
+It is easy to customise DOSee to load other MS-DOS programs by using HTML5 `<meta>` elements. An `index.html` file is an identifier which contains nine meta elements used by DOSee for handling emulation information and customisation.
 
 ```html
 <!-- DOSee initialisation options -->
@@ -11,16 +11,18 @@ It is easy to customise DOSee to load other MS-DOS programs by using HTML5 `<met
   content="dos_programs/program_4/agi_demo_pack_1.zip"
 />
 <meta name="dosee:run:filename" content="sierra.com" />
-
 <meta name="dosee:capture:filename" content="screenshot.png" />
 <meta name="dosee:utilities" content="false" />
+<meta name="dosee:width:height" content="640,480" />
+<meta name="dosee:speed" content="auto" />
+<meta name="dosee:graphic" content="tandy" />
+<meta name="dosee:audio" content="none" />
 <meta name="dosee:audio:gus" content="false" />
-<meta name="dosee:width:height" content="640, 400" />
 ```
 
-#### Required
+## Required
 
-#### `<meta name="dosee:zip:path">`
+### `<meta name="dosee:zip:path">`
 
 DOSee uses ZIP file archives to simulate a hard disk drive. Any ZIP file provided to _dosee:zip:path_ the emulator will mount path as MS-DOS drive `C:`. The `C:` drive will be accessible to all DOS commands such as `dir C:` and any included DOS programs available to run.
 
@@ -41,7 +43,9 @@ The meta _content_ attribute must be a relative path from the webroot and must p
 />
 ```
 
-#### `<meta name="dosee:run:filename">`
+---
+
+### `<meta name="dosee:run:filename">`
 
 The filename of the MS-DOS program DOSee should launch. The program file needs to exist in the ZIP archive provided to _dosee:zip:path_.
 
@@ -55,9 +59,9 @@ If the content is left blank or the filename doesn't exist in the archive, DOSee
 <meta name="dosee:run:filename" content="game.exe" />
 ```
 
-#### Optional
+## Optional
 
-#### `<meta name="dosee:capture:filename">`
+### `<meta name="dosee:capture:filename">`
 
 The filename used by the capture tool to save emulator screenshots. The PNG images should include the `.png` file extension.
 
@@ -73,7 +77,9 @@ The filename used by the capture tool to save emulator screenshots. The PNG imag
 <meta name="dosee:capture:filename" content="game" />
 ```
 
-#### `<meta name="dosee:utilities">`
+---
+
+### `<meta name="dosee:utilities">`
 
 When set to `true`, it tells DOSee to mount a collection of MS-DOS utilities and tools accessible from the `U:` drive. The default option is false.
 
@@ -89,7 +95,9 @@ When set to `true`, it tells DOSee to mount a collection of MS-DOS utilities and
 <meta name="dosee:utilities" content="false" />
 ```
 
-#### `<meta name="dosee:width:height">`
+---
+
+### `<meta name="dosee:width:height">`
 
 Configures the initial pixel width and height of the emulation loading screen and canvas. The canvas may readjust itself after the emulator runs depending on the graphics hardware selection, scale options and aspect correction settings. The default canvas and screen size is 640px x 480px.
 
@@ -105,7 +113,63 @@ Configures the initial pixel width and height of the emulation loading screen an
 <meta name="dosee:width:height" content="640px,400px" />
 ```
 
-#### Placeholders
+---
+
+### `<meta name="dosee:speed" content="auto" />`
+
+The default and initial selection for the **Speed and CPU** hardware. Possible values are:
+
+- `auto` **automatic** (default)
+- `8086` **slow (8086)** The first era of PCs using real address mode.
+- `386` **medium (80386)** The third generation of PC CPUs using protected mode.
+- `max` **faster (80486)** Unlocked, runs the emulator at maximum speed permitted by the browser.
+
+<small>DOSBox `core=dynamic` is not supported by em-dosbox so there is no Pentium emulation.</small>
+
+✓
+
+```html
+<meta name="dosee:speed" content="auto" />
+```
+
+---
+
+### `<meta name="dosee:graphic" content="tandy" />`
+
+The default and initial selection for the **Graphic adapter** hardware. Possible values are:
+
+- `svga`<br>**SuperVGA** Emulates an [S3 Trio64](https://en.wikipedia.org/wiki/S3_Trio) supporting much higher resolutions than VGA.
+- `vga` (default)<br>**VGA** Supports 256 colors at 320x200 resolution or 16 colors at 640x480.
+- `ega`<br>**EGA** Supports a limited selection of 16 colors up to 640x350 resolution.
+- `tandy`<br>**Tandy** Emulates the Tandy 1000 series or the IBM PCjr, which uses a variant of CGA that has 16 colors and enhanced audio.
+- `cga`<br>**CGA** Generally offers 4 colors at 320×200 resolution or monochrome at 640x200.
+- `herc`<br>**Hercules** Supports monochrome at 720x348 to improve the legibility of text.
+
+✓
+
+```html
+<meta name="dosee:graphic" content="tandy" />
+```
+
+---
+
+### `<meta name="dosee:audio" content="none" />`
+
+The default and initial selection for the **Audio addon** hardware. Possible values are:
+
+- `gus`<br>**Gravis Ultrasound** offers high quality 14 channel, 16-bit, 44 KHz digital playback.
+- `covox`<br>**Covox** Covox Speech Accelerator is an external audio device and speaker with mono digital playback.
+- `sb16`<br>**Sound Blaster 16** Creative Labs Sound Blaster 16 offers stereo, 16-bit, 44 KHz digital playback.
+- `sb1`<br>**Sound Blaster 1.0** Creative Labs Sound Blaster v1.0 offers mono, 8-bit, 22 KHz digital playback.
+- `none`<br>**none** Do not use any addon audio hardware. Internal PC, PCjr or Tandy 1000 speaker audio will be in use.
+
+✓
+
+```html
+<meta name="dosee:audio" content="none" />
+```
+
+## Placeholders
 
 #### `<meta name="dosee:audio:gus">`
 
@@ -122,27 +186,39 @@ There are three additional sample programs included in this repository that you 
   content="dos_programs/program_4/agi_demo_pack_1.zip"
 />
 <meta name="dosee:run:filename" content="sierra.com" />
+<meta name="dosee:speed" content="auto" />
+<meta name="dosee:graphic" content="tandy" />
+<meta name="dosee:audio" content="none" />
 ```
 
-Sample program 1 (fastest, VGA, Gravis Ultrasound)
+Sample program 1, Lucasfilm adventure demo
 
 ```html
-<meta name="dosee:zip:path" content="dos_programs/program_1/df2intro.zip" />
-<meta name="dosee:run:filename" content="DF2.EXE" />
+<meta name="dosee:zip:path" content="dos_programs/program_1/loom.zip" />
+<meta name="dosee:run:filename" content="SAMPLER.EXE" />
+<meta name="dosee:speed" content="386" />
+<meta name="dosee:graphic" content="ega" />
+<meta name="dosee:audio" content="sb1" />
 ```
 
-Sample program 2 (fastest, VGA, Gravis Ultrasound)
+Sample program 2, Verses by Electromotive Force
 
 ```html
-<meta name="dosee:zip:path" content="dos_programs/program_2/df2.zip" />
-<meta name="dosee:run:filename" content="df2.exe" />
+<meta name="dosee:zip:path" content="dos_programs/program_2/emf_vrs2.zip" />
+<meta name="dosee:run:filename" content="VERSES.EXE" />
+<meta name="dosee:speed" content="max" />
+<meta name="dosee:graphic" content="vga" />
+<meta name="dosee:audio" content="gus" />
 ```
 
-Sample program 3 (fastest, VGA, Sound Blaster 16)
+Sample program 3, Intro by Hybrid
 
 ```html
 <meta name="dosee:zip:path" content="dos_programs/program_3/hyb605.zip" />
 <meta name="dosee:run:filename" content="hyb605.exe" />
+<meta name="dosee:speed" content="max" />
+<meta name="dosee:graphic" content="vga" />
+<meta name="dosee:audio" content="sb16" />
 ```
 
 #### Add new software, an example

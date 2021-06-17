@@ -1,8 +1,8 @@
 {
-  "capture:filename": "df2intro.png",
-  "zip:path": "dos_programs/program_1/df2intro.zip",
+  "capture:filename": "lucas.png",
+  "zip:path": "dos_programs/program_1/loom.zip",
   "audio:gus": "false",
   "width:height": "640, 480",
-  "run:filename": "DF2.EXE",
+  "run:filename": "SAMPLER.EXE",
   "utilities": "false"
 }

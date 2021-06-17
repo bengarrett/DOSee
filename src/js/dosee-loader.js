@@ -18,8 +18,8 @@ window.Module = null;
 ((Promise) => {
   "use strict";
   const version = new Map()
-    .set(`date`, new Date(`30,Jan,2021`))
-    .set(`minor`, `6`)
+    .set(`date`, new Date(`18,Jun,2021`))
+    .set(`minor`, `7`)
     .set(`major`, `1`)
     .set(`display`, ``);
 
@@ -137,6 +137,18 @@ window.Module = null;
       console.log(this.verbose);
       return this.commandLine;
     }
+    _defaultParam(param = ``) {
+      switch (param) {
+        case `dosspeed`:
+          return DOSee.getMetaContent(`dosee:speed`) || `auto`;
+        case `dosmachine`:
+          return DOSee.getMetaContent(`dosee:graphic`) || `vga`;
+        case `dosaudio`:
+          return DOSee.getMetaContent(`dosee:audio`) || `sb16`;
+        default:
+          throw Error(`cannot fetch default URL param for "${param}"`);
+      }
+    }
     _graphicEngineScaler(loadConfig = ``) {
       if (loadConfig === ``)
         throw Error(`graphicEngineScaler loadConfig argument cannot be empty`);
@@ -189,7 +201,8 @@ window.Module = null;
       if (loadConfig === ``)
         throw Error(`cpuSpeed loadConfig argument cannot be empty`);
       // emulation cpu speed
-      const cpuspeed = urlParams.get(`dosspeed`) || `auto`;
+      const cpuspeed =
+        urlParams.get(`dosspeed`) || this._defaultParam(`dosspeed`);
       switch (cpuspeed) {
         case `auto`:
           this.verbose += ` Automatic CPU speed.`;
@@ -221,7 +234,7 @@ window.Module = null;
     _soundCard(loadConfig = ``, urlParams = URLSearchParams) {
       if (loadConfig === ``)
         throw Error(`soundCard loadConfig argument cannot be empty`);
-      const sound = urlParams.get(`dosaudio`) || `sb16`;
+      const sound = urlParams.get(`dosaudio`) || this._defaultParam(`dosaudio`);
       switch (sound) {
         case `none`:
           this.verbose += ` No audio.`;
@@ -262,7 +275,8 @@ window.Module = null;
         document.getElementById(`highResRequired`).classList.remove(`hidden`);
       };
       // emulation graphics or machine type
-      const machine = urlParams.get(`dosmachine`) || `vga`;
+      const machine =
+        urlParams.get(`dosmachine`) || this._defaultParam(`dosmachine`);
       switch (machine) {
         case `svga`:
           this.verbose += ` SVGA s3 graphics.`;
@@ -815,40 +829,6 @@ window.Module = null;
       }
     };
     document.addEventListener(`keydown`, blockKeys);
-  }
-
-  /**
-   * Convert bytes to a larger unit.
-   * @param {number} bytes  Bytes value.
-   * @param {number} base10 Use decimal `1000` or binary `1024` units.
-   */
-  function formatBytes(bytes = 0, base10 = 0) {
-    if (bytes === 0) return `0 B`;
-    const kilobyte = 1000,
-      kibibyte = 1024,
-      unit = base10 ? kilobyte : kibibyte,
-      units = base10
-        ? [`B`, `kB`, `MB`, `GB`, `TB`, `PB`, `EB`, `ZB`, `YB`]
-        : [`B`, `KiB`, `MiB`, `GiB`, `TiB`, `PiB`, `EiB`, `ZiB`, `YiB`],
-      exp = parseInt(Math.log(bytes) / Math.log(unit)),
-      size = bytes / Math.pow(unit, exp);
-    return `${size.toFixed(1)} ${units[exp]}`;
-  }
-
-  /**
-   * Convert the event update progress to a percentage value.
-   * @param {object} event Request progress event.
-   */
-  function formatSize(event = {}) {
-    const percentage = 100;
-    if (event.lengthComputable)
-      return `(${
-        event.total
-          ? ((event.loaded / event.total) * percentage).toFixed(0)
-          : `${percentage}`
-      }% \
-${formatBytes(event.loaded)} of ${formatBytes(event.total)})`;
-    return `(${formatBytes(event.loaded)})`;
   }
 
   /**

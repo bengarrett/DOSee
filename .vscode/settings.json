@@ -6,9 +6,10 @@
     "plaintext",
     "javascript",
     "html"
-],
+  ],
   "spellright.language": [
     "en"
-],
-"editor.formatOnSave": true
+  ],
+"editor.formatOnSave": true,
+"spellright.notificationClass": "hint"
 }

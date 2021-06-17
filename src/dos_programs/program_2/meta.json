@@ -1,8 +1,8 @@
 {
-  "capture:filename": "df2.png",
-  "zip:path": "dos_programs/program_2/df2.zip",
+  "capture:filename": "verses.png",
+  "zip:path": "dos_programs/program_2/emf_vrs2.zip",
   "audio:gus": "false",
   "width:height": "640, 480",
-  "run:filename": "df2.exe",
+  "run:filename": "VERSES.EXE",
   "utilities": "false"
 }

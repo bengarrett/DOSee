@@ -2,6 +2,12 @@
 
 ## Changes and updates
 
+### v1.70
+
+- New meta initialisation options, `dosee:speed`, `dosee:graphic` and `dosee:audio`.
+- Renamed Hardware tab headers to improve their clarity.
+- Replaced two of the sample demos to better show off the variety of emulated hardware.
+
 ### v1.60
 
 - Fixed broken stop button.
