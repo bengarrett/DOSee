@@ -46,7 +46,10 @@
     const urlParams = DOSee.newQueryString();
     // Gravis Ultrasound Audio drivers (dosaudio=gus)
     const audio = urlParams.get(`dosaudio`);
-    if (audio === `gus`) {
+    if (
+      audio === `gus` ||
+      (audio == null && DOSee.getMetaContent(`dosee:audio`) === `gus`)
+    ) {
       config.set(`gus`, `true`);
       DOSee.setMetaContent(`dosee:audio:gus`, `true`);
     }
