@@ -10,7 +10,7 @@
     "canvas-toBlob": "1.0.x",
     "copyfiles": "2.x",
     "file-saver-fixed": "1.3.8",
-    "http-server": "0.x",
+    "http-server": "14.x",
     "mini.css": "3.x",
     "workbox-cli": "6.x"
   },
