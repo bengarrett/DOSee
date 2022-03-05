@@ -1,15 +1,4 @@
 {
   "eslint.alwaysShowStatus": true,
-  "spellright.documentTypes": [
-    "markdown",
-    "latex",
-    "plaintext",
-    "javascript",
-    "html"
-  ],
-  "spellright.language": [
-    "en"
-  ],
-"editor.formatOnSave": true,
-"spellright.notificationClass": "hint"
+  "editor.formatOnSave": true
 }
