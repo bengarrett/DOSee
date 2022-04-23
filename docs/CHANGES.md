@@ -2,6 +2,10 @@
 
 ## Changes and updates
 
+### v1.71
+ - Fixed yarn/npm build error caused by an invalid type used in `workbox-config.js`.
+ <br>`[InjectManifest.maximumFileSizeToCacheInBytes] 'maximumFileSizeToCacheInBytes' property type must be number.`
+
 ### v1.70
 
 - New meta initialisation options, `dosee:speed`, `dosee:graphic` and `dosee:audio`.
