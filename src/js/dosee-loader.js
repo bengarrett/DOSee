@@ -18,8 +18,8 @@ window.Module = null;
 ((Promise) => {
   "use strict";
   const version = new Map()
-    .set(`date`, new Date(`18,Jun,2021`))
-    .set(`minor`, `7`)
+    .set(`date`, new Date(`5,Jul,2022`))
+    .set(`minor`, `8`)
     .set(`major`, `1`)
     .set(`display`, ``);
 
@@ -252,7 +252,7 @@ window.Module = null;
           document.getElementById(`dosaudio2`).checked = true;
           break;
         case `gus`:
-          this.verbose += ` Gravis Ultrasound audio.`;
+          this.verbose += ` Gravis UltraSound audio.`;
           this.commandLine.push(loadConfig, `/dos/g/gus.con`);
           document.getElementById(`dosaudio1`).checked = true;
           break;
@@ -366,11 +366,11 @@ window.Module = null;
     _automaticExecution(loadConfig = ``, urlParams = URLSearchParams) {
       if (loadConfig === ``)
         throw Error(`automaticExecution loadConfig argument cannot be empty`);
-
+      // to split backslash and forward slash use: .split(/\\|\//)
+      const backslash = /\\/,
+        path = this.executableFilename.split(backslash);
       const runCommand = `-c`,
-        diskDriveC = `C:`,
-        path = this.executableFilename.split(/\\|\//);
-
+        diskDriveC = `C:`;
       // dosbox mount points (dos drive letters)
       for (const file of this.filesToMount) {
         if (`drive` in file)
@@ -379,11 +379,6 @@ window.Module = null;
             `mount ${file.drive} /dos${file.mountpoint}`
           );
       }
-      // dosbox default drive letter
-      this.commandLine.push(
-        runCommand,
-        /^[a-zA-Z]:$/.test(path[0]) ? path.shift() : diskDriveC
-      );
       // Load any operating system drivers that are not natively supplied by DOSBox.
       // These must be loaded after the emulated drives are mounted.
       // And after the environment PATH to the drivers have been set in the
@@ -397,23 +392,45 @@ window.Module = null;
       if (urlParams.get(`dosutils`) === `true`)
         this.commandLine.push(loadConfig, `/dos/s/utils.con`);
       // some programs don't run correctly unless the current active directory is root
-      // pop() removes the last element from path.
-      let executable = path.pop();
       if (path && path.length) {
-        const newPath = path.toString().replace(`,`, `\\`);
-        console.log(`Execute path "${newPath}"`);
-        this.commandLine.push(runCommand, `CD ${newPath}`);
+        const suffix = -1;
+        let newPath = path.toString().replace(`,`, `\\`);
+        newPath = newPath.split(`\\`).slice(0, suffix).join(`\\`);
+        if (newPath !== ``) {
+          console.log(`Execute path "${newPath}"`);
+          this.commandLine.push(runCommand, `CD ${newPath}`);
+        }
       }
-      // automatically run the program executable
-      if (urlParams.get(`dosautorun`) === `false`) return;
+      // dosbox default drive letter
+      this.commandLine.push(
+        runCommand,
+        /^[a-zA-Z]:$/.test(path[0]) ? path.shift() : diskDriveC
+      );
+      // do not automatically run the program executable
+      if (
+        urlParams.get(`dosautorun`) === `false` ||
+        this.executableFilename === ``
+      ) {
+        this.commandLine.push(runCommand, `U:\\ALIAS\\WELCOME.BAT`);
+        return;
+      }
+      // handle multiple commands (chained) using && separators
+      let command = path.pop();
+      const chainCmds = command.split(`&&`);
+      if (chainCmds.length > 1) {
+        for (const cmd of chainCmds) {
+          this.commandLine.push(runCommand, cmd);
+        }
+        return;
+      }
       // hack to implement program options
-      executable = executable.replace(` :`, ` /`);
-      this.verbose = `Will execute \`${executable}\` ${this.verbose}`;
-      this.commandLine.push(runCommand, executable);
-      if (executable.trim().length) {
+      command = command.replace(` :`, ` /`);
+      this.verbose = `Will execute \`${command}\` ${this.verbose}`;
+      this.commandLine.push(runCommand, command);
+      if (command.trim().length) {
         // an exit comment to display after executable program is complete
         const print = `@echo `,
-          exitComment = `${print}${executable} has finished.`;
+          exitComment = `${print}${command} has finished.`;
         this.commandLine.push(runCommand, exitComment);
       }
     }
@@ -1094,6 +1111,8 @@ window.Module = null;
       img.classList.add(`dosee-crisp-render`);
       img.setAttribute(`id`, `doseeSplashImg`);
       img.setAttribute(`alt`, `DOSee logo`);
+      img.setAttribute(`width`, `180`);
+      img.setAttribute(`height`, `180`);
       splash.splashElt.append(img);
     };
     const title = () => {

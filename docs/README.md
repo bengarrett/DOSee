@@ -60,6 +60,7 @@ cd DOSee
 # run the container (tap Ctrl-C to exit)
 docker compose up
 ```
+
 Point a web browser to http://localhost:8086
 
 ```bash
@@ -85,7 +86,7 @@ If you edit the source files in `src/` you will need to rebuild the application.
 cd DOSee
 
 # re-build DOSee using your edits
-yarn # npm run install
+yarn run install # npm run install
 
 # serve the modified DOSee over port 8086
 yarn run serve # npm run serve
@@ -93,16 +94,7 @@ yarn run serve # npm run serve
 
 Point a web browser to http://localhost:8086
 
-Due to a PWA offline caching feature, web browsers must clear the application storage and unregister the service workers to reflect changes to the application code.
-
-- In Chrome/Edge bring up the browser Dev Tools in using <kbd>Ctrl</kbd> <kbd>Shift</kbd> <kbd>J</kbd>.<br>
-  Select the Application and Storage tab.<br>
-  Check the Application Unregister service workers checkbox.<br>
-  Press the Clear site data button.
-
-- In Firefox bring up the browser Developer Tools in using <kbd>Ctrl</kbd> <kbd>Shift</kbd> <kbd>I</kbd>.<br>
-  Select the Application and Service Workers tab.<br>
-  Press the Unregister button.
+Due to the PWA offline feature, web browsers need to unregister the service workers to reflect any changes to the application code. There is a red _Update DOSee and the service worker_ button on the index.html example that will do this and then reload the browser window. The eventListener code for this button can be found in the `src/js/dosee-sw.js` file.
 
 ### License
 

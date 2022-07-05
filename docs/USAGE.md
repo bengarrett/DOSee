@@ -47,9 +47,11 @@ The meta _content_ attribute must be a relative path from the webroot and must p
 
 ### `<meta name="dosee:run:filename">`
 
-The filename of the MS-DOS program DOSee should launch. The program file needs to exist in the ZIP archive provided to _dosee:zip:path_.
+The filenames of the MS-DOS programs or DOSBox commands DOSee should launch. Any programs need to exist in the ZIP archive provided to _dosee:zip:path_.
 
 DOS usually uses the following file extensions to identify a program: `.exe` `.com` `.bat`. Other than these, there is no standard file naming convention to identify which file should launch a piece of DOS software.
+
+Multiple programs and commands can be chained together using an `&&` separator.
 
 If the content is left blank or the filename doesn't exist in the archive, DOSee will launch into a DOS `C:` prompt.
 
@@ -57,6 +59,12 @@ If the content is left blank or the filename doesn't exist in the archive, DOSee
 
 ```html
 <meta name="dosee:run:filename" content="game.exe" />
+```
+
+✓
+
+```html
+<meta name="dosee:run:filename" content="CLS&&@ECHO Loading game&&game.exe" />
 ```
 
 ## Optional
@@ -157,7 +165,7 @@ The default and initial selection for the **Graphic adapter** hardware. Possible
 
 The default and initial selection for the **Audio addon** hardware. Possible values are:
 
-- `gus`<br>**Gravis Ultrasound** offers high quality 14 channel, 16-bit, 44 KHz digital playback.
+- `gus`<br>**Gravis UltraSound** offers high quality 14 channel, 16-bit, 44 KHz digital playback.
 - `covox`<br>**Covox** Covox Speech Accelerator is an external audio device and speaker with mono digital playback.
 - `sb16`<br>**Sound Blaster 16** Creative Labs Sound Blaster 16 offers stereo, 16-bit, 44 KHz digital playback.
 - `sb1`<br>**Sound Blaster 1.0** Creative Labs Sound Blaster v1.0 offers mono, 8-bit, 22 KHz digital playback.
@@ -173,7 +181,7 @@ The default and initial selection for the **Audio addon** hardware. Possible val
 
 #### `<meta name="dosee:audio:gus">`
 
-When set to `true`, it tells DOSee to mount a collection of Gravis Ultrasound audio drivers and tools accessible from the `G:` drive. These drivers are always loaded by DOSee whenever the Gravis Ultrasound audio option is selected. So this should still be left to `false`.
+When set to `true`, it tells DOSee to mount a collection of Gravis UltraSound audio drivers and tools accessible from the `G:` drive. These drivers are always loaded by DOSee whenever the Gravis UltraSound audio option is selected. So this should still be left to `false`.
 
 #### Sample programs
 

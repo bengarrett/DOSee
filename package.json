@@ -23,8 +23,8 @@
   },
   "homepage": "https://github.com/bengarrett/DOSee",
   "funding": {
-    "type" : "individual",
-    "url" : "https://www.buymeacoffee.com/4rtEGvUIY"
+    "type": "individual",
+    "url": "https://www.buymeacoffee.com/4rtEGvUIY"
   },
   "license": "GPL-3.0-or-later",
   "name": "dosee",
@@ -39,5 +39,6 @@
     "serve": "npx http-server build -p 8086",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "version": "1.7.0"
+  "version": "1.8.0",
+  "packageManager": "yarn@3.2.0"
 }

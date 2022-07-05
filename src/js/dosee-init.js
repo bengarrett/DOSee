@@ -6,9 +6,9 @@
   "use strict";
   // Relative file paths to DOSee emulation dependencies
   const paths = new Map()
-    .set(`driveG`, `/disk_drives/g_drive.zip`)
-    .set(`driveS`, `/disk_drives/s_drive.zip`)
-    .set(`driveU`, `/disk_drives/u_drive.zip`)
+    .set(`driveGUS`, `/disk_drives/g_drive.zip`)
+    .set(`driveConfigs`, `/disk_drives/s_drive.zip`)
+    .set(`driveUtils`, `/disk_drives/u_drive.zip`)
     .set(`sync`, `/emulator/dosbox-sync.js`)
     .set(`mem`, `/emulator/dosbox-sync.mem`)
     .set(`core`, `/emulator/dosbox.js`)
@@ -43,7 +43,7 @@
   // Handle URL params special cases that need additional files to be loaded by DOSee
   const specialCaseURLs = () => {
     const urlParams = DOSee.newQueryString();
-    // Gravis Ultrasound Audio drivers (dosaudio=gus)
+    // Gravis UltraSound Audio drivers (dosaudio=gus)
     const audio = urlParams.get(`dosaudio`);
     if (
       audio === `gus` ||
@@ -66,8 +66,8 @@
     return DoseeLoader.mountZip(
       `g`,
       DoseeLoader.fetchFile(
-        `gravis ultrasound drivers`,
-        `${paths.get(`driveG`)}`
+        `Gravis UltraSound (GUS) drivers`,
+        `${paths.get(`driveGUS`)}`
       )
     );
   };
@@ -98,9 +98,10 @@
   // Load additional DOS tools and utilities
   const utilities = (load) => {
     if (load !== `true`) return null;
+    const driveLetter = `u`;
     return DoseeLoader.mountZip(
-      `u`,
-      DoseeLoader.fetchFile(`dos utilities`, `${paths.get(`driveU`)}`)
+      driveLetter,
+      DoseeLoader.fetchFile(`DOSee utilities`, `${paths.get(`driveUtils`)}`)
     );
   };
 
@@ -168,7 +169,7 @@
   const wantsWASM = `WebAssembly` in window;
 
   const driveC = `c`,
-    driveS = `s`,
+    driveConfigs = `s`,
     init = new DoseeLoader(
       DoseeLoader.emulatorJS(`${paths.get(wantsWASM ? `core` : `sync`)}`),
       DoseeLoader.emulatorWASM(`${paths.get(`wasm`)}`),
@@ -185,8 +186,11 @@
         )
       ),
       DoseeLoader.mountZip(
-        driveS,
-        DoseeLoader.fetchFile(`DOSee configurations`, `${paths.get(`driveS`)}`)
+        driveConfigs,
+        DoseeLoader.fetchFile(
+          `DOSee configurations`,
+          `${paths.get(`driveConfigs`)}`
+        )
       ),
       gravisDriver(config.get(`gus`)),
       utilities(config.get(`utils`)),

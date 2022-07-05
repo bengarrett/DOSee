@@ -2,9 +2,33 @@
 
 ## Changes and updates
 
+### v1.8.0
+
+- Fixed DOSee incorrectly interpreting backslashes as new commands,
+  even though they're common DOS program arguments, ie, `EXAMPLE.EXE /?`.
+- DOSee (`dosee:run:filename`) can handle chained DOS and DOSBox commands, these are separated by a Bash-style `&&` (AND) separator.
+  For example, `@ECHO Hello&&PAUSE&&CLS` would print Hello, prompt for any key press to continue and then clear the screen.
+- Added a Update DOSee and the service worker button on the `index.html` running example.
+  Clicking this removes all stored DOSee files in the browser cache.
+- Added apple-touch-icon meta link to examples.
+- Renamed the internal drive letters to make their purpose clearer.
+- Updated the content of the Utilities `U:` drive.
+- - Renamed `ALIASES` dir to `ALIAS`
+- - Renamed `TOOLS` dir to `FILEHACK`
+- - Renamed `REPAIR` to `FIX`
+- - Renamed `DF2DOS` to `UTIL`
+- - Moved `FIX\TP-FIX` into `FILEHACK`
+- - Added the dependency `CWSDPMI.EXE` to `UTIL`
+- - Added an ANSI `WELCOME` help screen.
+- - Removed the DOSzip commander tool `DZ.EXE` as it ran too slow.
+- - Removed the unused `DRIVER` directory.
+- - Replaced Open Cubic Player with the performant XTC-PLAY v0.47.
+- - Replaced Acidview with Insane View v2.01b.
+
 ### v1.71
- - Fixed yarn/npm build error caused by an invalid type used in `workbox-config.js`.
- <br>`[InjectManifest.maximumFileSizeToCacheInBytes] 'maximumFileSizeToCacheInBytes' property type must be number.`
+
+- Fixed yarn/npm build error caused by an invalid type used in `workbox-config.js`.
+  <br>`[InjectManifest.maximumFileSizeToCacheInBytes] 'maximumFileSizeToCacheInBytes' property type must be number.`
 
 ### v1.70
 

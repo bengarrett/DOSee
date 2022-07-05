@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8" />
-  <title>DOSee Gravis Ultrasound running example</title>
+  <title>DOSee Gravis UltraSound running example</title>
   <meta name="description" content="Verses by Electromotive Force running in DOSee" />
   <meta name="author" content="Ben Garrett" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -11,9 +11,10 @@
   <!-- PWA configuration -->
   <meta name="theme-color" content="#1524eb" />
   <link rel="manifest" href="/manifest.json" />
+  <link rel="apple-touch-icon" href="/images/dosee-icon-192x192.png">
 
   <!-- DOSee initialisation options -->
- <meta name="dosee:zip:path" content="dos_programs/program_2/emf_vrs2.zip" />
+  <meta name="dosee:zip:path" content="dos_programs/program_2/emf_vrs2.zip" />
   <meta name="dosee:run:filename" content="VERSES.EXE" />
   <meta name="dosee:capture:filename" content="screenshot.png" />
   <meta name="dosee:utilities" content="false" />
@@ -54,12 +55,13 @@
   <div>
     <h2>
       DOSee
-      <small><a href="#doseeTabs" id="doseeInstall" class="hidden">+Install</a></small>
+      <small><em>A DOS era, PC emulator for the web</em>
+        <a href="#doseeTabs" id="doseeInstall" class="hidden">+Install</a>
+      </small>
     </h2>
     <hr />
     <h2>
-      <small>Emulating<span id="doseeOffline" class="hidden"> offline</span> …
-        <span id="doseeH2">Something</span></small>
+      <small>Emulating<span id="doseeOffline" class="hidden"> offline</span> <span id="doseeH2">something</span></small>
     </h2>
     <div class="row" id="doseeCrashed">
       <div class="card fluid error">
@@ -136,7 +138,7 @@
         <legend>Audio addon</legend>
         <label>
           <input type="radio" name="dosaudio" id="dosaudio1" value="gus" />
-          Gravis Ultrasound
+          Gravis UltraSound
         </label>
         <label>
           <input type="radio" name="dosaudio" id="dosaudio4" value="covox" />
@@ -225,7 +227,7 @@
       <div id="helpProgram_2" class="hide">
         <h4>Verses by Electromotive Force</h4>
         <p>Released: 1994</p>
-        <p>Uses Gravis Ultrasound and 256 color VGA graphics</p>
+        <p>Uses Gravis UltraSound and 256 color VGA graphics</p>
         <p>
           <a href="?dosspeed=max&dosmachine=vga&dosaudio=gus">Reset to recommended hardware</a>
         </p>
@@ -234,12 +236,19 @@
         <p>No help available</p>
       </div>
     </form>
-    <hr>
-    <p>
-      Example programs: <a href="/">Tandy 1000</a> - <a href="/index_1.html">EGA plus AdLib</a> - <a href="/index_2.html">Gravis Ultrasound</a> - <a href="/index_3.html">VGA plus AdLib</a>
-    </p>
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="card fluid">
+          <h5>Switch the example machines and programs,</h5>
+          <p> ✱ <a href="/">1987, Tandy 1000</a> ✱ <a href="/index_1.html">1990, EGA+AdLib</a> ✱ <a
+              href="/index_2.html">1994,
+              Gravis
+              UltraSound</a> ✱ <a href="/index_3.html">1996, VGA+AdLib</a></p>
+        </div>
+      </div>
+    </div>
     <footer>
-      © 2021 - Ben Garrett |
+      © 2022 - Ben Garrett |
       <a href="//github.com/bengarrett/DOSee" target="_blank" rel="noopener">GitHub</a> |
       <a href="https://dosee.link" target="_blank" rel="nopener">DOSee online</a>
       <p>
