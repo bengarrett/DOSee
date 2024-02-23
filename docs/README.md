@@ -50,7 +50,7 @@ Point a web browser to http://localhost:8086
 
 ### Docker instructions
 
-There is an [image at Docker Hub](https://hub.docker.com/repository/docker/bengarrett/dosee).
+There is an [image at Docker Hub](https://hub.docker.com/r/bengarrett/dosee).
 ```bash
 docker run --name dosee_app -i -p 8086:80 bengarrett/dosee
 ```
