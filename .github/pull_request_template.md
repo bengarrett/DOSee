@@ -4,7 +4,7 @@ Is this a documentation update (if yes, please continue onto _Changes proposed_)
 
 Platforms tested or developed on:
 
-- [ ] Windows 10
+- [ ] Windows
 - [ ] Linux (please include distro and version) \_
 - [ ] macOS
 
