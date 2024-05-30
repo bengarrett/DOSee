@@ -15,6 +15,8 @@ DOSee is a front-end for an [MS-DOS](https://en.wikipedia.org/wiki/MS-DOS) emula
 
 DOSee is only a user interface and installation process for an incredible emulation ecosystem. Many remarkable people created it over many years. DOSee itself is a fork of [The Emularity](https://github.com/db48x/emularity) project started by the Internet Archive. [EM-DOSBox](https://github.com/dreamlayers/em-dosbox/), the core of this emulation, is a JavaScript port of [DOSBox](https://www.dosbox.com), the world's most popular MS-DOS emulator.
 
+---
+
 ![DOSee preview](../src/images/preview.png)
 
 ### What's new
@@ -24,23 +26,23 @@ DOSee is only a user interface and installation process for an incredible emulat
 ### Requirements
 
 - A web browser that supports service workers.<br>
-  Current Firefox, Chrome, Edge, or Safari will work fine.
+  Current Chrome, Edge, Safari, or Firefox will work fine.
 - A physical keyboard, as MS-DOS is a text-based operating system.
 - [Node.js](https://nodejs.org) or [Docker](https://www.docker.com/get-started)
 
 **DOSee runs over an HTTP server**, and it can not function over the `file:///` browser protocol.
 
-### Instructions, _download, build and serve_
+## Instructions, _download, build and serve_
 
 DOSee requires a build before it can serve to a web browser.
 
 ```bash
 # clone DOSee
-git clone https://github.com/bengarrett/DOSee.git
+git clone git@github.com:bengarrett/DOSee.git
 cd DOSee
 
  # install dependencies & build
-npm install # (or equivalent in another package manager)
+npm install # (or the equivalent in another package manager)
 
 # serve DOSee over port 8086
 npm run serve
@@ -54,7 +56,7 @@ There is a [DOSee repository at Docker Hub](https://hub.docker.com/repository/do
 
 ```bash
 # clone DOSee
-git clone https://github.com/bengarrett/DOSee.git
+git clone git@github.com:bengarrett/DOSee.git
 cd DOSee
 
 # run the container (tap Ctrl-C to exit)
@@ -73,7 +75,7 @@ docker container rm dosee_app
 docker image rm dosee
 ```
 
-### Usage & customisations
+## Usage & customisations
 
 [Are in the USAGE document](USAGE.md)
 

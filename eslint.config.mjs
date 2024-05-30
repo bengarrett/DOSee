@@ -5,7 +5,7 @@ import js from "@eslint/js";
 
 export default [
   {
-    ignores: ["build/**", "src/emulator/**"],
+    ignores: ["build/**", "src/emulator/**", "workbox-config.js"],
   },
   js.configs.recommended,
   {

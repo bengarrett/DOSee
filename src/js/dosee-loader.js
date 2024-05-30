@@ -17,9 +17,10 @@
 window.Module = null;
 ((Promise) => {
   "use strict";
+  const revision = new Date(`31,May,2024`);
   const version = new Map()
-    .set(`date`, new Date(`31,May,2024`))
-    .set(`minor`, `8.2`)
+    .set(`date`, revision)
+    .set(`minor`, `8.5`)
     .set(`major`, `1`)
     .set(`display`, ``);
 
