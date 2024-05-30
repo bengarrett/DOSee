@@ -6,13 +6,13 @@
   "use strict";
   // Relative file paths to DOSee emulation dependencies
   const paths = new Map()
-    .set(`driveGUS`, `/disk_drives/g_drive.zip`)
-    .set(`driveConfigs`, `/disk_drives/s_drive.zip`)
-    .set(`driveUtils`, `/disk_drives/u_drive.zip`)
-    .set(`sync`, `/emulator/dosbox-sync.js`)
-    .set(`mem`, `/emulator/dosbox-sync.mem`)
-    .set(`core`, `/emulator/dosbox.js`)
-    .set(`wasm`, `/emulator/dosbox.wasm`);
+    .set(`driveGUS`, `disk_drives/g_drive.zip`)
+    .set(`driveConfigs`, `disk_drives/s_drive.zip`)
+    .set(`driveUtils`, `disk_drives/u_drive.zip`)
+    .set(`sync`, `emulator/dosbox-sync.js`)
+    .set(`mem`, `emulator/dosbox-sync.mem`)
+    .set(`core`, `emulator/dosbox.js`)
+    .set(`wasm`, `emulator/dosbox.wasm`);
 
   // Load configurations that are obtained from the <meta name="dosee:"> HTML tags
   const config = new Map()

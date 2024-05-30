@@ -18,8 +18,8 @@ window.Module = null;
 ((Promise) => {
   "use strict";
   const version = new Map()
-    .set(`date`, new Date(`5,Jul,2022`))
-    .set(`minor`, `8`)
+    .set(`date`, new Date(`31,May,2024`))
+    .set(`minor`, `8.2`)
     .set(`major`, `1`)
     .set(`display`, ``);
 

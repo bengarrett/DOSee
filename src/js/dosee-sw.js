@@ -8,7 +8,7 @@ if (`serviceWorker` in navigator) {
   window.addEventListener(`load`, () => {
     "use strict";
     navigator.serviceWorker
-      .register(`/sw.js`)
+      .register(`../sw.js`)
       .then((registration) => {
         console.log(`DOSee service worker registered: ${registration.scope}`);
         // optional, reload the service worker to destroy the browser cache
@@ -43,4 +43,8 @@ if (`serviceWorker` in navigator) {
         console.log(`DOSee service worker registration failed: ${err}`);
       });
   });
+} else {
+  console.log(`DOSee service worker not supported`);
+  document.getElementById(`updateDOSeeSW`).textContent =
+    `Service worker not supported`;
 }

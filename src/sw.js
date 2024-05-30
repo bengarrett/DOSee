@@ -1,5 +1,5 @@
 /*globals articleHandler importScripts workbox*/
-importScripts(`/js/workbox-sw.js`);
+importScripts(`js/workbox-sw.js`);
 
 if (!workbox) {
   console.warn(`Failed to load Workbox service worker library`);
