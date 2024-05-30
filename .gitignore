@@ -2,6 +2,7 @@ node_modules
 .yarn
 .yarnrc.yml
 package-lock.json
+pnpm-lock.yaml
 yarn.lock
 
 # Hide dependencies

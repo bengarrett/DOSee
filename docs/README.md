@@ -23,10 +23,10 @@ DOSee is only a user interface and installation process for an incredible emulat
 
 ### Requirements
 
-- A web browser that supports JavaScript ES6 (ECMAScript 2015).<br>
-  Current Firefox, Chrome, Edge, Brave or Safari will work fine.
+- A web browser that supports service workers.<br>
+  Current Firefox, Chrome, Edge, or Safari will work fine.
 - A physical keyboard, as MS-DOS is a text-based operating system.
-- [Node.js](https://nodejs.org) plus [yarn](https://yarnpkg.com)/[npm](https://www.npmjs.com) or [Docker](https://www.docker.com/get-started)
+- [Node.js](https://nodejs.org) or [Docker](https://www.docker.com/get-started)
 
 **DOSee runs over an HTTP server**, and it can not function over the `file:///` browser protocol.
 
@@ -40,10 +40,10 @@ git clone https://github.com/bengarrett/DOSee.git
 cd DOSee
 
  # install dependencies & build
-yarn # npm install
+npm install # (or equivalent in another package manager)
 
 # serve DOSee over port 8086
-yarn run serve # npm run serve
+npm run serve
 ```
 
 Point a web browser to http://localhost:8086
@@ -86,10 +86,10 @@ If you edit the source files in `src/` you will need to rebuild the application.
 cd DOSee
 
 # re-build DOSee using your edits
-yarn run install # npm run install
+npm run install
 
 # serve the modified DOSee over port 8086
-yarn run serve # npm run serve
+npm run serve
 ```
 
 Point a web browser to http://localhost:8086

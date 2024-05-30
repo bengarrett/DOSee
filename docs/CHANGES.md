@@ -2,6 +2,11 @@
 
 ## Changes and updates
 
+### v1.9.0
+
+- Minor update.
+- Removed yarn installation requirements.
+
 ### v1.8.0
 
 - Fixed DOSee incorrectly interpreting backslashes as new commands,
