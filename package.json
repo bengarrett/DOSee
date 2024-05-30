@@ -35,7 +35,7 @@
     "url": "git+https://github.com/bengarrett/DOSee.git"
   },
   "scripts": {
-    "copy": "npx copyfiles -u 1 src/**/**/* src/**/* src/* build && npx copyup -f tmp/workbox-v6.6.0/workbox-sw.js build/js && npx copyup -f node_modules/mini.css/dist/mini-default.min.css build/css && npx copyup -f node_modules/browserfs/dist/browserfs.min.js node_modules/browserfs-zipfs-extras/dist/browserfs-zipfs-extras.js node_modules/file-saver-fixed/dist/FileSaver.min.js node_modules/canvas-toBlob/canvas-toBlob.js build/js",
+    "copy": "npx copyfiles -u 1 src/**/**/* src/**/* src/* build && npx copyup -f tmp/workbox-v6.6.1/workbox-sw.js build/js && npx copyup -f node_modules/mini.css/dist/mini-default.min.css build/css && npx copyup -f node_modules/browserfs/dist/browserfs.min.js node_modules/browserfs-zipfs-extras/dist/browserfs-zipfs-extras.js node_modules/file-saver-fixed/dist/FileSaver.min.js node_modules/canvas-toBlob/canvas-toBlob.js build/js",
     "install": "npx workbox-cli copyLibraries tmp && npm run copy && npx workbox injectManifest workbox-config.js",
     "serve": "npx http-server build --port 8086",
     "test": "echo \"Error: no test specified\" && exit 1"
