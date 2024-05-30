@@ -6,6 +6,7 @@
 
 - Minor update.
 - Removed yarn installation requirements.
+- Updated ESLint to v9.
 
 ### v1.8.0
 
