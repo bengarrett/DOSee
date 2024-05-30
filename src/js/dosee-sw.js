@@ -19,7 +19,7 @@ if (`serviceWorker` in navigator) {
             () => {
               console.info(
                 `DOSee remove and reregister service worker`,
-                registration
+                registration,
               );
               registration
                 .unregister()
@@ -29,13 +29,13 @@ if (`serviceWorker` in navigator) {
                     location.reload();
                   }, oneSec);
                 })
-                .catch(function (error) {
+                .catch((error) => {
                   console.log(
-                    `DOSee could not unregister, the host server maybe offline?\n${error}`
+                    `DOSee could not unregister, the host server maybe offline?\n${error}`,
                   );
                 });
             },
-            false
+            false,
           );
         }
       })

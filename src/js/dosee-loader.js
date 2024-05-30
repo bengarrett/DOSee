@@ -521,7 +521,7 @@ window.Module = null;
         function _loadHardDrive(data) {
           if (typeof data === `undefined`)
             throw Error(`_loadHardDrive requires the data argument`);
-          return new Promise(function (resolve, reject) {
+          return new Promise((resolve, reject) => {
             const deltaFS = new BrowserFS.FileSystem.InMemory();
             gameData = data;
             // Any file system writes to MountableFileSystem will be written to the
@@ -532,7 +532,6 @@ window.Module = null;
               new BrowserFS.FileSystem.MountableFileSystem(),
             );
             gameData.fileSystem.initialize(() => {
-              /* eslint-disable new-cap */
               const Buffer = BrowserFS.BFSRequire(`buffer`).Buffer;
               const fetch = (file) => {
                 if (
@@ -604,7 +603,8 @@ window.Module = null;
               iphone = `iph`,
               ipod = `ipo`;
             const title = () => {
-              switch (navigator.platform.slice(0, 3).toLowerCase()) {
+              const prefixChrs = 3;
+              switch (navigator.platform.slice(0, prefixChrs).toLowerCase()) {
                 case android:
                 case ipad:
                 case iphone:
@@ -904,7 +904,7 @@ window.Module = null;
     }
     if (Array.isArray(one)) return one.concat(two);
     if (oneType === `object`) {
-      Object.keys(two).forEach(function (key) {
+      Object.keys(two).forEach((key) => {
         one[key] = mergeObjects(one[key], two[key]);
       });
       return one;
@@ -1186,7 +1186,8 @@ window.Module = null;
       return 0;
     },
     pathNotExistsAction: () => {
-      return 3;
+      const flag = 3;
+      return flag;
     },
   };
 

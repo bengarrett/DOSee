@@ -19,8 +19,13 @@ export default [
       },
       globals: {
         ...globals.browser,
-        DOSee: "readonly", // browser is for firefox only
-        chrome: "readonly",
+        BrowserFS: "readonly",
+        DOSee: "readonly",
+        DoseeLoader: "readonly",
+        Emulator: "readonly",
+        FileSaver: "readonly",
+        FS: "writable",
+        Module: "writable",
       },
     },
     linterOptions: {
@@ -63,16 +68,16 @@ export default [
       "no-nested-ternary": "warn",
       "no-negated-condition": "warn",
       "no-multi-assign": "warn",
-      // "no-magic-numbers": [
-      //   "warn",
-      //   {
-      //     ignore: [-1, 0, 1, 2],
-      //     ignoreArrayIndexes: true,
-      //     ignoreDefaultValues: true,
-      //     ignoreClassFieldInitialValues: true,
-      //     enforceConst: true,
-      //   },
-      // ],
+      "no-magic-numbers": [
+        "warn",
+        {
+          ignore: [-1, 0, 1, 2],
+          ignoreArrayIndexes: true,
+          ignoreDefaultValues: true,
+          ignoreClassFieldInitialValues: true,
+          enforceConst: true,
+        },
+      ],
       "no-loop-func": "warn",
       "no-lonely-if": "warn",
       "no-implied-eval": "warn",

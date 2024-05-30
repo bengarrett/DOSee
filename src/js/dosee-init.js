@@ -45,10 +45,10 @@
     const urlParams = DOSee.newQueryString();
     // Gravis UltraSound Audio drivers (dosaudio=gus)
     const audio = urlParams.get(`dosaudio`);
-    if (
-      audio === `gus` ||
-      (audio == null && DOSee.getMetaContent(`dosee:audio`) === `gus`)
-    ) {
+    const gusFallback =
+      (typeof audio === `undefined` || audio === null) &&
+      DOSee.getMetaContent(`dosee:audio`) === `gus`;
+    if (audio === `gus` || gusFallback) {
       config.set(`gus`, `true`);
       DOSee.setMetaContent(`dosee:audio:gus`, `true`);
     }
@@ -67,8 +67,8 @@
       `g`,
       DoseeLoader.fetchFile(
         `Gravis UltraSound (GUS) drivers`,
-        `${paths.get(`driveGUS`)}`
-      )
+        `${paths.get(`driveGUS`)}`,
+      ),
     );
   };
 
@@ -101,7 +101,7 @@
     const driveLetter = `u`;
     return DoseeLoader.mountZip(
       driveLetter,
-      DoseeLoader.fetchFile(`DOSee utilities`, `${paths.get(`driveUtils`)}`)
+      DoseeLoader.fetchFile(`DOSee utilities`, `${paths.get(`driveUtils`)}`),
     );
   };
 
@@ -127,7 +127,7 @@
         // invalid protocols
         try {
           throw new Error(
-            `DOSee has aborted as it cannot be hosted over the "${url.protocol}" protocol.`
+            `DOSee has aborted as it cannot be hosted over the "${url.protocol}" protocol.`,
           );
         } catch (err) {
           console.error(err);
@@ -176,25 +176,25 @@
       DoseeLoader.locateAdditionalEmulatorJS(locateFiles),
       DoseeLoader.nativeResolution(
         nativeResolution()[0],
-        nativeResolution()[1]
+        nativeResolution()[1],
       ),
       DoseeLoader.mountZip(
         driveC,
         DoseeLoader.fetchFile(
           `'${config.get(`filename`)}'`,
-          `${config.get(`path`)}`
-        )
+          `${config.get(`path`)}`,
+        ),
       ),
       DoseeLoader.mountZip(
         driveConfigs,
         DoseeLoader.fetchFile(
           `DOSee configurations`,
-          `${paths.get(`driveConfigs`)}`
-        )
+          `${paths.get(`driveConfigs`)}`,
+        ),
       ),
       gravisDriver(config.get(`gus`)),
       utilities(config.get(`utils`)),
-      DoseeLoader.startExe(config.get(`exe`))
+      DoseeLoader.startExe(config.get(`exe`)),
     );
 
   // Start DOSee!
@@ -220,21 +220,21 @@
       console.log(
         `%cDOSee`,
         `color:dimgray;font-weight:bold`,
-        `checking ${objName}, ${typeof window[objName]}`
+        `checking ${objName}, ${typeof window[objName]}`,
       );
     });
     if (!pass) {
       // console output
       try {
         throw new Error(
-          `DOSee has aborted as it is missing the above dependencies.`
+          `DOSee has aborted as it is missing the above dependencies.`,
         );
       } catch (err) {
         console.error(err);
       }
       // error link
       return errorBox(
-        `DOSee cannot load the required dependencies listed the Browser Console.`
+        `DOSee cannot load the required dependencies listed the Browser Console.`,
       );
     }
   });
