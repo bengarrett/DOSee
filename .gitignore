@@ -15,3 +15,5 @@ tmp/
 
 # VSCode
 .vscode/tasks.json
+
+.DS_Store

@@ -7,6 +7,13 @@ updates:
     directory: "/" # Location of package manifests
     schedule:
       interval: "monthly"
+    target-branch: "main"
+    open-pull-requests-limit: 10
+    groups:
+      updates:
+        update-types:
+        - "minor"
+        - "patch"
   - package-ecosystem: github-actions
     directory: "/"
     schedule:

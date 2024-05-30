@@ -50,36 +50,9 @@ npm run serve
 
 Point a web browser to http://localhost:8086
 
-### Docker instructions
-
-There is a [DOSee repository at Docker Hub](https://hub.docker.com/repository/docker/bengarrett/dosee), or you can build locally using these instructions.
-
-```bash
-# clone DOSee
-git clone git@github.com:bengarrett/DOSee.git
-cd DOSee
-
-# run the container (tap Ctrl-C to exit)
-docker compose up
-```
-
-Point a web browser to http://localhost:8086
-
-```bash
-# alternative manual build and run
-docker build -t dosee .
-docker run --name dosee_app -i -p 8086:80 dosee
-
-# clean up and remove
-docker container rm dosee_app
-docker image rm dosee
-```
-
-## Usage & customisations
-
 [Are in the USAGE document](USAGE.md)
 
-### Editing the source JS or HTML
+## Editing the source JS or HTML
 
 If you edit the source files in `src/` you will need to rebuild the application.
 
