@@ -15,6 +15,8 @@ DOSee is a front-end for an [MS-DOS](https://en.wikipedia.org/wiki/MS-DOS) emula
 
 DOSee is only a user interface and installation process for an incredible emulation ecosystem. Many remarkable people created it over many years. DOSee itself is a fork of [The Emularity](https://github.com/db48x/emularity) project started by the Internet Archive. [EM-DOSBox](https://github.com/dreamlayers/em-dosbox/), the core of this emulation, is a JavaScript port of [DOSBox](https://www.dosbox.com), the world's most popular MS-DOS emulator.
 
+---
+
 ![DOSee preview](../src/images/preview.png)
 
 ### What's new
@@ -23,45 +25,34 @@ DOSee is only a user interface and installation process for an incredible emulat
 
 ### Requirements
 
-- A web browser that supports JavaScript ES6 (ECMAScript 2015).<br>
-  Current Firefox, Chrome, Edge, Brave or Safari will work fine.
+- A web browser that supports service workers.<br>
+  Current Chrome, Edge, Safari, or Firefox will work fine.
 - A physical keyboard, as MS-DOS is a text-based operating system.
-- [Node.js](https://nodejs.org) plus [yarn](https://yarnpkg.com)/[npm](https://www.npmjs.com) or [Docker](https://www.docker.com/get-started)
+- [Node.js](https://nodejs.org) or [Docker](https://www.docker.com/get-started)
 
 **DOSee runs over an HTTP server**, and it can not function over the `file:///` browser protocol.
 
-### Instructions, _download, build and serve_
+## Instructions, _download, build and serve_
 
 DOSee requires a build before it can serve to a web browser.
 
 ```bash
 # clone DOSee
-git clone https://github.com/bengarrett/DOSee.git
+git clone git@github.com:bengarrett/DOSee.git
 cd DOSee
 
  # install dependencies & build
-yarn # npm install
+npm install # (or the equivalent in another package manager)
 
 # serve DOSee over port 8086
-yarn run serve # npm run serve
+npm run serve
 ```
 
 Point a web browser to http://localhost:8086
-
-### Docker instructions
-
-There is an [image at Docker Hub](https://hub.docker.com/r/bengarrett/dosee).
-```bash
-docker run --name dosee_app -i -p 8086:80 bengarrett/dosee
-```
-
-Point a web browser to http://localhost:8086
-
-### Usage & customisations
 
 [Are in the USAGE document](USAGE.md)
 
-### Editing the source JS or HTML
+## Editing the source JS or HTML
 
 If you edit the source files in `src/` you will need to rebuild the application.
 
@@ -70,10 +61,10 @@ If you edit the source files in `src/` you will need to rebuild the application.
 cd DOSee
 
 # re-build DOSee using your edits
-yarn run install # npm run install
+npm run install
 
 # serve the modified DOSee over port 8086
-yarn run serve # npm run serve
+npm run serve
 ```
 
 Point a web browser to http://localhost:8086

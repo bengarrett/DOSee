@@ -2,6 +2,12 @@
 
 ## Changes and updates
 
+### v1.8.5
+
+- Minor update to fix internal path issues, DOSee should work with subdirectories now.
+- Removed yarn installation requirements.
+- Updated ESLint to v9.
+
 ### v1.8.0
 
 - Fixed DOSee incorrectly interpreting backslashes as new commands,

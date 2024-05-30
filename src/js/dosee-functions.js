@@ -27,13 +27,13 @@
   // Resize the DOSee canvas
   DOSee.canvasResize = (
     width = DOSee.gfx.mode13h.width,
-    height = DOSee.gfx.mode13h.height
+    height = DOSee.gfx.mode13h.height,
   ) => {
     console.log(`Resizing DOSee canvas to ${width}*${height}px`);
     return window._emscripten_set_element_css_size(
       document.getElementById(`doseeCanvas`),
       parseInt(width),
-      parseInt(height)
+      parseInt(height),
     );
   };
 
@@ -51,7 +51,7 @@
         keyCode: 17,
         location: 1,
         witch: 17,
-      })
+      }),
     );
     body.dispatchEvent(
       new KeyboardEvent(`keydown`, {
@@ -63,7 +63,7 @@
         keyCode: 120,
         location: 0,
         witch: 120,
-      })
+      }),
     );
     const e = document.getElementById(`doseeExit`);
     if (e !== null) e.classList.add(`hide-true`);
@@ -131,8 +131,9 @@
   DOSee.screenCapture = function () {
     const blobSupport = () => {
       try {
-        if (typeof Boolean(new Blob()) === `undefined`) return false;
-      } catch (err) {
+        const exists = typeof Boolean(new Blob()) === `undefined`;
+        if (exists) return false;
+      } catch {
         return false;
       }
       return true;
@@ -168,7 +169,7 @@
         storage.setItem(x, `test data`);
         storage.removeItem(x);
         return true;
-      } catch (err) {
+      } catch {
         return false;
       }
     };
@@ -224,7 +225,7 @@
           (element) => {
             localStorage.setItem(`doseeScaler`, element.target.value);
           },
-          0
+          0,
         );
       });
     };
@@ -248,7 +249,8 @@
 
   // Screen capture button
   try {
-    if (typeof Boolean(new Blob()) !== `undefined`) {
+    const exists = typeof Boolean(new Blob()) !== `undefined`;
+    if (exists) {
       const button = document.getElementById(`doseeCaptureScreen`);
       if (button !== null)
         button.addEventListener(`click`, DOSee.screenCapture);
