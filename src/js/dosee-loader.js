@@ -905,6 +905,10 @@ window.Module = null;
     if (Array.isArray(one)) return one.concat(two);
     if (oneType === `object`) {
       Object.keys(two).forEach((key) => {
+        // to fix, "Prototype-polluting function"
+        // ignore __proto__ and constructor properties
+        if (!Object.prototype.hasOwnProperty.call(two, key)) return;
+        if (key === "__proto__" || key === "constructor") return;
         one[key] = mergeObjects(one[key], two[key]);
       });
       return one;
