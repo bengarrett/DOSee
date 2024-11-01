@@ -13,7 +13,7 @@
     "globals": "^15.3.0",
     "http-server": "^14.1.1",
     "mini.css": "~3.0.1",
-    "workbox-cli": "~6.6.0"
+    "workbox-cli": "~7.3.0"
   },
   "description": "A DOSBox-based MS-DOS emulator for the web",
   "devDependencies": {
