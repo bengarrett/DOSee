@@ -54,6 +54,9 @@ Point a web browser to http://localhost:8086
 
 ## Editing the source JS or HTML
 
+> [!NOTE]
+> DOSee is considered feature complete. A fork is recommended for any new features.
+
 If you edit the source files in `src/` you will need to rebuild the application.
 
 ```bash
