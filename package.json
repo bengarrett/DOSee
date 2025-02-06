@@ -18,7 +18,7 @@
   "description": "A DOSBox-based MS-DOS emulator for the web",
   "devDependencies": {
     "eslint": "^9.3.0",
-    "eslint-config-prettier": "^9.1.0",
+    "eslint-config-prettier": "^10.0.1",
     "htmlhint": "^1.1.4",
     "prettier": "^3.2.5"
   },
