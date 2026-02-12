@@ -1,31 +1,54 @@
 // eslint.config.mjs
-// ESLint v9 flat configuration for JavaScript and JavaScript modules.
+// ESLint v10 flat configuration for DOSee - MS-DOS Emulator for the Web
+// https://eslint.org/docs/latest/use/configure/configuration-files-new
+/// <reference types="@eslint/js" />
 import globals from "globals";
 import js from "@eslint/js";
+import prettierConfig from "eslint-config-prettier";
 
 export default [
+  // Global ignores - files that should not be linted
   {
-    ignores: ["build/**", "src/emulator/**", "workbox-config.js"],
+    ignores: [
+      "build/**",
+      "src/emulator/**",
+      "workbox-config.js",
+      "tmp/**",
+      "*.min.js",
+      "*.bundle.js",
+      "node_modules/**",
+    ],
   },
+
+  // Base recommended rules from ESLint
   js.configs.recommended,
   {
     files: ["src/**/*.js"],
     languageOptions: {
-      ecmaVersion: "latest",
+      ecmaVersion: 2023, // Explicit version for clarity
+      sourceType: "module", // ES modules (default in modern JS)
       parserOptions: {
         ecmaFeatures: {
           impliedStrict: true,
+          jsx: false, // Not using JSX
         },
       },
       globals: {
         ...globals.browser,
+        // DOSee application globals
         BrowserFS: "readonly",
         DOSee: "readonly",
         DoseeLoader: "readonly",
         Emulator: "readonly",
         FileSaver: "readonly",
+        // Writable globals
         FS: "writable",
         Module: "writable",
+        // Service Worker globals (for sw.js)
+        self: "readonly",
+        caches: "readonly",
+        clients: "readonly",
+        importScripts: "readonly",
       },
     },
     linterOptions: {
@@ -89,4 +112,17 @@ export default [
       "no-extend-native": "error",
     },
   },
+  {
+    files: ["puppeteer-runner.mjs"],
+    languageOptions: {
+      ecmaVersion: 2023,
+      sourceType: "module",
+      globals: {
+        ...globals.node,
+      },
+    },
+  },
+
+  // Prettier compatibility - should be last to override formatting rules
+  prettierConfig,
 ];

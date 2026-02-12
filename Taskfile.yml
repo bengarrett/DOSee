@@ -1,0 +1,208 @@
+# Task runner for DOSee - MS-DOS Emulator for the Web
+# =================================================
+#
+# This task runner requires Task to be installed.
+# https://taskfile.dev/#/installation
+#
+version: '3'
+
+silent: true
+
+vars:
+  REQNPM: 'task requires Node.js and pnpm: https://pnpm.io'
+  REQPNPM: 'task requires pnpm: https://pnpm.io'
+  BUILD_DIR: 'build'
+  SRC_DIR: 'src'
+
+tasks:
+  default:
+    desc: List the available tasks.
+    aliases: [help]
+    hidden: true
+    cmds:
+      - task --list
+
+  # Server tasks
+  serve:
+    desc: Clean, rebuild and Serve DOSee on localhost:8086.
+    aliases: [s]
+    preconditions:
+      - sh: node -v
+        msg: '{{.REQNPM}}'
+    cmds:
+      - task: clean
+      - task: build
+      - pnpm run serve
+
+      # Build tasks
+  build:
+    desc: Build DOSee for production.
+    aliases: [b]
+    preconditions:
+      - sh: node -v
+        msg: '{{.REQNPM}}'
+    cmds:
+      - rm -rf {{.BUILD_DIR}}
+      - mkdir -p {{.BUILD_DIR}}
+      - pnpm run install
+      - echo "DOSee built successfully in {{.BUILD_DIR}} directory"
+
+  # System checks
+  checks:
+    desc: Check system versions and all tools used by DOSee.
+    aliases: [v]
+    cmds:
+      - echo "=== System Information ==="
+      - echo "Node.js:" && node --version
+      - echo "pnpm:" && pnpm --version
+      - echo "=== Development Tools ==="
+      - echo "ESLint:" && pnpm exec eslint --version
+      - echo "Prettier:" && pnpm exec prettier --version
+      - echo "HTMLHint:" && pnpm exec htmlhint --version
+      - echo "=== Build Tools ==="
+      - echo "Workbox CLI:" && pnpm exec workbox --version
+      - echo "copyfiles:" && pnpm exec copyfiles --version
+      - echo "copyup:" && pnpm exec copyup --version
+      - echo "http-server:" && pnpm exec http-server --version
+      - echo "=== DOSee Dependencies ==="
+      - echo "BrowserFS:" && echo "$(pnpm list browserfs | grep browserfs)"
+      - echo "mini.css:" && echo "$(pnpm list mini.css | grep mini.css)"
+      - echo "=== All checks completed ==="
+
+  # Clean tasks
+  clean:
+    desc: Clean build directory.
+    aliases: [c]
+    cmds:
+      - rm -rf {{.BUILD_DIR}}
+      - mkdir -p {{.BUILD_DIR}}
+
+  # Development tasks
+  dev:
+    desc: Development mode - build and serve.
+    aliases: [d]
+    cmds:
+      - task: build
+      - task: serve
+
+  # Format tasks
+  format:
+    desc: Format code using Prettier.
+    aliases: [f]
+    cmds:
+      - pnpm exec prettier --write .
+      - echo "Code formatting completed"
+
+  # Installation tasks
+  install:
+    desc: Install dependencies and build DOSee.
+    aliases: [i]
+    preconditions:
+      - sh: node -v
+        msg: '{{.REQNPM}}'
+      - sh: pnpm -v
+        msg: '{{.REQNPM}}'
+    cmds:
+      - pnpm install
+      - task: build
+
+  # Linting tasks
+  lint:
+    desc: Run ESLint on JavaScript files.
+    aliases: [l]
+    cmds:
+      - pnpm exec eslint . --ext .js,.mjs || echo "ESLint found issues that need to be fixed"
+
+  lint-fix:
+    desc: Run ESLint and automatically fix fixable issues.
+    aliases: [lf]
+    cmds:
+      - pnpm exec eslint src/js/*.js --fix
+      - echo "ESLint fixes applied. Please review the changes."
+
+  # DOS program management
+  list-programs:
+    desc: List available DOS programs.
+    aliases: [lp]
+    cmds:
+      - ls -la {{.SRC_DIR}}/dos_programs/
+
+  # Package management tasks
+  packages-latest:
+    desc: Interactively update to the latest dependencies.
+    aliases: [pl]
+    preconditions:
+      - sh: pnpm -v
+        msg: '{{.REQPNPM}}'
+    cmds:
+      - pnpm update --interactive --latest
+
+  packages-update:
+    desc: Update all dependencies to the latest versions.
+    aliases: [pu]
+    preconditions:
+      - sh: pnpm -v
+        msg: '{{.REQPNPM}}'
+    cmds:
+      - pnpm update
+
+  # Puppeteer tasks
+  puppeteer-chrome:
+    desc: Run DOSee in headless browser using Puppeteer (Chrome default).
+    aliases: [pc]
+    preconditions:
+      - sh: node -v
+        msg: '{{.REQNPM}}'
+      - sh: command -v puppeteer || pnpm list puppeteer > /dev/null 2>&1
+        msg: 'Puppeteer is required. Install with: pnpm add puppeteer'
+    cmds:
+      - echo "=== Running DOSee with Puppeteer (Chrome) ==="
+      - node puppeteer-runner.mjs --browser chrome
+
+  puppeteer-firefox:
+    desc: Run DOSee in headless Firefox using Puppeteer.
+    aliases: [pf]
+    preconditions:
+      - sh: node -v
+        msg: '{{.REQNPM}}'
+      - sh: command -v puppeteer || pnpm list puppeteer > /dev/null 2>&1
+        msg: 'Puppeteer is required. Install with: pnpm add puppeteer'
+    cmds:
+      - echo "=== Running DOSee with Puppeteer (Firefox) ==="
+      - node puppeteer-runner.mjs --browser firefox
+
+  puppeteer-webkit:
+    desc: Run DOSee in headless WebKit using Puppeteer.
+    aliases: [pw]
+    preconditions:
+      - sh: node -v
+        msg: '{{.REQNPM}}'
+      - sh: command -v puppeteer || pnpm list puppeteer > /dev/null 2>&1
+        msg: 'Puppeteer is required. Install with: pnpm add puppeteer'
+    cmds:
+      - echo "=== Running DOSee with Puppeteer (WebKit) ==="
+      - node puppeteer-runner.mjs --browser webkit
+
+  puppeteer-browse-chrome:
+    desc: Run DOSee with visible Chrome window using Puppeteer.
+    aliases: [gc]
+    preconditions:
+      - sh: node -v
+        msg: '{{.REQNPM}}'
+      - sh: command -v puppeteer || pnpm list puppeteer > /dev/null 2>&1
+        msg: 'Puppeteer is required. Install with: pnpm add puppeteer'
+    cmds:
+      - echo "=== Running DOSee with Puppeteer (Headful Mode) ==="
+      - node puppeteer-runner.mjs --browser chrome --headful
+
+  puppeteer-browse-firefox:
+    desc: Run DOSee with visible Firefox window using Puppeteer.
+    aliases: [ff]
+    preconditions:
+      - sh: node -v
+        msg: '{{.REQNPM}}'
+      - sh: command -v puppeteer || pnpm list puppeteer > /dev/null 2>&1
+        msg: 'Puppeteer is required. Install with: pnpm add puppeteer'
+    cmds:
+      - echo "=== Running DOSee with Puppeteer (Headful Mode) ==="
+      - node puppeteer-runner.mjs --browser firefox --headful

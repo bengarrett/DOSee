@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gamepad Fix Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .result { margin: 10px 0; padding: 10px; border-radius: 4px; }
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
+        button { padding: 8px 16px; margin: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Gamepad Fix Test</h1>
+    <div id="results"></div>
+    
+    <button id="testLoad">Test Load Settings</button>
+    <button id="cleanup">Cleanup</button>
+    
+    <script type="module">
+        import DOSeeGamepad, { gamepadConfigs } from './src/js/dosee-gamepad.js';
+        
+        function log(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `result ${type}`;
+            div.textContent = message;
+            document.getElementById('results').appendChild(div);
+            console.log(message);
+        }
+        
+        document.getElementById('testLoad').addEventListener('click', async () => {
+            log('=== Testing Load Settings ===');
+            
+            // First, set up some test data
+            const testSettings = {
+                enabled: true,
+                layout: 'playstation'
+            };
+            localStorage.setItem('doseeGamepadSettings', JSON.stringify(testSettings));
+            log('✓ Saved test settings to localStorage');
+            
+            // Create gamepad instance and initialize
+            const gamepad = new DOSeeGamepad();
+            log('✓ Created gamepad instance');
+            
+            // Initialize (this should load settings)
+            gamepad.init();
+            log('✓ Called init() - settings should be loaded');
+            
+            // Check the results
+            log(`Gamepad enabled: ${gamepad.enabled} (should be true)`);
+            log(`Gamepad layout: ${gamepad.config === gamepadConfigs.xbox ? 'xbox' : 'playstation'} (should be playstation)`);
+            
+            if (gamepad.enabled && gamepad.config === gamepadConfigs.playstation) {
+                log('🎉 SUCCESS: Settings were properly loaded!', 'success');
+            } else {
+                log('❌ FAILURE: Settings were not loaded correctly', 'error');
+            }
+        });
+        
+        document.getElementById('cleanup').addEventListener('click', () => {
+            localStorage.removeItem('doseeGamepadSettings');
+            log('✓ Cleaned up localStorage');
+        });
+    </script>
+</body>
+</html>

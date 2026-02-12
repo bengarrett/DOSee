@@ -14,13 +14,16 @@
 
 */
 
+// Reset global Module to ensure clean state before Emscripten initialization
+// This prevents conflicts from previous Emscripten applications and ensures
+// DOSee starts with a fresh Module configuration
 window.Module = null;
 ((Promise) => {
-  "use strict";
-  const revision = new Date(`31,May,2024`);
+  'use strict';
+  const revision = new Date(`13,Feb,2025`);
   const version = new Map()
     .set(`date`, revision)
-    .set(`minor`, `8.5`)
+    .set(`minor`, `9.0`)
     .set(`major`, `1`)
     .set(`display`, ``);
 
@@ -28,8 +31,26 @@ window.Module = null;
     `display`,
     `${version.get(`major`)}.${version.get(`minor`)} (${version
       .get(`date`)
-      .toLocaleDateString()})`,
+      .toLocaleDateString()})`
   );
+
+  // DOSee console logging utility with consistent styling
+  const doseeLog = (level, message) => {
+    const styles = `color:dimgray;font-weight:bold`;
+    const prefix = `%cDOSee`;
+
+    switch (level) {
+      case 'error':
+        console.error(prefix, styles, message);
+        break;
+      case 'warn':
+        console.warn(prefix, styles, message);
+        break;
+      case 'info':
+      default:
+        console.log(prefix, styles, message);
+    }
+  };
 
   // DOSBox requires a valid IndexedDB
   if (window.indexedDB)
@@ -112,22 +133,38 @@ window.Module = null;
    */
   class dosboxArguments {
     constructor(executableFilename = ``, filesToMount = []) {
-      if (executableFilename === ``)
-        throw Error(`dosbox executableFilename argument cannot be blank`);
-      if (filesToMount.length === 0)
-        throw Error(`dosbox filesToMount argument cannot be empty`);
-      this.verbose = `with the following configuration:`;
-      this.executableFilename = executableFilename;
-      this.filesToMount = filesToMount;
-      // command line arguments
-      this.commandLine = [];
+      try {
+        if (executableFilename === ``)
+          throw new Error(`dosbox executableFilename argument cannot be blank`);
+
+        // Note: filesToMount can be empty for simple configurations
+        // Only the executable is strictly required
+        if (filesToMount.length === 0) {
+          doseeLog(
+            'warn',
+            `No additional files to mount - only running executable`
+          );
+        }
+        this.verbose = `with the following configuration:`;
+        this.executableFilename = executableFilename;
+        this.filesToMount = filesToMount;
+        // command line arguments
+        this.commandLine = [];
+        this.commandLine.push(`joysticktype=none`);
+      } catch (error) {
+        doseeLog(
+          'error',
+          `dosboxArguments initialization failed: ${error.message}`
+        );
+        throw error; // Re-throw for now, could be handled by caller
+      }
     }
     build() {
       // dosbox command line parameters https://www.dosbox.com/wiki/Usage
       // dosbox.conf https://www.dosbox.com/wiki/Dosbox.conf
       const loadConfig = `-conf`,
         urlParams = DOSee.newQueryString();
-      console.log(`Initialisation of DOSee ${version.get(`display`)}`);
+      doseeLog('info', `Initialisation of DOSee ${version.get(`display`)}`);
       this._graphicEngineScaler(loadConfig);
       this._aspectRatioCorrection(loadConfig);
       this._cpuSpeed(loadConfig, urlParams);
@@ -135,7 +172,7 @@ window.Module = null;
       this._graphicMode(loadConfig, urlParams);
       this._dosMemory(loadConfig, urlParams);
       this._automaticExecution(loadConfig, urlParams);
-      console.log(this.verbose);
+      doseeLog('info', this.verbose.trim());
       return this.commandLine;
     }
     _defaultParam(param = ``) {
@@ -180,14 +217,14 @@ window.Module = null;
           return (document.getElementById(`dosscale2`).checked = true);
         default:
           throw Error(
-            `doseeScaler value "${scaler}" is unknown, use "none" for a default`,
+            `doseeScaler value "${scaler}" is unknown, use "none" for a default`
           );
       }
     }
     _aspectRatioCorrection(loadConfig = ``) {
       if (loadConfig === ``)
         throw Error(
-          `aspectRatioCorrection loadConfig argument cannot be empty`,
+          `aspectRatioCorrection loadConfig argument cannot be empty`
         );
       // impose aspect ratio correction
       const aspect = localStorage.getItem(`doseeAspect`) || `false`;
@@ -228,7 +265,7 @@ window.Module = null;
           break;
         default:
           throw Error(
-            `dosspeed value "${cpuspeed}" is unknown, use "auto" for a default`,
+            `dosspeed value "${cpuspeed}" is unknown, use "auto" for a default`
           );
       }
     }
@@ -264,7 +301,7 @@ window.Module = null;
           break;
         default:
           throw Error(
-            `dosaudio value "${sound}" is unknown, use "sb16" for a default`,
+            `dosaudio value "${sound}" is unknown, use "sb16" for a default`
           );
       }
     }
@@ -340,7 +377,7 @@ window.Module = null;
           break;
         default:
           throw Error(
-            `dosmachine value "${machine}" is unknown, use "vga" for a default`,
+            `dosmachine value "${machine}" is unknown, use "vga" for a default`
           );
       }
     }
@@ -377,7 +414,7 @@ window.Module = null;
         if (`drive` in file)
           this.commandLine.push(
             runCommand,
-            `mount ${file.drive} /dos${file.mountpoint}`,
+            `mount ${file.drive} /dos${file.mountpoint}`
           );
       }
       // Load any operating system drivers that are not natively supplied by DOSBox.
@@ -398,14 +435,14 @@ window.Module = null;
         let newPath = path.toString().replace(`,`, `\\`);
         newPath = newPath.split(`\\`).slice(0, suffix).join(`\\`);
         if (newPath !== ``) {
-          console.log(`Execute path "${newPath}"`);
+          doseeLog('info', `Execute path "${newPath}"`);
           this.commandLine.push(runCommand, `CD ${newPath}`);
         }
       }
       // dosbox default drive letter
       this.commandLine.push(
         runCommand,
-        /^[a-zA-Z]:$/.test(path[0]) ? path.shift() : diskDriveC,
+        /^[a-zA-Z]:$/.test(path[0]) ? path.shift() : diskDriveC
       );
       // do not automatically run the program executable
       if (
@@ -445,11 +482,19 @@ window.Module = null;
      * @param {HTMLElement} canvas Element containing the emulator.
      * @param {object} loadFiles An object of `DoseeLoader` files to load.
      */
-    constructor(canvas = HTMLElement, loadFiles) {
-      if (canvas === null)
-        throw Error(`Emulator canvas element does not exist`);
-      if (loadFiles === null)
-        throw Error(`Emulator loadFiles must be a DoseeLoader object`);
+    constructor(canvas = null, loadFiles) {
+      // Validate canvas parameter
+      if (!(canvas instanceof HTMLElement)) {
+        throw new Error(`Emulator canvas argument must be an HTMLElement`);
+      }
+      if (canvas === null) {
+        throw new Error(`Emulator canvas element does not exist`);
+      }
+
+      // Validate loadFiles parameter
+      if (loadFiles === null || typeof loadFiles !== 'object') {
+        throw new Error(`Emulator loadFiles must be a DoseeLoader object`);
+      }
       /**
        * Initialize the loading splash screen and create its methods.
        */
@@ -475,8 +520,8 @@ window.Module = null;
       const _initializeCanvas = () => {
         if (canvas.hasAttribute(`width`)) return;
         const style = getComputedStyle(canvas);
-        console.log(`_initializeCanvas init canvas style`);
-        console.log(style);
+        doseeLog('info', `_initializeCanvas init canvas style`);
+        doseeLog('info', style);
         canvas.width = parseInt(style.width, 10);
         canvas.height = parseInt(style.height, 10);
       };
@@ -528,70 +573,78 @@ window.Module = null;
             // Any file system writes to MountableFileSystem will be written to the
             // deltaFS, letting us mount read-only zip files into the MountableFileSystem
             // while being able to 'write' to them.
-            gameData.fileSystem = new BrowserFS.FileSystem.OverlayFS(
-              deltaFS,
-              new BrowserFS.FileSystem.MountableFileSystem(),
-            );
-            gameData.fileSystem.initialize(() => {
-              const Buffer = BrowserFS.BFSRequire(`buffer`).Buffer;
-              const fetch = (file) => {
-                if (
-                  `data` in file &&
-                  file.data !== null &&
-                  typeof file.data !== `undefined`
-                )
-                  return Promise.resolve(file.data);
-                return requestFile(
-                  file.title,
-                  file.url,
-                  `arraybuffer`,
-                  file.optional,
-                );
-              };
-              const mountAt = (drive) => {
-                return (zipData) => {
-                  if (zipData === null) return;
-                  const mountpoint = `/${drive.toLowerCase()}`;
-                  // Mount into RO MFS.
-                  gameData.fileSystem
-                    .getOverlayedFileSystems()
-                    .readable.mount(
-                      mountpoint,
-                      BFSOpenZip(new Buffer(zipData)),
-                    );
+            BrowserFS.FileSystem.OverlayFS.Create(
+              {
+                readable: deltaFS,
+                writable: new BrowserFS.FileSystem.MountableFileSystem(),
+              },
+              (e, overlayFS) => {
+                if (e) {
+                  doseeLog('error', `Failed to create OverlayFS: ${e.message}`);
+                  return;
+                }
+                gameData.fileSystem = overlayFS;
+                const Buffer = BrowserFS.BFSRequire(`buffer`).Buffer;
+                const fetch = (file) => {
+                  if (
+                    `data` in file &&
+                    file.data !== null &&
+                    typeof file.data !== `undefined`
+                  )
+                    return Promise.resolve(file.data);
+                  return requestFile(
+                    file.title,
+                    file.url,
+                    `arraybuffer`,
+                    file.optional
+                  );
                 };
-              };
-              const wasm = () => {
-                if (!(`emulatorWASM` in gameData)) return;
-                if (!gameData.emulatorWASM) return;
-                if (!(`WebAssembly` in window)) return;
-                gameData.files.push(
-                  fetch({
-                    title: `WASM Binary`,
-                    url: gameData.emulatorWASM,
-                  })
-                    .then((binary) => {
-                      gameData.wasmBinary = binary;
-                    })
-                    .then(() => {
-                      Promise.all(
-                        gameData.files.map((f) => {
-                          if (!f) return null;
-                          if (!f.file) return null;
-                          if (!f.drive) return null;
-                          return fetch(f.file).then(mountAt(f.drive));
-                        }),
-                      ).then(resolve, reject);
-                      console.log(
-                        `%cDOSee`,
-                        `color:dimgray;font-weight:bold`,
-                        `loading WASM binary complete`,
+                const mountAt = (drive) => {
+                  return async (zipData) => {
+                    if (zipData === null) return;
+                    const mountpoint = `/${drive.toLowerCase()}`;
+                    // Mount into RO MFS.
+                    try {
+                      const zipFS = await BFSOpenZip(new Buffer(zipData));
+                      gameData.fileSystem
+                        .getOverlayedFileSystems()
+                        .writable.mount(mountpoint, zipFS);
+                    } catch (e) {
+                      doseeLog(
+                        'error',
+                        `Failed to mount zip file: ${e.message}`
                       );
-                    }),
-                );
-              };
-              wasm();
-            });
+                    }
+                  };
+                };
+                const wasm = () => {
+                  if (!(`emulatorWASM` in gameData)) return;
+                  if (!gameData.emulatorWASM) return;
+                  if (!(`WebAssembly` in window)) return;
+                  gameData.files.push(
+                    fetch({
+                      title: `WASM Binary`,
+                      url: gameData.emulatorWASM,
+                    })
+                      .then((binary) => {
+                        gameData.wasmBinary = binary;
+                      })
+                      .then(() => {
+                        Promise.all(
+                          gameData.files.map((f) => {
+                            if (!f) return null;
+                            if (!f.file) return null;
+                            if (!f.drive) return null;
+                            return fetch(f.file).then(mountAt(f.drive));
+                          })
+                        ).then(resolve, reject);
+                        doseeLog('info', `loading WASM binary complete`);
+                      })
+                  );
+                };
+                wasm();
+              }
+            );
           });
         }
 
@@ -599,40 +652,88 @@ window.Module = null;
           if (!gameData || splash.loadFail) return null;
           if (!options.waitAfterDownloading) return Promise.resolve();
           return new Promise((resolve) => {
-            const android = `and`,
-              ipad = `ipa`,
-              iphone = `iph`,
-              ipod = `ipo`;
-            const title = () => {
-              const prefixChrs = 3;
-              switch (navigator.platform.slice(0, prefixChrs).toLowerCase()) {
-                case android:
-                case ipad:
-                case iphone:
-                case ipod:
-                  return `tap to start`;
-                default:
-                  return `click to start`;
-              }
+            // Modern touch device detection
+            const isTouchDevice = () => {
+              // Check for touch events (works on most mobile devices)
+              if ('ontouchstart' in window) return true;
+
+              // Check pointer events and touch points (modern browsers)
+              if (window.PointerEvent && navigator.maxTouchPoints > 0)
+                return true;
+
+              // Media query fallback for devices without touch events
+              // hover: none = no hover capability (touch device)
+              // pointer: coarse = imprecise pointer (finger)
+              return (
+                window.matchMedia('(hover: none)').matches ||
+                window.matchMedia('(pointer: coarse)').matches
+              );
             };
-            splash.setTitle(`${title()}`);
+
+            // Check if gamepad is connected to show appropriate message
+            const gamepads = navigator.getGamepads
+              ? navigator.getGamepads()
+              : [];
+            const hasGamepad = gamepads.some((g) => g !== null);
+
+            let title;
+            if (hasGamepad) {
+              title = `press A button to start`;
+            } else if (isTouchDevice()) {
+              title = `tap to start`;
+            } else {
+              title = `click to start`;
+            }
+
+            // If gamepad is connected, also show a helpful sub-title
+            if (hasGamepad) {
+              const subtitle = document.createElement('div');
+              subtitle.style.fontSize = '0.8em';
+              subtitle.style.opacity = '0.7';
+              subtitle.style.marginTop = '0.5em';
+              subtitle.textContent = 'Gamepad detected - no mouse needed!';
+              splash.splashElt.appendChild(subtitle);
+            }
+            splash.setTitle(title);
             splash.spinning = false;
             // stashes these event listeners so that we can remove them after
-            window.addEventListener(
-              `keydown`,
-              (keyPressEvent = keyevent(resolve)),
-            );
-            canvas.addEventListener(`click`, (clickEvent = resolve));
+            const keyPressEvent = keyevent(resolve);
+            window.addEventListener(`keydown`, keyPressEvent);
+
+            // Add gamepad button support for starting emulation
+            const gamepadStartEvent = gamepadevent(resolve);
+            const gamepadPollInterval = setupGamepadPolling(gamepadStartEvent);
+
+            const clickEvent = resolve;
+            canvas.addEventListener(`click`, clickEvent);
             splash.splashElt.addEventListener(`click`, clickEvent);
+
+            // Store cleanup references on splash object for _loadDOSWarp
+            splash._cleanup = {
+              keyPressEvent: keyPressEvent,
+              gamepadPollInterval: gamepadPollInterval,
+              clickEvent: clickEvent,
+            };
           });
         }
 
         function _loadDOSWarp() {
           if (!gameData || splash.loadFail) return;
           splash.spinning = true;
-          window.removeEventListener(`keypress`, keyPressEvent);
-          canvas.removeEventListener(`click`, clickEvent);
-          splash.splashElt.removeEventListener(`click`, clickEvent);
+          if (splash._cleanup) {
+            window.removeEventListener(
+              `keydown`,
+              splash._cleanup.keyPressEvent
+            );
+            if (splash._cleanup.gamepadPollInterval)
+              clearInterval(splash._cleanup.gamepadPollInterval);
+            canvas.removeEventListener(`click`, splash._cleanup.clickEvent);
+            splash.splashElt.removeEventListener(
+              `click`,
+              splash._cleanup.clickEvent
+            );
+            delete splash._cleanup;
+          }
           blockNavigationKeys();
 
           // Emscripten doesn't use the proper prefixed functions for fullscreen requests,
@@ -644,7 +745,7 @@ window.Module = null;
             gameData.fileSystem,
             gameData.locateAdditionalJS,
             gameData.wasmBinary,
-            gameData.nativeResolution,
+            gameData.nativeResolution
           );
           if (!gameData.emulatorJS)
             return splash.setTitle(`Non-system disk or disk error`);
@@ -663,12 +764,12 @@ window.Module = null;
             if (button !== null) {
               switch (id) {
                 case `doseeCaptureScreen`:
-                  if (!Blob) return console.log(`Blob is unsupported`);
+                  if (!Blob) return doseeLog('info', `Blob is unsupported`);
                   break;
                 case `doseeFullScreen`:
                   // Fullscreen API check
                   if (!canvas.requestFullscreen)
-                    return console.log(`Fullscreen API is unsupported`);
+                    return doseeLog('info', `Fullscreen API is unsupported`);
                   break;
                 default:
               }
@@ -686,7 +787,7 @@ window.Module = null;
           if (splash.loadFail) return null;
           const frownFace = 9785;
           splash.setTitle(
-            `The emulator broke ${String.fromCharCode(frownFace)}`,
+            `The emulator broke ${String.fromCharCode(frownFace)}`
           );
           splash.loadFail = true;
         }
@@ -711,31 +812,31 @@ window.Module = null;
         fileSystem,
         locateAdditionalJS,
         wasmBinary,
-        nativeResolution,
+        nativeResolution
       ) {
         if (typeof args === `undefined`)
           throw Error(`initializeModule args argument cannot be undefined`);
         if (typeof fileSystem === `undefined`)
           throw Error(
-            `initializeModule fileSystem argument cannot be undefined`,
+            `initializeModule fileSystem argument cannot be undefined`
           );
         if (typeof locateAdditionalJS === `undefined`)
           throw Error(
-            `initializeModule locateAdditionalJS argument cannot be undefined`,
+            `initializeModule locateAdditionalJS argument cannot be undefined`
           );
         if (typeof wasmBinary === `undefined`)
           throw Error(
-            `initializeModule wasmBinary argument cannot be undefined`,
+            `initializeModule wasmBinary argument cannot be undefined`
           );
         if (typeof nativeResolution === `undefined`)
           throw Error(
-            `initializeModule nativeResolution argument cannot be undefined`,
+            `initializeModule nativeResolution argument cannot be undefined`
           );
         return {
           arguments: args,
           screenIsReadOnly: true,
           print(text) {
-            console.log(`%cDOSBox`, `color:dimgray;font-weight:bold;`, text);
+            doseeLog('info', text);
           },
           canvas,
           noInitialRun: false,
@@ -755,7 +856,7 @@ window.Module = null;
               resizeCanvas(
                 canvas,
                 (canvasSize = nativeResolution || canvasSize),
-                canvasScale,
+                canvasScale
               );
             });
           },
@@ -772,7 +873,7 @@ window.Module = null;
     config.emulatorArguments = new dosboxArguments(
       config.emulatorStart,
       config.files,
-      config.emulatorCPU,
+      config.emulatorCPU
     ).build();
     return config;
   }
@@ -793,7 +894,22 @@ window.Module = null;
   function BFSOpenZip(loadedData) {
     if (typeof loadedData === `undefined`)
       throw Error(`BFSOpenZip loadedData argument cannot be empty`);
-    return new BrowserFS.FileSystem.ZipFS(loadedData);
+
+    return new Promise((resolve, reject) => {
+      BrowserFS.FileSystem.ZipFS.Create(
+        {
+          zipData: loadedData,
+        },
+        (e, zipFS) => {
+          if (e) {
+            doseeLog('error', `Failed to create ZipFS: ${e.message}`);
+            reject(e);
+          } else {
+            resolve(zipFS);
+          }
+        }
+      );
+    });
   }
 
   /**
@@ -806,7 +922,7 @@ window.Module = null;
       title = document.createElement(`span`);
     if (progress === null)
       throw Error(
-        `div element doseeProgressIndicator does not exist on the page`,
+        `div element doseeProgressIndicator does not exist on the page`
       );
     status.classList.add(`splash-status`);
     p.classList.add(`toast`);
@@ -834,7 +950,8 @@ window.Module = null;
   function blockNavigationKeys() {
     const blockKeys = (event) => {
       if (typeof Module === `undefined`) return;
-      if (typeof window.ABORT === `boolean` && window.ABORT === true) {
+      // Check if Emscripten's ABORT flag is set (defined in the compiled WASM)
+      if (typeof Module !== `undefined` && Module.ABORT === true) {
         // cancel this preventDefault() event listener if em-dosbox has been aborted
         document.removeEventListener(`keydown`, blockKeys);
       }
@@ -888,6 +1005,66 @@ window.Module = null;
   }
 
   /**
+   * Gamepad input event handler for splash screen
+   * @param {*} resolve Promise resolve.
+   */
+  function gamepadevent(resolve) {
+    return (gamepadEvent) => {
+      // Check if this is a button press event with button information
+      if (gamepadEvent && gamepadEvent.button !== undefined) {
+        // A button (button 0) or Cross button (also typically button 0) to start
+        // This covers both Xbox (A) and PlayStation (Cross) controllers
+        if (gamepadEvent.button === 0) {
+          // Only allow gamepad start if gamepad support is enabled (default to true if not set)
+          if (window.doseeGamepadEnabled !== false) {
+            doseeLog('info', 'Gamepad button pressed to start emulation');
+            resolve();
+          }
+        }
+      }
+    };
+  }
+
+  /**
+   * Set up gamepad polling to detect button presses during splash screen
+   * @param {Function} handler Function to call when button is pressed
+   * @returns {number} Interval ID for cleanup
+   */
+  function setupGamepadPolling(handler) {
+    // Store previous button states to detect presses
+    const previousStates = new Map();
+
+    return setInterval(() => {
+      const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+
+      for (let i = 0; i < gamepads.length; i++) {
+        const gamepad = gamepads[i];
+        if (!gamepad) continue;
+
+        // Check if we have previous state for this gamepad
+        const previousState = previousStates.get(gamepad.index) || [];
+
+        // Check button 0 (A/Cross) for press
+        if (gamepad.buttons && gamepad.buttons.length > 0) {
+          const button0 = gamepad.buttons[0];
+          if (
+            button0 &&
+            button0.pressed &&
+            (!previousState[0] || !previousState[0].pressed)
+          ) {
+            // Button 0 was just pressed - trigger the handler
+            handler({ button: 0, gamepad: gamepad });
+            break; // Only handle one button press at a time
+          }
+        }
+
+        // Store current state for next poll
+        previousStates.set(gamepad.index, gamepad.buttons);
+      }
+    }, 100); // Poll every 100ms
+  }
+
+  /**
    * Merge two objects or arrays and return the result.
    * You cannot mix types and merge an object with an array.
    * @param {any[]|object} one Object or array one.
@@ -909,7 +1086,7 @@ window.Module = null;
         // to fix, "Prototype-polluting function"
         // ignore __proto__ and constructor properties
         if (!Object.prototype.hasOwnProperty.call(two, key)) return;
-        if (key === "__proto__" || key === "constructor") return;
+        if (key === '__proto__' || key === 'constructor') return;
         one[key] = mergeObjects(one[key], two[key]);
       });
       return one;
@@ -963,8 +1140,8 @@ window.Module = null;
         fileSystem.readFileSync(
           read.get(`filename`),
           read.get(`encoding`),
-          read.get(`fileFlag`),
-        ),
+          read.get(`fileFlag`)
+        )
       );
       // write the file to the new location
       fileSystem.writeFileSync(
@@ -972,7 +1149,7 @@ window.Module = null;
         write.get(`data`),
         write.get(`encoding`),
         write.get(`fileFlag`),
-        write.get(`mode`),
+        write.get(`mode`)
       );
     }
   }
@@ -1007,7 +1184,7 @@ window.Module = null;
         `fa-circle-notch`,
         `fa-spin`,
         `fa-fw`,
-        `fa-xs`,
+        `fa-xs`
       );
       statusCell.append(spinner, `${nbsp}`);
       fetch(url, {
@@ -1032,8 +1209,8 @@ window.Module = null;
             default:
               return reject(
                 new Error(
-                  `unknown requestFile type, it needs to be a valid fetch method`,
-                ),
+                  `unknown requestFile type, it needs to be a valid fetch method`
+                )
               );
           }
         })
@@ -1050,7 +1227,7 @@ window.Module = null;
           titleCell.textContent = text;
           titleCell.title = `${err}`;
           const error = `A DOSee error occurred`;
-          console.error(`${error}: ${err}`);
+          doseeLog('error', `${error}: ${err}`);
           reject(new Error(`${error}: ${err}`));
         });
     });
@@ -1065,7 +1242,7 @@ window.Module = null;
   function resizeCanvas(
     canvas = HTMLElement,
     resolution = { width: 0, height: 0 },
-    scale = 0,
+    scale = 0
   ) {
     if (scale && resolution) {
       canvas.classList.add(`dosee-crisp-render`);
@@ -1197,7 +1374,7 @@ window.Module = null;
   };
 
   document.getElementById(`doseeVersion`).innerHTML = ` version ${version.get(
-    `display`,
+    `display`
   )}`;
   window.DoseeLoader = DoseeLoader;
   window.Emulator = Emulator;

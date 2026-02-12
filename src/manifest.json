@@ -2,11 +2,7 @@
   "short_name": "DOSee",
   "name": "DOSee AGI Demo",
   "description": "A DOSBox-based, MS-DOS emulator for the web.",
-  "categories": [
-    "emulation",
-    "msdos",
-    "retro"
-  ],
+  "categories": ["emulation", "msdos", "retro"],
   "id": "/",
   "start_url": ".",
   "display": "standalone",

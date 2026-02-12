@@ -8,19 +8,20 @@
     "browserfs": "1.4.3",
     "browserfs-zipfs-extras": "1.0.1",
     "canvas-toBlob": "1.0.0",
-    "copyfiles": "~2.4.1",
     "file-saver-fixed": "1.3.8",
-    "globals": "^17.3.0",
-    "http-server": "^14.1.1",
-    "mini.css": "~3.0.1",
-    "workbox-cli": "~7.4.0"
+    "mini.css": "~3.0.1"
   },
   "description": "A DOSBox-based MS-DOS emulator for the web",
   "devDependencies": {
-    "eslint": "^9.3.0",
-    "eslint-config-prettier": "^10.0.1",
-    "htmlhint": "^1.1.4",
-    "prettier": "^3.2.5"
+    "copyfiles": "~2.4.1",
+    "eslint": "^10.0.0",
+    "eslint-config-prettier": "^10.1.8",
+    "globals": "^17.3.0",
+    "htmlhint": "^1.9.1",
+    "http-server": "^14.1.1",
+    "prettier": "^3.8.1",
+    "puppeteer": "^24.37.2",
+    "workbox-cli": "~7.4.0"
   },
   "homepage": "https://github.com/bengarrett/DOSee",
   "funding": {
@@ -35,10 +36,10 @@
     "url": "git+https://github.com/bengarrett/DOSee.git"
   },
   "scripts": {
-    "copy": "npx copyfiles -u 1 src/**/**/* src/**/* src/* build && npx copyup -f tmp/workbox-v6.6.1/workbox-sw.js build/js && npx copyup -f node_modules/mini.css/dist/mini-default.min.css build/css && npx copyup -f node_modules/browserfs/dist/browserfs.min.js node_modules/browserfs-zipfs-extras/dist/browserfs-zipfs-extras.js node_modules/file-saver-fixed/dist/FileSaver.min.js node_modules/canvas-toBlob/canvas-toBlob.js build/js",
-    "install": "npx workbox-cli copyLibraries tmp && npm run copy && npx workbox injectManifest workbox-config.js",
-    "serve": "npx http-server build --port 8086",
+    "copy": "npx copyfiles -u 1 src/**/**/* src/**/* src/* build && npx copyup -f tmp/workbox-v7.4.0/workbox-sw.js build/js && npx copyup -f node_modules/mini.css/dist/mini-default.min.css build/css && npx copyup -f node_modules/browserfs/dist/browserfs.min.js node_modules/browserfs-zipfs-extras/dist/browserfs-zipfs-extras.js node_modules/file-saver-fixed/dist/FileSaver.min.js node_modules/canvas-toBlob/canvas-toBlob.js build/js",
+    "install": "npx workbox-cli copyLibraries tmp && npm run copy && npx workbox-cli injectManifest workbox-config.js",
+    "serve": "npx http-server build --port 8086 --gzip --brotli --cors -c-1 --log-ip",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "version": "1.8.5"
+  "version": "1.9.0"
 }
