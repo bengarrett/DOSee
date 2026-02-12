@@ -2,6 +2,11 @@
 
 ## Changes and updates
 
+### v1.9.0
+
+- Update packages to the latest versions, including workbox.
+- Replaced basic npx and yarn, developer requirements with pnpm.
+
 ### v1.8.5
 
 - Minor update to fix internal path issues, DOSee should work with subdirectories now.

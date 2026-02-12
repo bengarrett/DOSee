@@ -37,12 +37,25 @@ tasks:
 
   # System checks
   checks:
-    desc: Check system versions.
+    desc: Check system versions and all tools used by DOSee.
     aliases: [v]
     cmds:
-      - echo "System Information:"
-      - node --version
-      - pnpm --version
+      - echo "=== System Information ==="
+      - echo "Node.js:" && node --version
+      - echo "pnpm:" && pnpm --version
+      - echo "=== Development Tools ==="
+      - echo "ESLint:" && pnpm exec eslint --version
+      - echo "Prettier:" && pnpm exec prettier --version
+      - echo "HTMLHint:" && pnpm exec htmlhint --version
+      - echo "=== Build Tools ==="
+      - echo "Workbox CLI:" && pnpm exec workbox --version
+      - echo "copyfiles:" && pnpm exec copyfiles --version
+      - echo "copyup:" && pnpm exec copyup --version
+      - echo "http-server:" && pnpm exec http-server --version
+      - echo "=== DOSee Dependencies ==="
+      - echo "BrowserFS:" && echo "$(pnpm list browserfs | grep browserfs)"
+      - echo "mini.css:" && echo "$(pnpm list mini.css | grep mini.css)"
+      - echo "=== All checks completed ==="
 
   # Clean tasks
   clean:
@@ -130,10 +143,3 @@ tasks:
         msg: '{{.REQNPM}}'
     cmds:
       - pnpm run serve
-
-  # Testing tasks
-  test:
-    desc: Run tests.
-    aliases: [t]
-    cmds:
-      - pnpm run test
