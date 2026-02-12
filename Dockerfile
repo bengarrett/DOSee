@@ -40,3 +40,7 @@ LABEL net.dosee.description="DOSee an MS-DOS emulator for the web"
 # Copy DOSee from the build image to the nginx webroot
 RUN rm /usr/share/nginx/html/*
 COPY --from=build /dosee/build/ /usr/share/nginx/html
+
+# Security enhancement: Run as non-root user
+RUN chown -R nginx:nginx /usr/share/nginx/html
+USER nginx

@@ -2,7 +2,7 @@
 importScripts(`js/workbox-sw.js`);
 
 if (workbox) {
-  console.log(`Loaded Workbox v6 service worker library`);
+  console.log(`Loaded Workbox v7 service worker library`);
   try {
     workbox.precaching.precacheAndRoute(self.__WB_MANIFEST);
   } catch (error) {

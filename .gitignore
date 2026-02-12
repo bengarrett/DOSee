@@ -1,19 +1,30 @@
-node_modules
-.yarn
-.yarnrc.yml
+# Dependency directories
+node_modules/
+
+# Lock files (keep pnpm-lock.yaml, ignore others)
 package-lock.json
-pnpm-lock.yaml
 yarn.lock
 
-# Hide dependencies
+# Build output
 build/
-pub/
 tmp/
 
-# Packs
+# Archive files
 *.tgz
 
-# VSCode
-.vscode/tasks.json
-
+# macOS metadata
 .DS_Store
+
+# Editor temporary files
+*.swp
+*.swo
+
+# Environment files
+.env
+.env.local
+
+# Ignore root markdown files (but not docs/)
+/*.md
+!/docs/
+!/docs/**/*.md
+
