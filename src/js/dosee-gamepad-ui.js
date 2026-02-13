@@ -28,6 +28,10 @@ export function addGamepadUI(gamepadSupport) {
   const toggleInput = document.createElement('input');
   toggleInput.type = 'checkbox';
   toggleInput.id = 'gamepadToggle';
+  
+  console.log('DEBUG UI: gamepadSupport.enabled =', gamepadSupport.enabled);
+  console.log('DEBUG UI: gamepadSupport.config =', gamepadSupport.config);
+  
   toggleInput.checked = gamepadSupport.enabled;
   
   const toggleText = document.createTextNode(' Enable Gamepad Support');
@@ -54,7 +58,11 @@ export function addGamepadUI(gamepadSupport) {
   
   layoutSelect.appendChild(xboxOption);
   layoutSelect.appendChild(psOption);
-  layoutSelect.value = gamepadSupport.config === gamepadConfigs.xbox ? 'xbox' : 'playstation';
+  
+  const layoutValue = gamepadSupport.config === gamepadConfigs.xbox ? 'xbox' : 'playstation';
+  console.log('DEBUG UI: Setting layout dropdown to:', layoutValue);
+  
+  layoutSelect.value = layoutValue;
   
   layoutLabel.appendChild(layoutSelect);
   gamepadFieldset.appendChild(layoutLabel);

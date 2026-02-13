@@ -56,15 +56,24 @@
     .set(`filename`, DOSee.getMetaContent(`dosee:loading:name`) || ``) // Default: empty string
     .set(`start`, false);
 
-  // Configure gamepad support from meta tags
+  // Configure gamepad support
   if (gamepadSupport) {
-    const gamepadEnabled = DOSee.getMetaContent(`dosee:gamepad`) === `enabled`;
-    const gamepadLayout = DOSee.getMetaContent(`dosee:gamepad:layout`) || `xbox`;
-
-    if (gamepadEnabled) {
-      gamepadSupport.setConfig(gamepadLayout);
-      gamepadSupport.enable();
-      doseeLog('info', `Gamepad support enabled with ${gamepadLayout} layout`);
+    // Import gamepad configs for layout detection
+    const { gamepadConfigs } = await import('./dosee-gamepad.js');
+    
+    // Check if localStorage settings exist
+    const hasLocalSettings = localStorage.getItem('doseeGamepadSettings') !== null;
+    
+    if (hasLocalSettings) {
+      // LocalStorage settings exist - they were already loaded in init()
+      doseeLog('info', 'Gamepad support using saved settings from localStorage');
+      
+      // Ensure the gamepad is enabled if the saved setting says it should be
+      if (gamepadSupport.enabled) {
+        doseeLog('info', `Gamepad support enabled with ${gamepadSupport.config === gamepadConfigs.xbox ? 'xbox' : 'playstation'} layout (from localStorage)`);
+      }
+    } else {
+      doseeLog('info', 'Gamepad support ready - use UI to enable and configure');
     }
 
     // Add UI controls for gamepad

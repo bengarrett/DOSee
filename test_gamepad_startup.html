@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gamepad Startup Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-result { margin: 10px 0; padding: 10px; border-radius: 4px; }
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
+        .info { background-color: #d1ecf1; color: #0c5460; }
+        button { padding: 8px 16px; margin: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Gamepad Startup Test</h1>
+    <p>This test simulates the full startup sequence to verify localStorage settings are properly applied.</p>
+    
+    <div id="testResults"></div>
+    
+    <div style="margin-top: 20px;">
+        <button id="testEnabledXbox">Test: Enable Xbox Layout</button>
+        <button id="testEnabledPS">Test: Enable PlayStation Layout</button>
+        <button id="testDisabled">Test: Disable Gamepad</button>
+        <button id="testStartup">Test: Simulate Startup</button>
+        <button id="cleanup">Cleanup LocalStorage</button>
+    </div>
+    
+    <script type="module">
+        // Import the gamepad module
+        import DOSeeGamepad, { gamepadConfigs } from './src/js/dosee-gamepad.js';
+        
+        const resultsDiv = document.getElementById('testResults');
+        
+        function logResult(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `test-result ${type}`;
+            div.textContent = message;
+            resultsDiv.appendChild(div);
+            console.log(message);
+        }
+        
+        async function simulateStartup() {
+            logResult('=== SIMULATING STARTUP SEQUENCE ===', 'info');
+            
+            // Step 1: Create gamepad instance (simulates dosee-init.js)
+            logResult('Step 1: Creating gamepad instance...', 'info');
+            const gamepad = new DOSeeGamepad();
+            
+            // Step 2: Initialize gamepad (this should load settings)
+            logResult('Step 2: Initializing gamepad...', 'info');
+            const initialized = gamepad.init();
+            logResult(`✓ Gamepad initialized: ${initialized}`, 'success');
+            
+            // Step 3: Check if settings were loaded
+            logResult('Step 3: Checking loaded settings...', 'info');
+            const settings = localStorage.getItem('doseeGamepadSettings');
+            if (settings) {
+                const parsed = JSON.parse(settings);
+                logResult(`✓ Found localStorage settings: enabled=${parsed.enabled}, layout=${parsed.layout}`, 'success');
+            } else {
+                logResult('✓ No localStorage settings found (first run)', 'info');
+            }
+            
+            // Step 4: Verify gamepad state matches settings
+            logResult('Step 4: Verifying gamepad state...', 'info');
+            logResult(`Gamepad enabled: ${gamepad.enabled}`, 'info');
+            logResult(`Gamepad layout: ${gamepad.config === gamepadConfigs.xbox ? 'xbox' : 'playstation'}`, 'info');
+            
+            // Step 5: Check if polling is active if enabled
+            if (gamepad.enabled && gamepad.pollingInterval) {
+                logResult('✓ Polling is active (gamepad is working)', 'success');
+            } else if (gamepad.enabled) {
+                logResult('⚠ Gamepad enabled but no polling active (no gamepad connected)', 'info');
+            } else {
+                logResult('✓ Gamepad disabled as expected', 'success');
+            }
+            
+            return gamepad;
+        }
+        
+        // Button event handlers
+        document.getElementById('testEnabledXbox').addEventListener('click', async () => {
+            const gamepad = new DOSeeGamepad();
+            gamepad.init();
+            gamepad.setConfig('xbox');
+            gamepad.enable();
+            logResult('✓ Set Xbox layout and enabled gamepad', 'success');
+        });
+        
+        document.getElementById('testEnabledPS').addEventListener('click', async () => {
+            const gamepad = new DOSeeGamepad();
+            gamepad.init();
+            gamepad.setConfig('playstation');
+            gamepad.enable();
+            logResult('✓ Set PlayStation layout and enabled gamepad', 'success');
+        });
+        
+        document.getElementById('testDisabled').addEventListener('click', async () => {
+            const gamepad = new DOSeeGamepad();
+            gamepad.init();
+            gamepad.disable();
+            logResult('✓ Disabled gamepad', 'success');
+        });
+        
+        document.getElementById('testStartup').addEventListener('click', simulateStartup);
+        
+        document.getElementById('cleanup').addEventListener('click', () => {
+            localStorage.removeItem('doseeGamepadSettings');
+            logResult('✓ Cleaned up localStorage', 'success');
+        });
+        
+        // Run initial test
+        logResult('Gamepad Startup Test Ready', 'info');
+        logResult('Use the buttons above to test different scenarios', 'info');
+    </script>
+</body>
+</html>

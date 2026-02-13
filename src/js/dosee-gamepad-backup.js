@@ -223,14 +223,27 @@ class DOSeeGamepad {
    * Poll gamepad state and handle input
    */
   pollGamepad() {
-    if (!this.gamepad || !this.enabled) return;
+    if (!this.gamepad) {
+      console.log('DEBUG: No gamepad available');
+      return;
+    }
+    
+    if (!this.enabled) {
+      console.log('DEBUG: Gamepad not enabled');
+      return;
+    }
 
     const gamepads = navigator.getGamepads();
+    console.log('DEBUG: Available gamepads:', gamepads.length);
+    
     const currentGamepad = gamepads[this.gamepad.index] || gamepads[0];
-
+    
     if (currentGamepad) {
+      console.log('DEBUG: Processing gamepad input');
       this.handleDpad(currentGamepad);
       this.handleButtons(currentGamepad);
+    } else {
+      console.log('DEBUG: No gamepad found in pollGamepad');
     }
   }
 
@@ -268,24 +281,32 @@ class DOSeeGamepad {
   tryMultipleAxisConfigurations(gamepad) {
     // Common D-pad axis configurations for different controllers
     const configurations = [
-      { xAxis: 6, yAxis: 7 },  // Xbox/PS standard
-      { xAxis: 0, yAxis: 1 },  // Some USB controllers
-      { xAxis: 2, yAxis: 3 },  // Some controllers
-      { xAxis: 4, yAxis: 5 },  // Rare but possible
-      { xAxis: 16, yAxis: 17 } // Some advanced controllers
+      { xAxis: 6, yAxis: 7, name: 'Standard (6,7)' },  // Xbox/PS standard
+      { xAxis: 0, yAxis: 1, name: 'Alternate (0,1)' },  // Some USB controllers
+      { xAxis: 2, yAxis: 3, name: 'Alternate (2,3)' },  // Some controllers
+      { xAxis: 4, yAxis: 5, name: 'Alternate (4,5)' },  // Rare but possible
+      { xAxis: 16, yAxis: 17, name: 'Extended (16,17)' } // Some advanced controllers
     ];
+
+    let anyAxisActive = false;
 
     for (const config of configurations) {
       const x = gamepad.axes[config.xAxis] || 0;
       const y = gamepad.axes[config.yAxis] || 0;
+      const axisActive = Math.abs(x) > 0.1 || Math.abs(y) > 0.1;
       
-      // Use this configuration if it shows significant activity
-      if (this.tryAxisConfiguration(gamepad, config.xAxis, config.yAxis, 0.5)) {
-        return true;
+      if (axisActive) {
+        anyAxisActive = true;
+        console.log(`DEBUG: D-pad axes detected on ${config.name}: X=${x.toFixed(2)}, Y=${y.toFixed(2)}`);
+        
+        // Use this configuration if it shows activity
+        if (this.tryAxisConfiguration(gamepad, config.xAxis, config.yAxis, 0.5)) {
+          return true;
+        }
       }
     }
     
-    return false;
+    return anyAxisActive;
   }
 
   /**
@@ -305,22 +326,22 @@ class DOSeeGamepad {
 
     // Handle X axis (left/right)
     if (x < -threshold) {
-      console.log(`D-pad: left (axis ${xAxis})`);
+      console.log(`Gamepad: D-pad Left → ArrowLeft (axes ${xAxis},${yAxis})`);
       this.pressKey('ArrowLeft');
       return true;
     } else if (x > threshold) {
-      console.log(`D-pad: right (axis ${xAxis})`);
+      console.log(`Gamepad: D-pad Right → ArrowRight (axes ${xAxis},${yAxis})`);
       this.pressKey('ArrowRight');
       return true;
     }
 
     // Handle Y axis (up/down)
     if (y < -threshold) {
-      console.log(`D-pad: up (axis ${yAxis})`);
+      console.log(`Gamepad: D-pad Up → ArrowUp (axes ${xAxis},${yAxis})`);
       this.pressKey('ArrowUp');
       return true;
     } else if (y > threshold) {
-      console.log(`D-pad: down (axis ${yAxis})`);
+      console.log(`Gamepad: D-pad Down → ArrowDown (axes ${xAxis},${yAxis})`);
       this.pressKey('ArrowDown');
       return true;
     }
@@ -378,7 +399,9 @@ class DOSeeGamepad {
    * @param {Gamepad} gamepad
    */
   handleDpadButtons(gamepad) {
-    // Try common button indices
+    console.log('DEBUG: Trying button-based D-pad detection');
+    
+    // First try common button indices
     const commonDpadButtons = this.tryCommonDpadButtonIndices(gamepad);
     
     // If common indices don't work, scan all buttons for D-pad
@@ -409,6 +432,8 @@ class DOSeeGamepad {
         const button = gamepad.buttons[buttonIndex];
         if (button && button.pressed) {
           foundAny = true;
+          console.log(`DEBUG: D-pad ${direction} button detected (index ${buttonIndex})`);
+          
           this.handleDpadButtonPress(direction);
         }
       }
@@ -422,6 +447,8 @@ class DOSeeGamepad {
    * @param {Gamepad} gamepad
    */
   scanAllButtonsForDpad(gamepad) {
+    console.log('DEBUG: Scanning all buttons for D-pad...');
+    
     // Release all arrow keys first
     this.releaseKeys(['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight']);
     
@@ -430,9 +457,12 @@ class DOSeeGamepad {
       if (i < gamepad.buttons.length) {
         const button = gamepad.buttons[i];
         if (button && button.pressed) {
+          console.log(`DEBUG: Button ${i} pressed - possible D-pad button`);
+          
           // Try to map button index to direction
           const direction = this.getDirectionFromButtonIndex(i);
           if (direction) {
+            console.log(`DEBUG: Button ${i} mapped to D-pad ${direction}`);
             this.handleDpadButtonPress(direction);
           }
         }
@@ -474,19 +504,21 @@ class DOSeeGamepad {
    * @param {string} direction
    */
   handleDpadButtonPress(direction) {
-    console.log(`D-pad: ${direction}`);
-    
     switch (direction) {
       case 'up':
+        console.log('Gamepad: D-pad Up → ArrowUp (button-based)');
         this.pressKey('ArrowUp');
         break;
       case 'down':
+        console.log('Gamepad: D-pad Down → ArrowDown (button-based)');
         this.pressKey('ArrowDown');
         break;
       case 'left':
+        console.log('Gamepad: D-pad Left → ArrowLeft (button-based)');
         this.pressKey('ArrowLeft');
         break;
       case 'right':
+        console.log('Gamepad: D-pad Right → ArrowRight (button-based)');
         this.pressKey('ArrowRight');
         break;
     }
@@ -504,44 +536,24 @@ class DOSeeGamepad {
       const button = gamepad.buttons[buttonIndex];
 
       if (button && button.pressed && !this.activeKeys.has(mapping.key)) {
-        console.log(`Gamepad: ${buttonName} → ${mapping.key}`);
+        console.log(`Gamepad: ${buttonName} button → ${mapping.key} (${mapping.name})`);
+        if (this.developerMode) {
+          console.log(`[DEV] Button pressed: ${buttonName} → ${mapping.key}`);
+        }
         
-        // Debug gamepad state when back/share is pressed
+        // Debug gamepad state when any button is pressed
         if (buttonName === 'back' || buttonName === 'share') {
+          console.log('DEBUG: Manual debug trigger - current gamepad state:');
           this.debugGamepadState(gamepad);
         }
         
         this.pressKey(mapping.key);
       } else if ((!button || !button.pressed) && this.activeKeys.has(mapping.key)) {
-        console.log(`Gamepad: ${buttonName} released`);
-        this.releaseKey(mapping.key);
-      }
-    }
-    
-    // Simple D-pad button test - check buttons 12-15 directly
-    this.checkSimpleDpadButtons(gamepad);
-  }
-
-  /**
-   * Simple direct check for D-pad buttons (12-15)
-   * @param {Gamepad} gamepad
-   */
-  checkSimpleDpadButtons(gamepad) {
-    const dpadButtons = {
-      12: 'ArrowUp',
-      13: 'ArrowDown', 
-      14: 'ArrowLeft',
-      15: 'ArrowRight'
-    };
-
-    for (const [buttonIndex, arrowKey] of Object.entries(dpadButtons)) {
-      const idx = parseInt(buttonIndex);
-      if (idx < gamepad.buttons.length) {
-        const button = gamepad.buttons[idx];
-        if (button && button.pressed && !this.activeKeys.has(arrowKey)) {
-          console.log(`D-pad: ${buttonIndex} → ${arrowKey}`);
-          this.pressKey(arrowKey);
+        console.log(`Gamepad: ${buttonName} button released`);
+        if (this.developerMode) {
+          console.log(`[DEV] Button released: ${buttonName} → ${mapping.key}`);
         }
+        this.releaseKey(mapping.key);
       }
     }
   }

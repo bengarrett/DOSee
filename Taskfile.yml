@@ -22,7 +22,19 @@ tasks:
     cmds:
       - task --list
 
-  # Build tasks
+  # Server tasks
+  serve:
+    desc: Clean, rebuild and Serve DOSee on localhost:8086.
+    aliases: [s]
+    preconditions:
+      - sh: node -v
+        msg: '{{.REQNPM}}'
+    cmds:
+      - task: clean
+      - task: build
+      - pnpm run serve
+
+      # Build tasks
   build:
     desc: Build DOSee for production.
     aliases: [b]
@@ -133,16 +145,6 @@ tasks:
         msg: '{{.REQPNPM}}'
     cmds:
       - pnpm update
-
-  # Server tasks
-  serve:
-    desc: Clean, rebuild and Serve DOSee on localhost:8086.
-    aliases: [s]
-    preconditions:
-      - sh: node -v
-        msg: '{{.REQNPM}}'
-    cmds:
-      - pnpm run serve
 
   # Puppeteer tasks
   puppeteer-chrome:
