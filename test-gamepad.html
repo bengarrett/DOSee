@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOSee Gamepad Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .test-section {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        .test-section h2 {
+            margin-top: 0;
+        }
+        #testResults {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+            min-height: 100px;
+        }
+        .success {
+            color: green;
+        }
+        .error {
+            color: red;
+        }
+        button {
+            padding: 8px 16px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>DOSee Gamepad Implementation Test</h1>
+
+    <div class="test-section">
+        <h2>Test 1: Module Loading</h2>
+        <p>Testing if gamepad modules can be loaded...</p>
+        <button id="testModuleLoading">Run Test</button>
+        <div id="test1Result" class="test-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 2: Gamepad Detection</h2>
+        <p>Testing gamepad API support and detection...</p>
+        <button id="testGamepadDetection">Run Test</button>
+        <div id="test2Result" class="test-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 3: Button Mapping</h2>
+        <p>Testing button to keyboard mapping...</p>
+        <button id="testButtonMapping">Run Test</button>
+        <div id="test3Result" class="test-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 4: D-Pad Handling</h2>
+        <p>Testing D-pad to arrow key mapping...</p>
+        <button id="testDpadHandling">Run Test</button>
+        <div id="test4Result" class="test-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Overall Test Results</h2>
+        <div id="testResults"></div>
+    </div>
+
+    <script type="module">
+        // Test variables
+        let testsPassed = 0;
+        let testsFailed = 0;
+
+        async function runAllTests() {
+            await testModuleLoading();
+            await testGamepadDetection();
+            await testButtonMapping();
+            await testDpadHandling();
+            
+            const resultDiv = document.getElementById('testResults');
+            resultDiv.innerHTML = `
+                <p><strong>Tests Completed:</strong> ${testsPassed + testsFailed}</p>
+                <p class="success">✅ Passed: ${testsPassed}</p>
+                <p class="error">❌ Failed: ${testsFailed}</p>
+            `;
+        }
+
+        async function testModuleLoading() {
+            const resultDiv = document.getElementById('test1Result');
+            resultDiv.innerHTML = 'Testing...';
+            
+            try {
+                // Test importing the gamepad module
+                const gamepadModule = await import('./src/js/dosee-gamepad.js');
+                
+                if (gamepadModule && gamepadModule.default) {
+                    resultDiv.innerHTML = '<span class="success">✅ Gamepad module loaded successfully</span>';
+                    testsPassed++;
+                } else {
+                    resultDiv.innerHTML = '<span class="error">❌ Gamepad module structure invalid</span>';
+                    testsFailed++;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<span class="error">❌ Failed to load gamepad module: ${error.message}</span>`;
+                testsFailed++;
+            }
+        }
+
+        function testGamepadDetection() {
+            const resultDiv = document.getElementById('test2Result');
+            resultDiv.innerHTML = 'Testing...';
+            
+            try {
+                const hasGamepadAPI = !!navigator.getGamepads;
+                
+                if (hasGamepadAPI) {
+                    resultDiv.innerHTML = '<span class="success">✅ Gamepad API supported</span>';
+                    testsPassed++;
+                } else {
+                    resultDiv.innerHTML = '<span class="error">❌ Gamepad API not supported in this browser</span>';
+                    testsFailed++;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<span class="error">❌ Error testing Gamepad API: ${error.message}</span>`;
+                testsFailed++;
+            }
+        }
+
+        async function testButtonMapping() {
+            const resultDiv = document.getElementById('test3Result');
+            resultDiv.innerHTML = 'Testing...';
+            
+            try {
+                const gamepadModule = await import('./src/js/dosee-gamepad.js');
+                const DOSeeGamepad = gamepadModule.default;
+                const gamepad = new DOSeeGamepad();
+                
+                // Test that button mapping exists
+                if (gamepad.config && gamepad.config.buttons) {
+                    const buttonCount = Object.keys(gamepad.config.buttons).length;
+                    resultDiv.innerHTML = `<span class="success">✅ Button mapping configured (${buttonCount} buttons)</span>`;
+                    testsPassed++;
+                } else {
+                    resultDiv.innerHTML = '<span class="error">❌ Button mapping not found</span>';
+                    testsFailed++;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<span class="error">❌ Error testing button mapping: ${error.message}</span>`;
+                testsFailed++;
+            }
+        }
+
+        async function testDpadHandling() {
+            const resultDiv = document.getElementById('test4Result');
+            resultDiv.innerHTML = 'Testing...';
+            
+            try {
+                const gamepadModule = await import('./src/js/dosee-gamepad.js');
+                const DOSeeGamepad = gamepadModule.default;
+                const gamepad = new DOSeeGamepad();
+                
+                // Test that D-pad configuration exists
+                if (gamepad.config && gamepad.config.dpad) {
+                    resultDiv.innerHTML = `<span class="success">✅ D-pad configured (X: ${gamepad.config.dpad.xAxis}, Y: ${gamepad.config.dpad.yAxis})</span>`;
+                    testsPassed++;
+                } else {
+                    resultDiv.innerHTML = '<span class="error">❌ D-pad configuration not found</span>';
+                    testsFailed++;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<span class="error">❌ Error testing D-pad: ${error.message}</span>`;
+                testsFailed++;
+            }
+        }
+
+        // Set up test buttons
+        document.getElementById('testModuleLoading').addEventListener('click', testModuleLoading);
+        document.getElementById('testGamepadDetection').addEventListener('click', testGamepadDetection);
+        document.getElementById('testButtonMapping').addEventListener('click', testButtonMapping);
+        document.getElementById('testDpadHandling').addEventListener('click', testDpadHandling);
+
+        // Run all tests automatically
+        runAllTests();
+    </script>
+</body>
+</html>

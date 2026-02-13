@@ -2,7 +2,7 @@
  * dosee-init.js
  * DOSee initialisation
  */
-(() => {
+(async () => {
   'use strict';
 
   // DOSee console logging utility with consistent styling
@@ -33,6 +33,19 @@
     .set(`core`, `emulator/dosbox.js`)
     .set(`wasm`, `emulator/dosbox.wasm`);
 
+  // Gamepad support initialization
+  let gamepadSupport;
+  try {
+    // Try to import the gamepad module (works with ES modules)
+    gamepadSupport = new (await import('./dosee-gamepad.js')).default();
+    gamepadSupport.init();
+    doseeLog('info', 'Gamepad support initialized');
+  } catch (error) {
+    // Fallback for non-module environments or if file doesn't exist
+    console.warn('Gamepad module not available:', error.message);
+    gamepadSupport = null;
+  }
+
   // Load configurations that are obtained from the <meta name="dosee:"> HTML tags
   const config = new Map()
     .set(`path`, DOSee.getMetaContent(`dosee:zip:path`))
@@ -42,6 +55,26 @@
     .set(`res`, DOSee.getMetaContent(`dosee:width:height`) || ``) // Default: empty string
     .set(`filename`, DOSee.getMetaContent(`dosee:loading:name`) || ``) // Default: empty string
     .set(`start`, false);
+
+  // Configure gamepad support from meta tags
+  if (gamepadSupport) {
+    const gamepadEnabled = DOSee.getMetaContent(`dosee:gamepad`) === `enabled`;
+    const gamepadLayout = DOSee.getMetaContent(`dosee:gamepad:layout`) || `xbox`;
+
+    if (gamepadEnabled) {
+      gamepadSupport.setConfig(gamepadLayout);
+      gamepadSupport.enable();
+      doseeLog('info', `Gamepad support enabled with ${gamepadLayout} layout`);
+    }
+
+    // Add UI controls for gamepad
+    try {
+      const gamepadUIModule = await import('./dosee-gamepad-ui.js');
+      gamepadUIModule.addGamepadUI(gamepadSupport);
+    } catch (error) {
+      console.warn('Gamepad UI module not available:', error.message);
+    }
+  }
 
   const checks = () => {
     const err = `html page is missing the required meta tag`;
