@@ -32,6 +32,25 @@ window.Module = null;
   );
 
   // DOSBox requires a valid IndexedDB
+  
+  // DOSee console logging utility with consistent styling
+  const doseeLog = (level, message) => {
+    const styles = `color:dimgray;font-weight:bold`;
+    const prefix = `%cDOSee`;
+    
+    switch (level) {
+      case 'error':
+        console.error(prefix, styles, message);
+        break;
+      case 'warn':
+        console.warn(prefix, styles, message);
+        break;
+      case 'info':
+      default:
+        console.log(prefix, styles, message);
+    }
+  };
+  
   if (window.indexedDB)
     document.getElementById(`doseeCrashed`).classList.add(`hidden`);
 
@@ -119,8 +138,8 @@ window.Module = null;
         // Note: filesToMount can be empty for simple configurations
         // Only the executable is strictly required
         if (filesToMount.length === 0) {
-          console.warn(
-            `DOSee: No additional files to mount - only running executable`
+          doseeLog('warn',
+            `No additional files to mount - only running executable`
           );
         }
         this.verbose = `with the following configuration:`;
@@ -129,7 +148,7 @@ window.Module = null;
         // command line arguments
         this.commandLine = [];
       } catch (error) {
-        console.error(`DOSee dosboxArguments initialization failed:`, error);
+        doseeLog('error', `dosboxArguments initialization failed: ${error.message}`);
         throw error; // Re-throw for now, could be handled by caller
       }
     }
@@ -138,7 +157,7 @@ window.Module = null;
       // dosbox.conf https://www.dosbox.com/wiki/Dosbox.conf
       const loadConfig = `-conf`,
         urlParams = DOSee.newQueryString();
-      console.log(`Initialisation of DOSee ${version.get(`display`)}`);
+      doseeLog('info', `Initialisation of DOSee ${version.get(`display`)}`);
       this._graphicEngineScaler(loadConfig);
       this._aspectRatioCorrection(loadConfig);
       this._cpuSpeed(loadConfig, urlParams);
@@ -146,7 +165,7 @@ window.Module = null;
       this._graphicMode(loadConfig, urlParams);
       this._dosMemory(loadConfig, urlParams);
       this._automaticExecution(loadConfig, urlParams);
-      console.log(this.verbose);
+      doseeLog('info', this.verbose.trim());
       return this.commandLine;
     }
     _defaultParam(param = ``) {
@@ -409,7 +428,7 @@ window.Module = null;
         let newPath = path.toString().replace(`,`, `\\`);
         newPath = newPath.split(`\\`).slice(0, suffix).join(`\\`);
         if (newPath !== ``) {
-          console.log(`Execute path "${newPath}"`);
+          doseeLog('info', `Execute path "${newPath}"`);
           this.commandLine.push(runCommand, `CD ${newPath}`);
         }
       }
@@ -494,8 +513,8 @@ window.Module = null;
       const _initializeCanvas = () => {
         if (canvas.hasAttribute(`width`)) return;
         const style = getComputedStyle(canvas);
-        console.log(`_initializeCanvas init canvas style`);
-        console.log(style);
+        doseeLog('info', `_initializeCanvas init canvas style`);
+        doseeLog('info', style);
         canvas.width = parseInt(style.width, 10);
         canvas.height = parseInt(style.height, 10);
       };
@@ -601,11 +620,7 @@ window.Module = null;
                           return fetch(f.file).then(mountAt(f.drive));
                         })
                       ).then(resolve, reject);
-                      console.log(
-                        `%cDOSee`,
-                        `color:dimgray;font-weight:bold`,
-                        `loading WASM binary complete`
-                      );
+                      doseeLog('info', `loading WASM binary complete`);
                     })
                 );
               };
@@ -682,12 +697,12 @@ window.Module = null;
             if (button !== null) {
               switch (id) {
                 case `doseeCaptureScreen`:
-                  if (!Blob) return console.log(`Blob is unsupported`);
+                  if (!Blob) return doseeLog('info', `Blob is unsupported`);
                   break;
                 case `doseeFullScreen`:
                   // Fullscreen API check
                   if (!canvas.requestFullscreen)
-                    return console.log(`Fullscreen API is unsupported`);
+                    return doseeLog('info', `Fullscreen API is unsupported`);
                   break;
                 default:
               }
@@ -1069,7 +1084,7 @@ window.Module = null;
           titleCell.textContent = text;
           titleCell.title = `${err}`;
           const error = `A DOSee error occurred`;
-          console.error(`${error}: ${err}`);
+          doseeLog('error', `${error}: ${err}`);
           reject(new Error(`${error}: ${err}`));
         });
     });

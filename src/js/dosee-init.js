@@ -4,6 +4,25 @@
  */
 (() => {
   'use strict';
+  
+  // DOSee console logging utility with consistent styling
+  const doseeLog = (level, message) => {
+    const styles = `color:dimgray;font-weight:bold`;
+    const prefix = `%cDOSee`;
+    
+    switch (level) {
+      case 'error':
+        console.error(prefix, styles, message);
+        break;
+      case 'warn':
+        console.warn(prefix, styles, message);
+        break;
+      case 'info':
+      default:
+        console.log(prefix, styles, message);
+    }
+  };
+  
   // Relative file paths to DOSee emulation dependencies
   const paths = new Map()
     .set(`driveGUS`, `disk_drives/g_drive.zip`)
@@ -83,8 +102,8 @@
   const gravisDriver = (load) => {
     if (load !== `true`) {
       if (load !== `false` && load !== ``) {
-        console.error(
-          `DOSee: Invalid GUS audio configuration value "${load}". ` +
+        doseeLog('error',
+          `Invalid GUS audio configuration value "${load}". ` +
           `Use "true" to enable or omit/"false"/"" to disable.`
         );
       }
@@ -136,8 +155,8 @@
       // Split and validate format
       const resolutions = resConfig.split(`,`);
       if (resolutions.length !== 2) {
-        console.error(
-          `DOSee: Invalid resolution format "${resConfig}". ` +
+        doseeLog('error',
+          `Invalid resolution format "${resConfig}". ` +
           `Expected "width,height" (e.g., "640,480" or "800,600").`
         );
         return defaults;
@@ -149,8 +168,8 @@
 
       // Check for non-numeric values
       if (isNaN(width) || isNaN(height)) {
-        console.error(
-          `DOSee: Invalid resolution values "${resConfig}". ` +
+        doseeLog('error',
+          `Invalid resolution values "${resConfig}". ` +
           `Width and height must be valid numbers.`
         );
         return defaults;
@@ -158,8 +177,8 @@
 
       // Check for zero or negative values
       if (width <= 0 || height <= 0) {
-        console.error(
-          `DOSee: Invalid resolution values "${resConfig}". ` +
+        doseeLog('error',
+          `Invalid resolution values "${resConfig}". ` +
           `Width and height must be positive numbers greater than 0.`
         );
         return defaults;
@@ -167,8 +186,8 @@
 
       // Optional: Prevent unreasonably large resolutions
       if (width > 4096 || height > 4096) {
-        console.error(
-          `DOSee: Unreasonably large resolution "${resConfig}". ` +
+        doseeLog('error',
+          `Unreasonably large resolution "${resConfig}". ` +
           `Maximum supported resolution is 4096x4096.`
         );
         return defaults;
@@ -176,7 +195,7 @@
 
       return [width, height];
     } catch (error) {
-      console.error(`DOSee: Failed to parse resolution "${resConfig}":`, error);
+      doseeLog('error', `Failed to parse resolution "${resConfig}": ${error.message}`);
       return defaults;
     }
   };
@@ -185,8 +204,8 @@
   const utilities = (load) => {
     if (load !== `true`) {
       if (load !== `false` && load !== ``) {
-        console.error(
-          `DOSee: Invalid utilities configuration value "${load}". ` +
+        doseeLog('error',
+          `Invalid utilities configuration value "${load}". ` +
           `Use "true" to enable or omit/"false"/"" to disable.`
         );
       }

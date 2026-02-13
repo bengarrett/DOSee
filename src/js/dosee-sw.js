@@ -6,8 +6,26 @@
 if ('serviceWorker' in navigator) {
   ('use strict');
 
+  // DOSee console logging utility with consistent styling
+  const doseeLog = (level, message) => {
+    const styles = `color:dimgray;font-weight:bold`;
+    const prefix = `%cDOSee`;
+
+    switch (level) {
+      case 'error':
+        console.error(prefix, styles, message);
+        break;
+      case 'warn':
+        console.warn(prefix, styles, message);
+        break;
+      case 'info':
+      default:
+        console.log(prefix, styles, message);
+    }
+  };
+
   // Debug logging function
-  const logDebug = (message, type = 'log') => {
+  const debugLog = (message, type = 'log') => {
     if (typeof console !== 'undefined') {
       const timestamp = new Date().toISOString();
       let logMethod = console.log;
@@ -16,7 +34,9 @@ if ('serviceWorker' in navigator) {
       else if (type === 'warn') logMethod = console.warn;
       else if (type === 'info') logMethod = console.info;
 
-      logMethod(`[DOSee-SW ${timestamp}] [${type.toUpperCase()}] ${message}`);
+      logMethod(
+        `[DOSee ServiceWorker ${timestamp}] [${type.toUpperCase()}] ${message}`
+      );
     }
   };
 
@@ -27,7 +47,7 @@ if ('serviceWorker' in navigator) {
     window.location.protocol === 'file:';
 
   if (isDevelopment) {
-    logDebug('Running in development mode - enabling extra debugging', 'info');
+    debugLog('Running in development mode - enabling extra debugging', 'info');
   }
 
   window.addEventListener('load', () => {
@@ -41,18 +61,12 @@ if ('serviceWorker' in navigator) {
         window.location.hostname !== 'localhost' &&
         window.location.hostname !== '127.0.0.1'
       ) {
-        logDebug(
-          '⚠️  Service workers require HTTPS (except localhost)',
-          'warn'
-        );
+        debugLog('Service workers require HTTPS (except localhost)', 'warn');
       }
 
       // Check if the page is being served from file:// (won't work)
       if (window.location.protocol === 'file:') {
-        logDebug(
-          '❌ Service workers do not work with file:// protocol',
-          'error'
-        );
+        debugLog('Service workers do not work with file:// protocol', 'error');
       }
     }
     // Use relative path based on the current location
@@ -76,9 +90,9 @@ if ('serviceWorker' in navigator) {
       return '/sw.js';
     })();
 
-    logDebug(`Attempting to register service worker from: ${swPath}`, 'info');
-    logDebug(`Current page location: ${window.location.href}`, 'info');
-    logDebug(`Current pathname: ${window.location.pathname}`, 'info');
+    debugLog(`Attempting to register service worker from: ${swPath}`, 'info');
+    debugLog(`Current page location: ${window.location.href}`, 'info');
+    debugLog(`Current pathname: ${window.location.pathname}`, 'info');
 
     // Test if the service worker file is accessible before trying to register
     async function testServiceWorkerAccessibility(path) {
@@ -88,21 +102,21 @@ if ('serviceWorker' in navigator) {
           cache: 'no-store',
         });
         if (response.ok) {
-          logDebug(
-            `✅ Service worker file accessible at: ${path} (${response.status})`,
+          debugLog(
+            `Service worker file accessible at: ${path} (${response.status})`,
             'success'
           );
           return true;
         } else {
-          logDebug(
-            `⚠️  Service worker file exists but returned status: ${response.status} at ${path}`,
+          debugLog(
+            `Service worker file exists but returned status: ${response.status} at ${path}`,
             'warn'
           );
           return false;
         }
       } catch (error) {
-        logDebug(
-          `❌ Service worker file not accessible at: ${path} - ${error.message}`,
+        debugLog(
+          `Service worker file not accessible at: ${path} - ${error.message}`,
           'error'
         );
         return false;
@@ -118,50 +132,50 @@ if ('serviceWorker' in navigator) {
     ).then((results) => {
       const accessiblePaths = pathsToTry.filter((_, index) => results[index]);
       if (accessiblePaths.length > 0) {
-        logDebug(
+        debugLog(
           `Accessible service worker paths: ${accessiblePaths.join(', ')}`,
           'success'
         );
       } else {
-        logDebug('❌ No accessible service worker paths found!', 'error');
+        debugLog('No accessible service worker paths found!', 'error');
       }
     });
 
     function tryRegisterServiceWorker(paths, index = 0) {
       if (index >= paths.length) {
-        logDebug('All service worker registration paths failed');
+        debugLog('All service worker registration paths failed');
         throw new Error('Could not register service worker from any path');
       }
 
       const currentPath = paths[index];
-      logDebug(
+      debugLog(
         `Attempt ${index + 1}/${paths.length}: Registering from ${currentPath}`
       );
 
       return navigator.serviceWorker
         .register(currentPath, { scope: '/' })
         .catch((error) => {
-          logDebug(`Failed to register from ${currentPath}: ${error.message}`);
+          debugLog(`Failed to register from ${currentPath}: ${error.message}`);
           return tryRegisterServiceWorker(paths, index + 1);
         });
     }
 
     tryRegisterServiceWorker(pathsToTry)
       .then((registration) => {
-        console.log(`DOSee service worker registered: ${registration.scope}`);
-        logDebug(
+        doseeLog('info', `Service worker registered: ${registration.scope}`);
+        debugLog(
           `Service worker registered successfully with scope: ${registration.scope}`,
           'success'
         );
 
         // Check for updates if this is not the first load
         if (navigator.serviceWorker.controller) {
-          logDebug('Service worker is controlling the page', 'info');
+          debugLog('Service worker is controlling the page', 'info');
           registration.update().then(() => {
-            logDebug('Checked for service worker updates', 'info');
+            debugLog('Checked for service worker updates', 'info');
           });
         } else {
-          logDebug(
+          debugLog(
             'Service worker registered but not yet controlling the page',
             'info'
           );
@@ -175,7 +189,7 @@ if ('serviceWorker' in navigator) {
 
           // Add service worker state monitoring
           navigator.serviceWorker.addEventListener('controllerchange', () => {
-            logDebug(
+            debugLog(
               'Service worker controller changed - new version available',
               'info'
             );
@@ -186,11 +200,8 @@ if ('serviceWorker' in navigator) {
           update.addEventListener(
             'click',
             () => {
-              console.info(
-                'DOSee remove and reregister service worker',
-                registration
-              );
-              logDebug('User initiated service worker update', 'info');
+              doseeLog('info', 'Remove and reregister service worker');
+              debugLog('User initiated service worker update', 'info');
 
               // Show loading state
               update.textContent = 'Updating...';
@@ -199,7 +210,7 @@ if ('serviceWorker' in navigator) {
               registration
                 .unregister()
                 .then(() => {
-                  logDebug(
+                  debugLog(
                     'Service worker unregistered successfully',
                     'success'
                   );
@@ -209,11 +220,11 @@ if ('serviceWorker' in navigator) {
                   }, oneSec);
                 })
                 .catch((error) => {
-                  console.error(
-                    'DOSee could not unregister service worker:',
-                    error
+                  doseeLog(
+                    'error',
+                    `Could not unregister service worker: ${error.message}`
                   );
-                  logDebug(
+                  debugLog(
                     `Service worker update failed: ${error.message}`,
                     'error'
                   );
@@ -226,11 +237,11 @@ if ('serviceWorker' in navigator) {
         }
         // Add message event listener for service worker messages
         navigator.serviceWorker.addEventListener('message', (event) => {
-          logDebug(`Message from service worker: ${event.data}`, 'info');
+          debugLog(`Message from service worker: ${event.data}`, 'info');
         });
       })
       .catch((err) => {
-        console.error(`DOSee service worker registration failed:`, err);
+        doseeLog('error', `Service worker registration failed: ${err.message}`);
         // Provide user feedback about the failure
         const updateButton = document.getElementById(`updateDOSeeSW`);
         if (updateButton) {
@@ -240,7 +251,7 @@ if ('serviceWorker' in navigator) {
       });
   });
 } else {
-  console.info(`DOSee service worker not supported in this browser`);
+  doseeLog('info', `Service worker not supported in this browser`);
   const updateButton = document.getElementById(`updateDOSeeSW`);
   if (updateButton) {
     updateButton.textContent = `Service worker not supported`;
