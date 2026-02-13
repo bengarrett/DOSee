@@ -14,6 +14,9 @@
 
 */
 
+// Reset global Module to ensure clean state before Emscripten initialization
+// This prevents conflicts from previous Emscripten applications and ensures
+// DOSee starts with a fresh Module configuration
 window.Module = null;
 ((Promise) => {
   'use strict';
@@ -31,13 +34,11 @@ window.Module = null;
       .toLocaleDateString()})`
   );
 
-  // DOSBox requires a valid IndexedDB
-  
   // DOSee console logging utility with consistent styling
   const doseeLog = (level, message) => {
     const styles = `color:dimgray;font-weight:bold`;
     const prefix = `%cDOSee`;
-    
+
     switch (level) {
       case 'error':
         console.error(prefix, styles, message);
@@ -50,7 +51,8 @@ window.Module = null;
         console.log(prefix, styles, message);
     }
   };
-  
+
+  // DOSBox requires a valid IndexedDB
   if (window.indexedDB)
     document.getElementById(`doseeCrashed`).classList.add(`hidden`);
 
@@ -138,7 +140,8 @@ window.Module = null;
         // Note: filesToMount can be empty for simple configurations
         // Only the executable is strictly required
         if (filesToMount.length === 0) {
-          doseeLog('warn',
+          doseeLog(
+            'warn',
             `No additional files to mount - only running executable`
           );
         }
@@ -148,7 +151,10 @@ window.Module = null;
         // command line arguments
         this.commandLine = [];
       } catch (error) {
-        doseeLog('error', `dosboxArguments initialization failed: ${error.message}`);
+        doseeLog(
+          'error',
+          `dosboxArguments initialization failed: ${error.message}`
+        );
         throw error; // Re-throw for now, could be handled by caller
       }
     }
@@ -633,23 +639,26 @@ window.Module = null;
           if (!gameData || splash.loadFail) return null;
           if (!options.waitAfterDownloading) return Promise.resolve();
           return new Promise((resolve) => {
-            const android = `and`,
-              ipad = `ipa`,
-              iphone = `iph`,
-              ipod = `ipo`;
-            const title = () => {
-              const prefixChrs = 3;
-              switch (navigator.platform.slice(0, prefixChrs).toLowerCase()) {
-                case android:
-                case ipad:
-                case iphone:
-                case ipod:
-                  return `tap to start`;
-                default:
-                  return `click to start`;
-              }
+            // Modern touch device detection
+            const isTouchDevice = () => {
+              // Check for touch events (works on most mobile devices)
+              if ('ontouchstart' in window) return true;
+
+              // Check pointer events and touch points (modern browsers)
+              if (window.PointerEvent && navigator.maxTouchPoints > 0)
+                return true;
+
+              // Media query fallback for devices without touch events
+              // hover: none = no hover capability (touch device)
+              // pointer: coarse = imprecise pointer (finger)
+              return (
+                window.matchMedia('(hover: none)').matches ||
+                window.matchMedia('(pointer: coarse)').matches
+              );
             };
-            splash.setTitle(`${title()}`);
+
+            const title = isTouchDevice() ? `tap to start` : `click to start`;
+            splash.setTitle(title);
             splash.spinning = false;
             // stashes these event listeners so that we can remove them after
             window.addEventListener(
@@ -868,7 +877,8 @@ window.Module = null;
   function blockNavigationKeys() {
     const blockKeys = (event) => {
       if (typeof Module === `undefined`) return;
-      if (typeof window.ABORT === `boolean` && window.ABORT === true) {
+      // Check if Emscripten's ABORT flag is set (defined in the compiled WASM)
+      if (typeof ABORT !== `undefined` && ABORT === true) {
         // cancel this preventDefault() event listener if em-dosbox has been aborted
         document.removeEventListener(`keydown`, blockKeys);
       }

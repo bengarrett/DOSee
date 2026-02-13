@@ -79,7 +79,8 @@ if ('serviceWorker' in navigator) {
 
       // For file protocol, try to calculate relative path
       const pathParts = window.location.pathname.split('/');
-      const currentFile = pathParts.pop() || '';
+      // Remove current file from path (pop not needed, just check if we need to go up)
+      pathParts.pop(); // Remove current file
 
       // If we're in a subdirectory, go up to root
       if (pathParts.length > 0) {
