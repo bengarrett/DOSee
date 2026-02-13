@@ -47,6 +47,7 @@ export default [
         // Service Worker globals (for sw.js)
         self: "readonly",
         caches: "readonly",
+        clients: "readonly",
         importScripts: "readonly",
       },
     },
@@ -109,6 +110,16 @@ export default [
       "dot-notation": "warn",
       eqeqeq: "warn",
       "no-extend-native": "error",
+    },
+  },
+  {
+    files: ["puppeteer-runner.mjs"],
+    languageOptions: {
+      ecmaVersion: 2023,
+      sourceType: "module",
+      globals: {
+        ...globals.node,
+      },
     },
   },
 
