@@ -19,7 +19,7 @@
 // DOSee starts with a fresh Module configuration
 window.Module = null;
 ((Promise) => {
-  'use strict';
+  "use strict";
   const revision = new Date(`13,Feb,2025`);
   const version = new Map()
     .set(`date`, revision)
@@ -31,7 +31,7 @@ window.Module = null;
     `display`,
     `${version.get(`major`)}.${version.get(`minor`)} (${version
       .get(`date`)
-      .toLocaleDateString()})`
+      .toLocaleDateString()})`,
   );
 
   // DOSee console logging utility with consistent styling
@@ -40,13 +40,13 @@ window.Module = null;
     const prefix = `%cDOSee`;
 
     switch (level) {
-      case 'error':
+      case "error":
         console.error(prefix, styles, message);
         break;
-      case 'warn':
+      case "warn":
         console.warn(prefix, styles, message);
         break;
-      case 'info':
+      case "info":
       default:
         console.log(prefix, styles, message);
     }
@@ -141,8 +141,8 @@ window.Module = null;
         // Only the executable is strictly required
         if (filesToMount.length === 0) {
           doseeLog(
-            'warn',
-            `No additional files to mount - only running executable`
+            "warn",
+            `No additional files to mount - only running executable`,
           );
         }
         this.verbose = `with the following configuration:`;
@@ -152,8 +152,8 @@ window.Module = null;
         this.commandLine = [];
       } catch (error) {
         doseeLog(
-          'error',
-          `dosboxArguments initialization failed: ${error.message}`
+          "error",
+          `dosboxArguments initialization failed: ${error.message}`,
         );
         throw error; // Re-throw for now, could be handled by caller
       }
@@ -163,7 +163,7 @@ window.Module = null;
       // dosbox.conf https://www.dosbox.com/wiki/Dosbox.conf
       const loadConfig = `-conf`,
         urlParams = DOSee.newQueryString();
-      doseeLog('info', `Initialisation of DOSee ${version.get(`display`)}`);
+      doseeLog("info", `Initialisation of DOSee ${version.get(`display`)}`);
       this._graphicEngineScaler(loadConfig);
       this._aspectRatioCorrection(loadConfig);
       this._cpuSpeed(loadConfig, urlParams);
@@ -171,7 +171,7 @@ window.Module = null;
       this._graphicMode(loadConfig, urlParams);
       this._dosMemory(loadConfig, urlParams);
       this._automaticExecution(loadConfig, urlParams);
-      doseeLog('info', this.verbose.trim());
+      doseeLog("info", this.verbose.trim());
       return this.commandLine;
     }
     _defaultParam(param = ``) {
@@ -216,14 +216,14 @@ window.Module = null;
           return (document.getElementById(`dosscale2`).checked = true);
         default:
           throw Error(
-            `doseeScaler value "${scaler}" is unknown, use "none" for a default`
+            `doseeScaler value "${scaler}" is unknown, use "none" for a default`,
           );
       }
     }
     _aspectRatioCorrection(loadConfig = ``) {
       if (loadConfig === ``)
         throw Error(
-          `aspectRatioCorrection loadConfig argument cannot be empty`
+          `aspectRatioCorrection loadConfig argument cannot be empty`,
         );
       // impose aspect ratio correction
       const aspect = localStorage.getItem(`doseeAspect`) || `false`;
@@ -264,7 +264,7 @@ window.Module = null;
           break;
         default:
           throw Error(
-            `dosspeed value "${cpuspeed}" is unknown, use "auto" for a default`
+            `dosspeed value "${cpuspeed}" is unknown, use "auto" for a default`,
           );
       }
     }
@@ -300,7 +300,7 @@ window.Module = null;
           break;
         default:
           throw Error(
-            `dosaudio value "${sound}" is unknown, use "sb16" for a default`
+            `dosaudio value "${sound}" is unknown, use "sb16" for a default`,
           );
       }
     }
@@ -376,7 +376,7 @@ window.Module = null;
           break;
         default:
           throw Error(
-            `dosmachine value "${machine}" is unknown, use "vga" for a default`
+            `dosmachine value "${machine}" is unknown, use "vga" for a default`,
           );
       }
     }
@@ -413,7 +413,7 @@ window.Module = null;
         if (`drive` in file)
           this.commandLine.push(
             runCommand,
-            `mount ${file.drive} /dos${file.mountpoint}`
+            `mount ${file.drive} /dos${file.mountpoint}`,
           );
       }
       // Load any operating system drivers that are not natively supplied by DOSBox.
@@ -434,14 +434,14 @@ window.Module = null;
         let newPath = path.toString().replace(`,`, `\\`);
         newPath = newPath.split(`\\`).slice(0, suffix).join(`\\`);
         if (newPath !== ``) {
-          doseeLog('info', `Execute path "${newPath}"`);
+          doseeLog("info", `Execute path "${newPath}"`);
           this.commandLine.push(runCommand, `CD ${newPath}`);
         }
       }
       // dosbox default drive letter
       this.commandLine.push(
         runCommand,
-        /^[a-zA-Z]:$/.test(path[0]) ? path.shift() : diskDriveC
+        /^[a-zA-Z]:$/.test(path[0]) ? path.shift() : diskDriveC,
       );
       // do not automatically run the program executable
       if (
@@ -491,7 +491,7 @@ window.Module = null;
       }
 
       // Validate loadFiles parameter
-      if (loadFiles === null || typeof loadFiles !== 'object') {
+      if (loadFiles === null || typeof loadFiles !== "object") {
         throw new Error(`Emulator loadFiles must be a DoseeLoader object`);
       }
       /**
@@ -519,8 +519,8 @@ window.Module = null;
       const _initializeCanvas = () => {
         if (canvas.hasAttribute(`width`)) return;
         const style = getComputedStyle(canvas);
-        doseeLog('info', `_initializeCanvas init canvas style`);
-        doseeLog('info', style);
+        doseeLog("info", `_initializeCanvas init canvas style`);
+        doseeLog("info", style);
         canvas.width = parseInt(style.width, 10);
         canvas.height = parseInt(style.height, 10);
       };
@@ -579,7 +579,7 @@ window.Module = null;
               },
               (e, overlayFS) => {
                 if (e) {
-                  doseeLog('error', `Failed to create OverlayFS: ${e.message}`);
+                  doseeLog("error", `Failed to create OverlayFS: ${e.message}`);
                   return;
                 }
                 gameData.fileSystem = overlayFS;
@@ -595,7 +595,7 @@ window.Module = null;
                     file.title,
                     file.url,
                     `arraybuffer`,
-                    file.optional
+                    file.optional,
                   );
                 };
                 const mountAt = (drive) => {
@@ -610,8 +610,8 @@ window.Module = null;
                         .writable.mount(mountpoint, zipFS);
                     } catch (e) {
                       doseeLog(
-                        'error',
-                        `Failed to mount zip file: ${e.message}`
+                        "error",
+                        `Failed to mount zip file: ${e.message}`,
                       );
                     }
                   };
@@ -635,14 +635,14 @@ window.Module = null;
                             if (!f.file) return null;
                             if (!f.drive) return null;
                             return fetch(f.file).then(mountAt(f.drive));
-                          })
+                          }),
                         ).then(resolve, reject);
-                        doseeLog('info', `loading WASM binary complete`);
-                      })
+                        doseeLog("info", `loading WASM binary complete`);
+                      }),
                   );
                 };
                 wasm();
-              }
+              },
             );
           });
         }
@@ -654,7 +654,7 @@ window.Module = null;
             // Modern touch device detection
             const isTouchDevice = () => {
               // Check for touch events (works on most mobile devices)
-              if ('ontouchstart' in window) return true;
+              if ("ontouchstart" in window) return true;
 
               // Check pointer events and touch points (modern browsers)
               if (window.PointerEvent && navigator.maxTouchPoints > 0)
@@ -664,8 +664,8 @@ window.Module = null;
               // hover: none = no hover capability (touch device)
               // pointer: coarse = imprecise pointer (finger)
               return (
-                window.matchMedia('(hover: none)').matches ||
-                window.matchMedia('(pointer: coarse)').matches
+                window.matchMedia("(hover: none)").matches ||
+                window.matchMedia("(pointer: coarse)").matches
               );
             };
 
@@ -675,7 +675,7 @@ window.Module = null;
             // stashes these event listeners so that we can remove them after
             window.addEventListener(
               `keydown`,
-              (keyPressEvent = keyevent(resolve))
+              (keyPressEvent = keyevent(resolve)),
             );
             canvas.addEventListener(`click`, (clickEvent = resolve));
             splash.splashElt.addEventListener(`click`, clickEvent);
@@ -699,7 +699,7 @@ window.Module = null;
             gameData.fileSystem,
             gameData.locateAdditionalJS,
             gameData.wasmBinary,
-            gameData.nativeResolution
+            gameData.nativeResolution,
           );
           if (!gameData.emulatorJS)
             return splash.setTitle(`Non-system disk or disk error`);
@@ -718,12 +718,12 @@ window.Module = null;
             if (button !== null) {
               switch (id) {
                 case `doseeCaptureScreen`:
-                  if (!Blob) return doseeLog('info', `Blob is unsupported`);
+                  if (!Blob) return doseeLog("info", `Blob is unsupported`);
                   break;
                 case `doseeFullScreen`:
                   // Fullscreen API check
                   if (!canvas.requestFullscreen)
-                    return doseeLog('info', `Fullscreen API is unsupported`);
+                    return doseeLog("info", `Fullscreen API is unsupported`);
                   break;
                 default:
               }
@@ -741,7 +741,7 @@ window.Module = null;
           if (splash.loadFail) return null;
           const frownFace = 9785;
           splash.setTitle(
-            `The emulator broke ${String.fromCharCode(frownFace)}`
+            `The emulator broke ${String.fromCharCode(frownFace)}`,
           );
           splash.loadFail = true;
         }
@@ -766,25 +766,25 @@ window.Module = null;
         fileSystem,
         locateAdditionalJS,
         wasmBinary,
-        nativeResolution
+        nativeResolution,
       ) {
         if (typeof args === `undefined`)
           throw Error(`initializeModule args argument cannot be undefined`);
         if (typeof fileSystem === `undefined`)
           throw Error(
-            `initializeModule fileSystem argument cannot be undefined`
+            `initializeModule fileSystem argument cannot be undefined`,
           );
         if (typeof locateAdditionalJS === `undefined`)
           throw Error(
-            `initializeModule locateAdditionalJS argument cannot be undefined`
+            `initializeModule locateAdditionalJS argument cannot be undefined`,
           );
         if (typeof wasmBinary === `undefined`)
           throw Error(
-            `initializeModule wasmBinary argument cannot be undefined`
+            `initializeModule wasmBinary argument cannot be undefined`,
           );
         if (typeof nativeResolution === `undefined`)
           throw Error(
-            `initializeModule nativeResolution argument cannot be undefined`
+            `initializeModule nativeResolution argument cannot be undefined`,
           );
         return {
           arguments: args,
@@ -810,7 +810,7 @@ window.Module = null;
               resizeCanvas(
                 canvas,
                 (canvasSize = nativeResolution || canvasSize),
-                canvasScale
+                canvasScale,
               );
             });
           },
@@ -827,7 +827,7 @@ window.Module = null;
     config.emulatorArguments = new dosboxArguments(
       config.emulatorStart,
       config.files,
-      config.emulatorCPU
+      config.emulatorCPU,
     ).build();
     return config;
   }
@@ -856,12 +856,12 @@ window.Module = null;
         },
         (e, zipFS) => {
           if (e) {
-            doseeLog('error', `Failed to create ZipFS: ${e.message}`);
+            doseeLog("error", `Failed to create ZipFS: ${e.message}`);
             reject(e);
           } else {
             resolve(zipFS);
           }
-        }
+        },
       );
     });
   }
@@ -876,7 +876,7 @@ window.Module = null;
       title = document.createElement(`span`);
     if (progress === null)
       throw Error(
-        `div element doseeProgressIndicator does not exist on the page`
+        `div element doseeProgressIndicator does not exist on the page`,
       );
     status.classList.add(`splash-status`);
     p.classList.add(`toast`);
@@ -980,7 +980,7 @@ window.Module = null;
         // to fix, "Prototype-polluting function"
         // ignore __proto__ and constructor properties
         if (!Object.prototype.hasOwnProperty.call(two, key)) return;
-        if (key === '__proto__' || key === 'constructor') return;
+        if (key === "__proto__" || key === "constructor") return;
         one[key] = mergeObjects(one[key], two[key]);
       });
       return one;
@@ -1034,8 +1034,8 @@ window.Module = null;
         fileSystem.readFileSync(
           read.get(`filename`),
           read.get(`encoding`),
-          read.get(`fileFlag`)
-        )
+          read.get(`fileFlag`),
+        ),
       );
       // write the file to the new location
       fileSystem.writeFileSync(
@@ -1043,7 +1043,7 @@ window.Module = null;
         write.get(`data`),
         write.get(`encoding`),
         write.get(`fileFlag`),
-        write.get(`mode`)
+        write.get(`mode`),
       );
     }
   }
@@ -1078,7 +1078,7 @@ window.Module = null;
         `fa-circle-notch`,
         `fa-spin`,
         `fa-fw`,
-        `fa-xs`
+        `fa-xs`,
       );
       statusCell.append(spinner, `${nbsp}`);
       fetch(url, {
@@ -1103,8 +1103,8 @@ window.Module = null;
             default:
               return reject(
                 new Error(
-                  `unknown requestFile type, it needs to be a valid fetch method`
-                )
+                  `unknown requestFile type, it needs to be a valid fetch method`,
+                ),
               );
           }
         })
@@ -1121,7 +1121,7 @@ window.Module = null;
           titleCell.textContent = text;
           titleCell.title = `${err}`;
           const error = `A DOSee error occurred`;
-          doseeLog('error', `${error}: ${err}`);
+          doseeLog("error", `${error}: ${err}`);
           reject(new Error(`${error}: ${err}`));
         });
     });
@@ -1136,7 +1136,7 @@ window.Module = null;
   function resizeCanvas(
     canvas = HTMLElement,
     resolution = { width: 0, height: 0 },
-    scale = 0
+    scale = 0,
   ) {
     if (scale && resolution) {
       canvas.classList.add(`dosee-crisp-render`);
@@ -1268,7 +1268,7 @@ window.Module = null;
   };
 
   document.getElementById(`doseeVersion`).innerHTML = ` version ${version.get(
-    `display`
+    `display`,
   )}`;
   window.DoseeLoader = DoseeLoader;
   window.Emulator = Emulator;

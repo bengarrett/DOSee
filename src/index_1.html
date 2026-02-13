@@ -1,281 +1,350 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>DOSee EGA plus AdLib running example</title>
+    <meta
+      name="description"
+      content="Lucasfilm passport to adventure running in DOSee"
+    />
+    <meta name="author" content="Ben Garrett" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<head>
-  <meta charset="utf-8" />
-  <title>DOSee EGA plus AdLib running example</title>
-  <meta name="description" content="Lucasfilm passport to adventure running in DOSee" />
-  <meta name="author" content="Ben Garrett" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- PWA configuration -->
+    <meta name="theme-color" content="#1524eb" />
+    <link rel="manifest" href="manifest.json" />
+    <link rel="apple-touch-icon" href="images/dosee-icon-192x192.png" />
 
-  <!-- PWA configuration -->
-  <meta name="theme-color" content="#1524eb" />
-  <link rel="manifest" href="manifest.json" />
-  <link rel="apple-touch-icon" href="images/dosee-icon-192x192.png">
+    <!-- DOSee initialisation options -->
+    <meta name="dosee:zip:path" content="dos_programs/program_1/loom.zip" />
+    <meta name="dosee:run:filename" content="SAMPLER.EXE" />
+    <meta name="dosee:capture:filename" content="screenshot.png" />
+    <meta name="dosee:utilities" content="false" />
+    <meta name="dosee:width:height" content="640,480" />
 
-  <!-- DOSee initialisation options -->
-  <meta name="dosee:zip:path" content="dos_programs/program_1/loom.zip" />
-  <meta name="dosee:run:filename" content="SAMPLER.EXE" />
-  <meta name="dosee:capture:filename" content="screenshot.png" />
-  <meta name="dosee:utilities" content="false" />
-  <meta name="dosee:width:height" content="640,480" />
+    <meta name="dosee:speed" content="auto" />
+    <meta name="dosee:graphic" content="ega" />
+    <meta name="dosee:audio" content="sb1" />
 
-  <meta name="dosee:speed" content="auto" />
-  <meta name="dosee:graphic" content="ega" />
-  <meta name="dosee:audio" content="sb1" />
+    <meta name="dosee:audio:gus" content="false" />
 
-  <meta name="dosee:audio:gus" content="false" />
+    <link rel="preload" href="js/dosee-functions.js" as="script" />
+    <link rel="preload" href="js/dosee-loader.js" as="script" />
+    <link rel="preload" href="js/index.js" as="script" />
 
-  <link rel="preload" href="js/dosee-functions.js" as="script" />
-  <link rel="preload" href="js/dosee-loader.js" as="script" />
-  <link rel="preload" href="js/index.js" as="script" />
+    <link rel="preload" href="js/browserfs.min.js" as="script" />
+    <link rel="preload" href="js/browserfs-zipfs-extras.js" as="script" />
+    <link rel="preload" href="js/FileSaver.min.js" as="script" />
+    <link rel="preload" href="js/canvas-toBlob.js" as="script" />
 
-  <link rel="preload" href="js/browserfs.min.js" as="script" />
-  <link rel="preload" href="js/browserfs-zipfs-extras.js" as="script" />
-  <link rel="preload" href="js/FileSaver.min.js" as="script" />
-  <link rel="preload" href="js/canvas-toBlob.js" as="script" />
+    <link rel="icon" href="favicon.ico" />
+    <link rel="license" href="//www.gnu.org/licenses/gpl-3.0.en.html" />
+    <!-- JavaScripts -->
+    <script defer src="js/index.js"></script>
+    <!-- screen capture -->
+    <script async src="js/FileSaver.min.js"></script>
+    <script async src="js/canvas-toBlob.js"></script>
 
-  <link rel="icon" href="favicon.ico" />
-  <link rel="license" href="//www.gnu.org/licenses/gpl-3.0.en.html" />
-  <!-- JavaScripts -->
-  <script defer src="js/index.js"></script>
-  <!-- screen capture -->
-  <script async src="js/FileSaver.min.js"></script>
-  <script async src="js/canvas-toBlob.js"></script>
+    <link rel="stylesheet" href="css/index.css" />
+    <!-- "minimal, responsive, style-agnostic CSS framework" https://minicss.org/docs -->
+    <!-- "mini-default.css" can be swapped with "mini-nord.css" or "mini-dark.css" -->
+    <link rel="stylesheet" href="css/mini-default.min.css" />
+    <!-- dosee.css needs to load after mini-default.css -->
+    <link rel="stylesheet" href="css/dosee.css" />
+  </head>
 
-  <link rel="stylesheet" href="css/index.css" />
-  <!-- "minimal, responsive, style-agnostic CSS framework" https://minicss.org/docs -->
-  <!-- "mini-default.css" can be swapped with "mini-nord.css" or "mini-dark.css" -->
-  <link rel="stylesheet" href="css/mini-default.min.css" />
-  <!-- dosee.css needs to load after mini-default.css -->
-  <link rel="stylesheet" href="css/dosee.css" />
-</head>
-
-<body>
-  <div>
-    <h2>
-      DOSee
-      <small><em>A DOS era, PC emulator for the web</em>
-        <a href="#doseeTabs" id="doseeInstall" class="hidden">+Install</a>
-      </small>
-    </h2>
-    <hr />
-    <h2>
-      <small>Emulating<span id="doseeOffline" class="hidden"> offline</span> <span id="doseeH2">something</span></small>
-    </h2>
-    <div class="row" id="doseeCrashed">
-      <div class="card fluid error">
-        <p id="doseeError">Oops the emulation crashed?</p>
-      </div>
-    </div>
-    <div class="row" id="doseeSlowLoad">
-      <div class="card fluid warning">
-        <p>The emulator is taking a while to load</p>
-      </div>
-    </div>
-    <!-- DOSee canvas -->
-    <div class="row" id="doseeContainer">
-      <canvas id="doseeCanvas" class="rounded hidden"></canvas>
-    </div>
-    <!-- DOSee UI (menu) -->
-    <header id="doseeTabs">
-      <a href="#doseeTabs" id="hardwareBtn" class="button tabtoggle">Hardware</a>
-      <a href="#doseeTabs" id="optionsBtn" class="button tabtoggle">Options</a>
-      <a href="#doseeTabs" id="helpBtn" class="button tabtoggle">Help</a>
-      <a href="#doseeTabs" id="doseeFullScreen" class="button">Full screen</a>
-      <a href="#doseeTabs" id="doseeCaptureScreen" class="button">Capture</a>
-      <a href="#doseeTabs" name="doseeReboot" class="button">Reboot</a>
-      <a href="#doseeTabs" id="doseeExit" class="button">STOP</a>
-    </header>
-    <form id="hardwareTab">
-      <fieldset>
-        <legend>Speed and CPU</legend>
-        <label for="dosspeed2">
-          <input type="radio" name="dosspeed" id="dosspeed2" value="max" />
-          faster (80486)
-        </label>
-        <label for="dosspeed3">
-          <input type="radio" name="dosspeed" id="dosspeed3" value="386" />
-          medium (80386)
-        </label>
-        <label for="dosspeed4">
-          <input type="radio" name="dosspeed" id="dosspeed4" value="8086" />
-          slow (8086)
-        </label>
-        <label for="dosspeed1">
-          <input type="radio" name="dosspeed" id="dosspeed1" value="auto" />
-          <u>automatic</u>
-        </label>
-      </fieldset>
-      <fieldset>
-        <legend>Graphic adapter</legend>
-        <label>
-          <input type="radio" name="dosmachine" id="dosmachine1" value="svga" />
-          SuperVGA
-        </label>
-        <label>
-          <input type="radio" name="dosmachine" id="dosmachine2" value="vga" />
-          <u>VGA</u>
-        </label>
-        <label>
-          <input type="radio" name="dosmachine" id="dosmachine3" value="ega" />
-          EGA
-        </label>
-        <label>
-          <input type="radio" name="dosmachine" id="dosmachine4" value="tandy" />
-          Tandy
-        </label>
-        <label>
-          <input type="radio" name="dosmachine" id="dosmachine5" value="cga" />
-          CGA
-        </label>
-        <label>
-          <input type="radio" name="dosmachine" id="dosmachine6" value="herc" />
-          Hercules
-        </label>
-      </fieldset>
-      <fieldset>
-        <legend>Audio addon</legend>
-        <label>
-          <input type="radio" name="dosaudio" id="dosaudio1" value="gus" />
-          Gravis UltraSound
-        </label>
-        <label>
-          <input type="radio" name="dosaudio" id="dosaudio4" value="covox" />
-          Covox
-          <small>also Disney Sound Source/DA Converter</small>
-        </label>
-        <label>
-          <input type="radio" name="dosaudio" id="dosaudio2" value="sb16" />
-          <u>Sound Blaster 16</u>
-        </label>
-        <label>
-          <input type="radio" name="dosaudio" id="dosaudio3" value="sb1" />
-          Sound Blaster 1.0
-        </label>
-        <label>
-          <input type="radio" name="dosaudio" id="dosaudio5" value="none" />
-          none
-          <small>use the internal audio</small>
-        </label>
-      </fieldset>
-      <input type="submit" class="small primary" value="Apply changes" />
-    </form>
-    <form id="optionsTab">
-      <p><a href="#" name="doseeReboot">Reboot to apply changes</a></p>
-      <div>
-        <label>
-          <input type="checkbox" id="doseeAutoRun" /> Automatically start DOS
-          emulation
-        </label>
-      </div>
-      <div>
-        <label>
-          <input type="checkbox" id="doseeAspect" /> Disable aspect correction
-          <small>For sharper DOS ASCII/ANSI text</small>
-        </label>
-      </div>
+  <body>
+    <div>
+      <h2>
+        DOSee
+        <small
+          ><em>A DOS era, PC emulator for the web</em>
+          <a href="#doseeTabs" id="doseeInstall" class="hidden">+Install</a>
+        </small>
+      </h2>
       <hr />
-      <fieldset>
-        <legend>SuperVGA real-time graphic effect</legend>
-        <input type="hidden" name="dosmachine" id="passThroughDosmachine" value="svga" />
-        <label>
-          <input type="radio" name="dosscale" id="dosscale0" value="none" />
-          None
-        </label>
-        <br />
-        <label>
-          <input type="radio" name="dosscale" id="dosscale5" value="advinterp3x" />
-          Advanced interpolation
-          <small>advinterp3x</small>
-        </label>
-        <label>
-          <input type="radio" name="dosscale" id="dosscale4" value="hq3x" />
-          High Quality 3 magnification
-          <small>hq3x</small>
-        </label>
-        <br />
-        <label>
-          <input type="radio" name="dosscale" id="dosscale3" value="rgb3x" />
-          RGB
-          <small>rgb3x</small>
-        </label>
-        <label>
-          <input type="radio" name="dosscale" id="dosscale1" value="super2xsai" />
-          Super scale and interpolation
-          <small>super2xsai</small>
-        </label>
-        <label>
-          <input type="radio" name="dosscale" id="dosscale2" value="tv3x" />
-          Television
-          <small>tv3x</small>
-        </label>
-        <br />
-        <input type="submit" class="small primary" value="Apply changes" />
-        <p id="svgaEffectsMsg">
-          Hardware 🡒 Graphics will be changed to <u>SuperVGA</u>
-        </p>
-      </fieldset>
-      <div id="helpBlock">
-        <p>
-          <span class="icon-help"></span>
-          <a href="//www.dosbox.com/wiki/Scaler">Graphic effect comparisons</a>
-        </p>
-      </div>
-    </form>
-    <form id="helpTab">
-      <div id="helpProgram_1" class="hide">
-        <h4>Lucasfilm passport to adventure</h4>
-        <p>Released: 1990</p>
-        <p>Uses 16 EGA color graphics and AdLib audio via the Sound Blaster</p>
-        <p>
-          <a href="?dosspeed=auto&dosmachine=ega&dosaudio=sb1">Reset to recommended hardware</a>
-        </p>
-      </div>
-      <div id="helpTabNA">
-        <p>No help available</p>
-      </div>
-    </form>
-    <div class="row">
-      <div class="col-sm-12">
-        <div class="card fluid">
-          <h5>Switch the example machines and programs,</h5>
-          <p> ✱ <a href="index.html">1987, Tandy 1000</a> ✱ <a href="index_1.html">1990, EGA+AdLib</a> ✱ <a
-              href="index_2.html">1994,
-              Gravis
-              UltraSound</a> ✱ <a href="index_3.html">1996, VGA+AdLib</a></p>
+      <h2>
+        <small
+          >Emulating<span id="doseeOffline" class="hidden"> offline</span>
+          <span id="doseeH2">something</span></small
+        >
+      </h2>
+      <div class="row" id="doseeCrashed">
+        <div class="card fluid error">
+          <p id="doseeError">Oops the emulation crashed?</p>
         </div>
       </div>
+      <div class="row" id="doseeSlowLoad">
+        <div class="card fluid warning">
+          <p>The emulator is taking a while to load</p>
+        </div>
+      </div>
+      <!-- DOSee canvas -->
+      <div class="row" id="doseeContainer">
+        <canvas id="doseeCanvas" class="rounded hidden"></canvas>
+      </div>
+      <!-- DOSee UI (menu) -->
+      <header id="doseeTabs">
+        <a href="#doseeTabs" id="hardwareBtn" class="button tabtoggle"
+          >Hardware</a
+        >
+        <a href="#doseeTabs" id="optionsBtn" class="button tabtoggle"
+          >Options</a
+        >
+        <a href="#doseeTabs" id="helpBtn" class="button tabtoggle">Help</a>
+        <a href="#doseeTabs" id="doseeFullScreen" class="button">Full screen</a>
+        <a href="#doseeTabs" id="doseeCaptureScreen" class="button">Capture</a>
+        <a href="#doseeTabs" name="doseeReboot" class="button">Reboot</a>
+        <a href="#doseeTabs" id="doseeExit" class="button">STOP</a>
+      </header>
+      <form id="hardwareTab">
+        <fieldset>
+          <legend>Speed and CPU</legend>
+          <label for="dosspeed2">
+            <input type="radio" name="dosspeed" id="dosspeed2" value="max" />
+            faster (80486)
+          </label>
+          <label for="dosspeed3">
+            <input type="radio" name="dosspeed" id="dosspeed3" value="386" />
+            medium (80386)
+          </label>
+          <label for="dosspeed4">
+            <input type="radio" name="dosspeed" id="dosspeed4" value="8086" />
+            slow (8086)
+          </label>
+          <label for="dosspeed1">
+            <input type="radio" name="dosspeed" id="dosspeed1" value="auto" />
+            <u>automatic</u>
+          </label>
+        </fieldset>
+        <fieldset>
+          <legend>Graphic adapter</legend>
+          <label>
+            <input
+              type="radio"
+              name="dosmachine"
+              id="dosmachine1"
+              value="svga"
+            />
+            SuperVGA
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="dosmachine"
+              id="dosmachine2"
+              value="vga"
+            />
+            <u>VGA</u>
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="dosmachine"
+              id="dosmachine3"
+              value="ega"
+            />
+            EGA
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="dosmachine"
+              id="dosmachine4"
+              value="tandy"
+            />
+            Tandy
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="dosmachine"
+              id="dosmachine5"
+              value="cga"
+            />
+            CGA
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="dosmachine"
+              id="dosmachine6"
+              value="herc"
+            />
+            Hercules
+          </label>
+        </fieldset>
+        <fieldset>
+          <legend>Audio addon</legend>
+          <label>
+            <input type="radio" name="dosaudio" id="dosaudio1" value="gus" />
+            Gravis UltraSound
+          </label>
+          <label>
+            <input type="radio" name="dosaudio" id="dosaudio4" value="covox" />
+            Covox
+            <small>also Disney Sound Source/DA Converter</small>
+          </label>
+          <label>
+            <input type="radio" name="dosaudio" id="dosaudio2" value="sb16" />
+            <u>Sound Blaster 16</u>
+          </label>
+          <label>
+            <input type="radio" name="dosaudio" id="dosaudio3" value="sb1" />
+            Sound Blaster 1.0
+          </label>
+          <label>
+            <input type="radio" name="dosaudio" id="dosaudio5" value="none" />
+            none
+            <small>use the internal audio</small>
+          </label>
+        </fieldset>
+        <input type="submit" class="small primary" value="Apply changes" />
+      </form>
+      <form id="optionsTab">
+        <p><a href="#" name="doseeReboot">Reboot to apply changes</a></p>
+        <div>
+          <label>
+            <input type="checkbox" id="doseeAutoRun" /> Automatically start DOS
+            emulation
+          </label>
+        </div>
+        <div>
+          <label>
+            <input type="checkbox" id="doseeAspect" /> Disable aspect correction
+            <small>For sharper DOS ASCII/ANSI text</small>
+          </label>
+        </div>
+        <hr />
+        <fieldset>
+          <legend>SuperVGA real-time graphic effect</legend>
+          <input
+            type="hidden"
+            name="dosmachine"
+            id="passThroughDosmachine"
+            value="svga"
+          />
+          <label>
+            <input type="radio" name="dosscale" id="dosscale0" value="none" />
+            None
+          </label>
+          <br />
+          <label>
+            <input
+              type="radio"
+              name="dosscale"
+              id="dosscale5"
+              value="advinterp3x"
+            />
+            Advanced interpolation
+            <small>advinterp3x</small>
+          </label>
+          <label>
+            <input type="radio" name="dosscale" id="dosscale4" value="hq3x" />
+            High Quality 3 magnification
+            <small>hq3x</small>
+          </label>
+          <br />
+          <label>
+            <input type="radio" name="dosscale" id="dosscale3" value="rgb3x" />
+            RGB
+            <small>rgb3x</small>
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="dosscale"
+              id="dosscale1"
+              value="super2xsai"
+            />
+            Super scale and interpolation
+            <small>super2xsai</small>
+          </label>
+          <label>
+            <input type="radio" name="dosscale" id="dosscale2" value="tv3x" />
+            Television
+            <small>tv3x</small>
+          </label>
+          <br />
+          <input type="submit" class="small primary" value="Apply changes" />
+          <p id="svgaEffectsMsg">
+            Hardware 🡒 Graphics will be changed to <u>SuperVGA</u>
+          </p>
+        </fieldset>
+        <div id="helpBlock">
+          <p>
+            <span class="icon-help"></span>
+            <a href="//www.dosbox.com/wiki/Scaler"
+              >Graphic effect comparisons</a
+            >
+          </p>
+        </div>
+      </form>
+      <form id="helpTab">
+        <div id="helpProgram_1" class="hide">
+          <h4>Lucasfilm passport to adventure</h4>
+          <p>Released: 1990</p>
+          <p>
+            Uses 16 EGA color graphics and AdLib audio via the Sound Blaster
+          </p>
+          <p>
+            <a href="?dosspeed=auto&dosmachine=ega&dosaudio=sb1"
+              >Reset to recommended hardware</a
+            >
+          </p>
+        </div>
+        <div id="helpTabNA">
+          <p>No help available</p>
+        </div>
+      </form>
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="card fluid">
+            <h5>Switch the example machines and programs,</h5>
+            <p>
+              ✱ <a href="index.html">1987, Tandy 1000</a> ✱
+              <a href="index_1.html">1990, EGA+AdLib</a> ✱
+              <a href="index_2.html">1994, Gravis UltraSound</a> ✱
+              <a href="index_3.html">1996, VGA+AdLib</a>
+            </p>
+          </div>
+        </div>
+      </div>
+      <footer>
+        © 2024 - Ben Garrett |
+        <a href="//github.com/bengarrett/DOSee" target="_blank" rel="noopener"
+          >GitHub</a
+        >
+        |
+        <a href="https://dosee.link" target="_blank" rel="nopener"
+          >DOSee online</a
+        >
+        <p>
+          <small
+            >DOSee <span id="doseeVersion"></span> built on
+            <a href="//github.com/db48x/emularity">The Emularity</a>,
+            <a href="//github.com/dreamlayers/em-dosbox">EM-DOSBox</a> and
+            <a href="//www.dosbox.com">DOSBox</a>. Capture and save function
+            uses
+            <a href="//github.com/eligrey/FileSaver.js">FileSaver.js</a>.</small
+          >
+        </p>
+      </footer>
+
+      <!-- these JS are placed at end of the page for a better user load page experience -->
+      <!-- they need to be loaded in this sequence and will not work with async or deferred loading -->
+
+      <!-- dosee loader -->
+      <script src="js/dosee-loader.js"></script>
+      <!-- browserfs -->
+      <script src="js/browserfs.min.js"></script>
+      <!-- browserfs zip filesystem -->
+      <script defer src="js/browserfs-zipfs-extras.js"></script>
+      <!-- dosee functions -->
+      <script src="js/dosee-functions.js"></script>
+      <!-- dosee initialisation -->
+      <script src="js/dosee-init.js"></script>
+      <script src="js/dosee-sw.js"></script>
     </div>
-    <footer>
-      © 2024 - Ben Garrett |
-      <a href="//github.com/bengarrett/DOSee" target="_blank" rel="noopener">GitHub</a> |
-      <a href="https://dosee.link" target="_blank" rel="nopener">DOSee online</a>
-      <p>
-        <small>DOSee <span id="doseeVersion"></span> built on
-          <a href="//github.com/db48x/emularity">The Emularity</a>,
-          <a href="//github.com/dreamlayers/em-dosbox">EM-DOSBox</a> and
-          <a href="//www.dosbox.com">DOSBox</a>. Capture and save function
-          uses
-          <a href="//github.com/eligrey/FileSaver.js">FileSaver.js</a>.</small>
-      </p>
-    </footer>
-
-    <!-- these JS are placed at end of the page for a better user load page experience -->
-    <!-- they need to be loaded in this sequence and will not work with async or deferred loading -->
-
-    <!-- dosee loader -->
-    <script src="js/dosee-loader.js"></script>
-    <!-- browserfs -->
-    <script src="js/browserfs.min.js"></script>
-    <!-- browserfs zip filesystem -->
-    <script defer src="js/browserfs-zipfs-extras.js"></script>
-    <!-- dosee functions -->
-    <script src="js/dosee-functions.js"></script>
-    <!-- dosee initialisation -->
-    <script src="js/dosee-init.js"></script>
-    <script src="js/dosee-sw.js"></script>
-  </div>
-</body>
-
+  </body>
 </html>

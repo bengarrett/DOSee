@@ -1,6 +1,7 @@
 // eslint.config.mjs
 // ESLint v10 flat configuration for DOSee - MS-DOS Emulator for the Web
 // https://eslint.org/docs/latest/use/configure/configuration-files-new
+/// <reference types="@eslint/js" />
 import globals from "globals";
 import js from "@eslint/js";
 import prettierConfig from "eslint-config-prettier";

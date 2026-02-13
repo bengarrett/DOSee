@@ -99,7 +99,7 @@ tasks:
     desc: Run ESLint on JavaScript files.
     aliases: [l]
     cmds:
-      - pnpm exec eslint src/js/*.js || echo "ESLint found issues that need to be fixed"
+      - pnpm exec eslint . --ext .js,.mjs || echo "ESLint found issues that need to be fixed"
 
   lint-fix:
     desc: Run ESLint and automatically fix fixable issues.
@@ -136,10 +136,71 @@ tasks:
 
   # Server tasks
   serve:
-    desc: Serve DOSee on localhost:8086.
+    desc: Clean, rebuild and Serve DOSee on localhost:8086.
     aliases: [s]
     preconditions:
       - sh: node -v
         msg: '{{.REQNPM}}'
     cmds:
       - pnpm run serve
+
+  # Puppeteer tasks
+  puppeteer-chrome:
+    desc: Run DOSee in headless browser using Puppeteer (Chrome default).
+    aliases: [pc]
+    preconditions:
+      - sh: node -v
+        msg: '{{.REQNPM}}'
+      - sh: command -v puppeteer || pnpm list puppeteer > /dev/null 2>&1
+        msg: 'Puppeteer is required. Install with: pnpm add puppeteer'
+    cmds:
+      - echo "=== Running DOSee with Puppeteer (Chrome) ==="
+      - node puppeteer-runner.mjs --browser chrome
+
+  puppeteer-firefox:
+    desc: Run DOSee in headless Firefox using Puppeteer.
+    aliases: [pf]
+    preconditions:
+      - sh: node -v
+        msg: '{{.REQNPM}}'
+      - sh: command -v puppeteer || pnpm list puppeteer > /dev/null 2>&1
+        msg: 'Puppeteer is required. Install with: pnpm add puppeteer'
+    cmds:
+      - echo "=== Running DOSee with Puppeteer (Firefox) ==="
+      - node puppeteer-runner.mjs --browser firefox
+
+  puppeteer-webkit:
+    desc: Run DOSee in headless WebKit using Puppeteer.
+    aliases: [pw]
+    preconditions:
+      - sh: node -v
+        msg: '{{.REQNPM}}'
+      - sh: command -v puppeteer || pnpm list puppeteer > /dev/null 2>&1
+        msg: 'Puppeteer is required. Install with: pnpm add puppeteer'
+    cmds:
+      - echo "=== Running DOSee with Puppeteer (WebKit) ==="
+      - node puppeteer-runner.mjs --browser webkit
+
+  puppeteer-browse-chrome:
+    desc: Run DOSee with visible Chrome window using Puppeteer.
+    aliases: [gc]
+    preconditions:
+      - sh: node -v
+        msg: '{{.REQNPM}}'
+      - sh: command -v puppeteer || pnpm list puppeteer > /dev/null 2>&1
+        msg: 'Puppeteer is required. Install with: pnpm add puppeteer'
+    cmds:
+      - echo "=== Running DOSee with Puppeteer (Headful Mode) ==="
+      - node puppeteer-runner.mjs --browser chrome --headful
+
+  puppeteer-browse-firefox:
+    desc: Run DOSee with visible Firefox window using Puppeteer.
+    aliases: [ff]
+    preconditions:
+      - sh: node -v
+        msg: '{{.REQNPM}}'
+      - sh: command -v puppeteer || pnpm list puppeteer > /dev/null 2>&1
+        msg: 'Puppeteer is required. Install with: pnpm add puppeteer'
+    cmds:
+      - echo "=== Running DOSee with Puppeteer (Headful Mode) ==="
+      - node puppeteer-runner.mjs --browser firefox --headful

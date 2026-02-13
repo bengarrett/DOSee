@@ -4,7 +4,7 @@
  */
 
 (() => {
-  'use strict';
+  "use strict";
 
   // DOSee console logging utility with consistent styling
   const doseeLog = (level, message) => {
@@ -12,13 +12,13 @@
     const prefix = `%cDOSee`;
 
     switch (level) {
-      case 'error':
+      case "error":
         console.error(prefix, styles, message);
         break;
-      case 'warn':
+      case "warn":
         console.warn(prefix, styles, message);
         break;
-      case 'info':
+      case "info":
       default:
         console.log(prefix, styles, message);
     }
@@ -41,15 +41,15 @@
     menuTabs.forEach((tab, key) => {
       if (tab === null) {
         doseeLog(
-          'error',
-          `Menu tab element missing for key "${key}". Check your HTML for element with id "${key}Tab"`
+          "error",
+          `Menu tab element missing for key "${key}". Check your HTML for element with id "${key}Tab"`,
         );
         return;
       }
-      if (typeof tab.id !== 'string' || tab.id.length === 0) {
+      if (typeof tab.id !== "string" || tab.id.length === 0) {
         doseeLog(
-          'error',
-          `Menu tab element has invalid id. Expected "${key}Tab", got: ${tab.id}`
+          "error",
+          `Menu tab element has invalid id. Expected "${key}Tab", got: ${tab.id}`,
         );
         return;
       }
@@ -79,8 +79,8 @@
     const h2 = document.getElementById(`doseeH2`);
     if (h2 === null) {
       doseeLog(
-        'error',
-        `Required element #doseeH2 not found. Check your HTML structure`
+        "error",
+        `Required element #doseeH2 not found. Check your HTML structure`,
       );
       return;
     }
@@ -90,24 +90,24 @@
 
     if (zipPath === null) {
       doseeLog(
-        'error',
-        `Missing required meta tag "dosee:zip:path". Add <meta name="dosee:zip:path" content="your/path/here.zip"> to your HTML`
+        "error",
+        `Missing required meta tag "dosee:zip:path". Add <meta name="dosee:zip:path" content="your/path/here.zip"> to your HTML`,
       );
       return;
     }
 
     if (runFilename === null) {
       doseeLog(
-        'error',
-        `Missing required meta tag "dosee:run:filename". Add <meta name="dosee:run:filename" content="program.exe"> to your HTML`
+        "error",
+        `Missing required meta tag "dosee:run:filename". Add <meta name="dosee:run:filename" content="program.exe"> to your HTML`,
       );
       return;
     }
 
-    if (!zipPath.includes('/')) {
+    if (!zipPath.includes("/")) {
       doseeLog(
-        'warn',
-        `zip path doesn't contain '/'. Expected format like "programs/example.zip", got: ${zipPath}`
+        "warn",
+        `zip path doesn't contain '/'. Expected format like "programs/example.zip", got: ${zipPath}`,
       );
     }
 
@@ -126,7 +126,7 @@
           ? `${executable} ${String.fromCharCode(leftwardArrow)} ${fileName}`
           : `${fileName}`;
     } catch (error) {
-      doseeLog('error', `Error setting header text: ${error.message}`);
+      doseeLog("error", `Error setting header text: ${error.message}`);
       h2.innerText = `DOSee Configuration Error`;
     }
   }
@@ -176,7 +176,7 @@
 
   // Install (pwa) link
   window.onappinstalled = () => {
-    doseeLog('info', `Thank you for installing DOSee`);
+    doseeLog("info", `Thank you for installing DOSee`);
   };
   window.addEventListener(`beforeinstallprompt`, (beforeInstallPromptEvent) => {
     const installButton = document.getElementById(`doseeInstall`);
@@ -191,5 +191,5 @@
       });
     });
   });
-  doseeLog('info', `Loaded index.js`);
+  doseeLog("info", `Loaded index.js`);
 })();

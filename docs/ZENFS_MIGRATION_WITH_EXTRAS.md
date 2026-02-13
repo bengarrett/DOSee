@@ -25,6 +25,7 @@ After researching ZenFS, here's what I found about ZIP compression support:
 #### ZenFS Native ZIP Support
 
 ZenFS's `@zenfs/zipfs` package includes:
+
 - **DEFLATE** (most common modern ZIP compression)
 - **STORE** (uncompressed storage)
 - **BZIP2** (optional, if supported)
@@ -36,9 +37,9 @@ ZenFS's `@zenfs/zipfs` package includes:
 ### Option 1: Use ZenFS with Custom Decompression
 
 ```javascript
-import { ZipFileSystem } from '@zenfs/zipfs';
-import { ExplodeDecompressor } from 'custom-explode-decompressor';
-import { UnshrinkDecompressor } from 'custom-unshrink-decompressor';
+import { ZipFileSystem } from "@zenfs/zipfs";
+import { ExplodeDecompressor } from "custom-explode-decompressor";
+import { UnshrinkDecompressor } from "custom-unshrink-decompressor";
 
 // Register custom decompressors
 ZipFileSystem.registerDecompressor(8, ExplodeDecompressor); // Method 8 = EXPLODE
@@ -64,16 +65,22 @@ async function BFSOpenZip(loadedData) {
     // Fall back to BrowserFS for legacy ZIPs
     if (window.BrowserFS) {
       return new Promise((resolve, reject) => {
-        BrowserFS.FileSystem.ZipFS.Create({
-          zipData: loadedData
-        }, (e, zipFS) => {
-          if (e) {
-            doseeLog('ERROR', 'Failed to create ZipFS with BrowserFS: ' + e.message);
-            reject(e);
-          } else {
-            resolve(zipFS);
-          }
-        });
+        BrowserFS.FileSystem.ZipFS.Create(
+          {
+            zipData: loadedData,
+          },
+          (e, zipFS) => {
+            if (e) {
+              doseeLog(
+                "ERROR",
+                "Failed to create ZipFS with BrowserFS: " + e.message,
+              );
+              reject(e);
+            } else {
+              resolve(zipFS);
+            }
+          },
+        );
       });
     }
     throw e;
@@ -87,14 +94,14 @@ Create a compatibility package that ports the GPL2 algorithms to work with ZenFS
 
 ```javascript
 // zenfs-extras.js
-import { registerDecompressor } from '@zenfs/zipfs';
-import { ExplodeDecompressor } from './explode';
-import { UnshrinkDecompressor } from './unshrink';
-import { UnreduceDecompressor } from './unreduce';
+import { registerDecompressor } from "@zenfs/zipfs";
+import { ExplodeDecompressor } from "./explode";
+import { UnshrinkDecompressor } from "./unshrink";
+import { UnreduceDecompressor } from "./unreduce";
 
 export function initializeZenFSExtras() {
-  registerDecompressor(8, ExplodeDecompressor);  // EXPLODE
-  registerDecompressor(1, UnshrinkDecompressor); // UNSHRINK  
+  registerDecompressor(8, ExplodeDecompressor); // EXPLODE
+  registerDecompressor(1, UnshrinkDecompressor); // UNSHRINK
   registerDecompressor(10, UnreduceDecompressor); // UNREDUCE
 }
 ```
@@ -115,9 +122,9 @@ npm install browserfs@1.4.3 browserfs-zipfs-extras@1.0.1
 
 ```javascript
 // src/js/dosee-loader.js
-import { MemoryFileSystem } from '@zenfs/memory';
-import { OverlayFileSystem } from '@zenfs/overlay';
-import { MountableFileSystem } from '@zenfs/core';
+import { MemoryFileSystem } from "@zenfs/memory";
+import { OverlayFileSystem } from "@zenfs/overlay";
+import { MountableFileSystem } from "@zenfs/core";
 
 async function initializeFileSystem() {
   try {
@@ -125,13 +132,16 @@ async function initializeFileSystem() {
     const deltaFS = new MemoryFileSystem();
     const overlayFS = await OverlayFileSystem.create({
       readable: deltaFS,
-      writable: new MountableFileSystem()
+      writable: new MountableFileSystem(),
     });
     gameData.fileSystem = overlayFS;
-    doseeLog('INFO', 'Using ZenFS for file system operations');
+    doseeLog("INFO", "Using ZenFS for file system operations");
     return true;
   } catch (e) {
-    doseeLog('WARN', 'ZenFS initialization failed, falling back to BrowserFS: ' + e.message);
+    doseeLog(
+      "WARN",
+      "ZenFS initialization failed, falling back to BrowserFS: " + e.message,
+    );
     // Fall back to BrowserFS
     return initializeBrowserFSFileSystem();
   }
@@ -140,18 +150,24 @@ async function initializeFileSystem() {
 function initializeBrowserFSFileSystem() {
   return new Promise((resolve) => {
     const deltaFS = new BrowserFS.FileSystem.InMemory();
-    BrowserFS.FileSystem.OverlayFS.Create({
-      readable: deltaFS,
-      writable: new BrowserFS.FileSystem.MountableFileSystem()
-    }, (e, overlayFS) => {
-      if (e) {
-        doseeLog('ERROR', 'BrowserFS initialization also failed: ' + e.message);
-        resolve(false);
-      } else {
-        gameData.fileSystem = overlayFS;
-        resolve(true);
-      }
-    });
+    BrowserFS.FileSystem.OverlayFS.Create(
+      {
+        readable: deltaFS,
+        writable: new BrowserFS.FileSystem.MountableFileSystem(),
+      },
+      (e, overlayFS) => {
+        if (e) {
+          doseeLog(
+            "ERROR",
+            "BrowserFS initialization also failed: " + e.message,
+          );
+          resolve(false);
+        } else {
+          gameData.fileSystem = overlayFS;
+          resolve(true);
+        }
+      },
+    );
   });
 }
 ```
@@ -159,7 +175,7 @@ function initializeBrowserFSFileSystem() {
 #### Step 3: Update ZIP Handling with Fallback
 
 ```javascript
-import { ZipFileSystem } from '@zenfs/zipfs';
+import { ZipFileSystem } from "@zenfs/zipfs";
 
 async function BFSOpenZip(loadedData) {
   if (typeof loadedData === `undefined`)
@@ -168,29 +184,38 @@ async function BFSOpenZip(loadedData) {
   try {
     // Try ZenFS first (handles modern ZIPs)
     const zipFS = await ZipFileSystem.create({ zipData: loadedData });
-    doseeLog('INFO', 'ZIP opened with ZenFS');
+    doseeLog("INFO", "ZIP opened with ZenFS");
     return zipFS;
   } catch (e) {
-    doseeLog('INFO', 'ZenFS failed for ZIP, trying BrowserFS: ' + e.message);
-    
+    doseeLog("INFO", "ZenFS failed for ZIP, trying BrowserFS: " + e.message);
+
     // Fall back to BrowserFS (handles legacy ZIPs with extras)
     if (window.BrowserFS) {
       return new Promise((resolve, reject) => {
-        BrowserFS.FileSystem.ZipFS.Create({
-          zipData: loadedData
-        }, (e, zipFS) => {
-          if (e) {
-            doseeLog('ERROR', 'BrowserFS also failed to open ZIP: ' + e.message);
-            reject(e);
-          } else {
-            doseeLog('INFO', 'ZIP opened with BrowserFS (likely legacy format)');
-            resolve(zipFS);
-          }
-        });
+        BrowserFS.FileSystem.ZipFS.Create(
+          {
+            zipData: loadedData,
+          },
+          (e, zipFS) => {
+            if (e) {
+              doseeLog(
+                "ERROR",
+                "BrowserFS also failed to open ZIP: " + e.message,
+              );
+              reject(e);
+            } else {
+              doseeLog(
+                "INFO",
+                "ZIP opened with BrowserFS (likely legacy format)",
+              );
+              resolve(zipFS);
+            }
+          },
+        );
       });
     }
-    
-    throw new Error('No ZIP file system available: ' + e.message);
+
+    throw new Error("No ZIP file system available: " + e.message);
   }
 }
 ```
@@ -199,28 +224,23 @@ async function BFSOpenZip(loadedData) {
 
 ```javascript
 // src/js/dosee-init.js
-const doseeObjects = [
-  `DOSee`,
-  `DoseeLoader`,
-  `FileSaver`,
-  `Module`,
-];
+const doseeObjects = [`DOSee`, `DoseeLoader`, `FileSaver`, `Module`];
 
 // Check for file system availability
 let fileSystemAvailable = false;
 try {
   // Check if ZenFS is available (would be bundled)
-  if (typeof window.ZenFS !== 'undefined') {
+  if (typeof window.ZenFS !== "undefined") {
     fileSystemAvailable = true;
-    console.log('ZenFS available');
-  } else if (typeof window.BrowserFS !== 'undefined') {
+    console.log("ZenFS available");
+  } else if (typeof window.BrowserFS !== "undefined") {
     fileSystemAvailable = true;
-    console.log('BrowserFS available for fallback');
+    console.log("BrowserFS available for fallback");
   } else {
-    console.error('No file system library available');
+    console.error("No file system library available");
   }
 } catch (e) {
-  console.error('File system check failed:', e);
+  console.error("File system check failed:", e);
 }
 ```
 
@@ -233,6 +253,7 @@ try {
 ```
 
 **Changes:**
+
 - Remove BrowserFS files from copy script
 - BrowserFS will be loaded dynamically only when needed
 - ZenFS will be bundled with the main application
@@ -246,10 +267,10 @@ try {
 <!-- BrowserFS fallback (loaded on-demand) -->
 <script>
   // Dynamic loading of BrowserFS only if needed
-  window.loadBrowserFSFallback = function() {
+  window.loadBrowserFSFallback = function () {
     return Promise.all([
-      import('/js/browserfs.min.js'),
-      import('/js/browserfs-zipfs-extras.js')
+      import("/js/browserfs.min.js"),
+      import("/js/browserfs-zipfs-extras.js"),
     ]);
   };
 </script>
@@ -286,12 +307,12 @@ try {
 const zipCache = new Map();
 
 async function getCachedZipFS(loadedData) {
-  const cacheKey = loadedData.length + '-' + loadedData[0] + loadedData[10];
-  
+  const cacheKey = loadedData.length + "-" + loadedData[0] + loadedData[10];
+
   if (zipCache.has(cacheKey)) {
     return zipCache.get(cacheKey);
   }
-  
+
   const zipFS = await BFSOpenZip(loadedData);
   zipCache.set(cacheKey, zipFS);
   return zipFS;
@@ -304,12 +325,12 @@ async function getCachedZipFS(loadedData) {
 // Only load BrowserFS when actually needed
 async function ensureBrowserFSAvailable() {
   if (window.BrowserFS) return true;
-  
+
   try {
     await window.loadBrowserFSFallback();
-    return typeof window.BrowserFS !== 'undefined';
+    return typeof window.BrowserFS !== "undefined";
   } catch (e) {
-    doseeLog('ERROR', 'Failed to load BrowserFS fallback: ' + e.message);
+    doseeLog("ERROR", "Failed to load BrowserFS fallback: " + e.message);
     return false;
   }
 }
@@ -321,18 +342,18 @@ async function ensureBrowserFSAvailable() {
 
 ```javascript
 // Future: Create a zenfs-extras package
-import { registerDecompressor } from '@zenfs/zipfs';
-import { explode } from './decompressors/explode';
-import { unshrink } from './decompressors/unshrink';
-import { unreduce } from './decompressors/unreduce';
+import { registerDecompressor } from "@zenfs/zipfs";
+import { explode } from "./decompressors/explode";
+import { unshrink } from "./decompressors/unshrink";
+import { unreduce } from "./decompressors/unreduce";
 
 export function initializeLegacySupport() {
   // Port the algorithms from browserfs-zipfs-extras
-  registerDecompressor(8, explode);    // EXPLODE method
-  registerDecompressor(1, unshrink);  // UNSHRINK method  
-  registerDecompressor(10, unreduce);  // UNREDUCE method
-  
-  console.log('Legacy ZIP compression support initialized');
+  registerDecompressor(8, explode); // EXPLODE method
+  registerDecompressor(1, unshrink); // UNSHRINK method
+  registerDecompressor(10, unreduce); // UNREDUCE method
+
+  console.log("Legacy ZIP compression support initialized");
 }
 ```
 
@@ -349,10 +370,10 @@ export function initializeLegacySupport() {
 
 ```javascript
 // Import ZenFS modules
-import { MemoryFileSystem } from '@zenfs/memory';
-import { OverlayFileSystem } from '@zenfs/overlay';
-import { MountableFileSystem } from '@zenfs/core';
-import { ZipFileSystem } from '@zenfs/zipfs';
+import { MemoryFileSystem } from "@zenfs/memory";
+import { OverlayFileSystem } from "@zenfs/overlay";
+import { MountableFileSystem } from "@zenfs/core";
+import { ZipFileSystem } from "@zenfs/zipfs";
 
 // File system state
 let usingZenFS = false;
@@ -364,22 +385,21 @@ async function initializeFileSystem() {
     const deltaFS = new MemoryFileSystem();
     const overlayFS = await OverlayFileSystem.create({
       readable: deltaFS,
-      writable: new MountableFileSystem()
+      writable: new MountableFileSystem(),
     });
-    
+
     gameData.fileSystem = overlayFS;
     usingZenFS = true;
-    doseeLog('INFO', 'Initialized file system with ZenFS');
+    doseeLog("INFO", "Initialized file system with ZenFS");
     return true;
-    
   } catch (zenFSError) {
-    doseeLog('WARN', 'ZenFS initialization failed: ' + zenFSError.message);
-    
+    doseeLog("WARN", "ZenFS initialization failed: " + zenFSError.message);
+
     // Fall back to BrowserFS
-    if (typeof BrowserFS !== 'undefined') {
+    if (typeof BrowserFS !== "undefined") {
       return initializeBrowserFSFileSystem();
     } else {
-      doseeLog('ERROR', 'BrowserFS not available as fallback');
+      doseeLog("ERROR", "BrowserFS not available as fallback");
       return false;
     }
   }
@@ -389,22 +409,28 @@ function initializeBrowserFSFileSystem() {
   return new Promise((resolve) => {
     try {
       const deltaFS = new BrowserFS.FileSystem.InMemory();
-      BrowserFS.FileSystem.OverlayFS.Create({
-        readable: deltaFS,
-        writable: new BrowserFS.FileSystem.MountableFileSystem()
-      }, (e, overlayFS) => {
-        if (e) {
-          doseeLog('ERROR', 'BrowserFS initialization failed: ' + e.message);
-          resolve(false);
-        } else {
-          gameData.fileSystem = overlayFS;
-          usingBrowserFS = true;
-          doseeLog('INFO', 'Initialized file system with BrowserFS (fallback)');
-          resolve(true);
-        }
-      });
+      BrowserFS.FileSystem.OverlayFS.Create(
+        {
+          readable: deltaFS,
+          writable: new BrowserFS.FileSystem.MountableFileSystem(),
+        },
+        (e, overlayFS) => {
+          if (e) {
+            doseeLog("ERROR", "BrowserFS initialization failed: " + e.message);
+            resolve(false);
+          } else {
+            gameData.fileSystem = overlayFS;
+            usingBrowserFS = true;
+            doseeLog(
+              "INFO",
+              "Initialized file system with BrowserFS (fallback)",
+            );
+            resolve(true);
+          }
+        },
+      );
     } catch (e) {
-      doseeLog('ERROR', 'BrowserFS initialization error: ' + e.message);
+      doseeLog("ERROR", "BrowserFS initialization error: " + e.message);
       resolve(false);
     }
   });
@@ -422,33 +448,36 @@ async function BFSOpenZip(loadedData) {
   // Try ZenFS first
   try {
     const zipFS = await ZipFileSystem.create({ zipData: loadedData });
-    doseeLog('DEBUG', 'ZIP opened with ZenFS');
+    doseeLog("DEBUG", "ZIP opened with ZenFS");
     return zipFS;
   } catch (zenFSError) {
-    doseeLog('DEBUG', 'ZenFS failed for ZIP: ' + zenFSError.message);
-    
+    doseeLog("DEBUG", "ZenFS failed for ZIP: " + zenFSError.message);
+
     // Fall back to BrowserFS
-    if (typeof BrowserFS !== 'undefined') {
+    if (typeof BrowserFS !== "undefined") {
       return openZipWithBrowserFS(loadedData);
     }
-    
-    throw new Error('No ZIP file system available: ' + zenFSError.message);
+
+    throw new Error("No ZIP file system available: " + zenFSError.message);
   }
 }
 
 function openZipWithBrowserFS(loadedData) {
   return new Promise((resolve, reject) => {
-    BrowserFS.FileSystem.ZipFS.Create({
-      zipData: loadedData
-    }, (e, zipFS) => {
-      if (e) {
-        doseeLog('ERROR', 'BrowserFS failed to open ZIP: ' + e.message);
-        reject(e);
-      } else {
-        doseeLog('DEBUG', 'ZIP opened with BrowserFS (legacy format)');
-        resolve(zipFS);
-      }
-    });
+    BrowserFS.FileSystem.ZipFS.Create(
+      {
+        zipData: loadedData,
+      },
+      (e, zipFS) => {
+        if (e) {
+          doseeLog("ERROR", "BrowserFS failed to open ZIP: " + e.message);
+          reject(e);
+        } else {
+          doseeLog("DEBUG", "ZIP opened with BrowserFS (legacy format)");
+          resolve(zipFS);
+        }
+      },
+    );
   });
 }
 ```
@@ -462,7 +491,7 @@ function openZipWithBrowserFS(loadedData) {
   "dependencies": {
     "@zenfs/core": "^1.0.0",
     "@zenfs/memory": "^1.0.0",
-    "@zenfs/zipfs": "^1.0.0", 
+    "@zenfs/zipfs": "^1.0.0",
     "@zenfs/overlay": "^1.0.0",
     "@zenfs/emscripten": "^1.0.0",
     "browserfs": "1.4.3",
@@ -481,13 +510,13 @@ function openZipWithBrowserFS(loadedData) {
 #### Webpack Configuration (webpack.config.js)
 
 ```javascript
-const path = require('path');
+const path = require("path");
 
 module.exports = {
-  entry: './src/js/index.js',
+  entry: "./src/js/index.js",
   output: {
-    filename: 'dosee-bundle.js',
-    path: path.resolve(__dirname, 'build/js'),
+    filename: "dosee-bundle.js",
+    path: path.resolve(__dirname, "build/js"),
   },
   module: {
     rules: [
@@ -495,21 +524,21 @@ module.exports = {
         test: /\.js$/,
         exclude: /node_modules/,
         use: {
-          loader: 'babel-loader',
+          loader: "babel-loader",
           options: {
-            presets: ['@babel/preset-env']
-          }
-        }
-      }
-    ]
+            presets: ["@babel/preset-env"],
+          },
+        },
+      },
+    ],
   },
   resolve: {
     fallback: {
-      "buffer": require.resolve("buffer/"),
-      "path": require.resolve("path-browserify"),
-      "fs": false
-    }
-  }
+      buffer: require.resolve("buffer/"),
+      path: require.resolve("path-browserify"),
+      fs: false,
+    },
+  },
 };
 ```
 
@@ -518,34 +547,34 @@ module.exports = {
 ```html
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <!-- ... other head elements ... -->
     <script>
-        // BrowserFS fallback loader
-        window.loadBrowserFSFallback = function() {
-            console.log('Loading BrowserFS fallback...');
-            return new Promise((resolve, reject) => {
-                const browserFSScript = document.createElement('script');
-                browserFSScript.src = 'js/browserfs.min.js';
-                browserFSScript.onload = () => {
-                    const extrasScript = document.createElement('script');
-                    extrasScript.src = 'js/browserfs-zipfs-extras.js';
-                    extrasScript.onload = resolve;
-                    extrasScript.onerror = reject;
-                    document.head.appendChild(extrasScript);
-                };
-                browserFSScript.onerror = reject;
-                document.head.appendChild(browserFSScript);
-            });
-        };
+      // BrowserFS fallback loader
+      window.loadBrowserFSFallback = function () {
+        console.log("Loading BrowserFS fallback...");
+        return new Promise((resolve, reject) => {
+          const browserFSScript = document.createElement("script");
+          browserFSScript.src = "js/browserfs.min.js";
+          browserFSScript.onload = () => {
+            const extrasScript = document.createElement("script");
+            extrasScript.src = "js/browserfs-zipfs-extras.js";
+            extrasScript.onload = resolve;
+            extrasScript.onerror = reject;
+            document.head.appendChild(extrasScript);
+          };
+          browserFSScript.onerror = reject;
+          document.head.appendChild(browserFSScript);
+        });
+      };
     </script>
-</head>
-<body>
+  </head>
+  <body>
     <!-- ... page content ... -->
-    
+
     <!-- Main application bundle with ZenFS -->
     <script type="module" src="js/dosee-bundle.js"></script>
-</body>
+  </body>
 </html>
 ```
 
@@ -569,24 +598,26 @@ module.exports = {
 
 ## Migration Timeline
 
-| Phase | Duration | Description |
-|-------|----------|-------------|
-| 1. Setup | 1 day | Install packages, configure webpack |
-| 2. Core Migration | 2-3 days | Implement hybrid file system |
-| 3. Testing | 2 days | Test with modern and legacy ZIPs |
-| 4. Optimization | 1 day | Implement caching and lazy loading |
-| 5. Documentation | 1 day | Update docs and migration guide |
-| **Total** | **1-2 weeks** | Full hybrid migration |
+| Phase             | Duration      | Description                         |
+| ----------------- | ------------- | ----------------------------------- |
+| 1. Setup          | 1 day         | Install packages, configure webpack |
+| 2. Core Migration | 2-3 days      | Implement hybrid file system        |
+| 3. Testing        | 2 days        | Test with modern and legacy ZIPs    |
+| 4. Optimization   | 1 day         | Implement caching and lazy loading  |
+| 5. Documentation  | 1 day         | Update docs and migration guide     |
+| **Total**         | **1-2 weeks** | Full hybrid migration               |
 
 ## Long-term Roadmap
 
 ### 6-12 Months
+
 1. **Monitor Usage**: Track how often BrowserFS fallback is used
 2. **Identify Key Games**: Find which games require legacy ZIP support
 3. **Implement Custom Decompressors**: Port EXPLODE/UNSHRINK to ZenFS
 4. **Phase Out BrowserFS**: Remove fallback once all games are supported
 
 ### 12+ Months
+
 1. **Pure ZenFS**: Remove BrowserFS dependency completely
 2. **Optimize**: Fine-tune performance for DOS emulation
 3. **Contribute**: Submit legacy algorithms to ZenFS project
@@ -595,6 +626,7 @@ module.exports = {
 ## Conclusion
 
 The hybrid migration approach provides the best of both worlds:
+
 - **Immediate benefits** of ZenFS for modern ZIP files
 - **Continued support** for legacy DOS games via BrowserFS fallback
 - **Clear path** to full ZenFS migration in the future

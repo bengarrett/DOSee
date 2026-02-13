@@ -3,7 +3,7 @@
  * DOSee user-interface functions
  */
 (() => {
-  'use strict';
+  "use strict";
 
   // DOSee console logging utility with consistent styling
   const doseeLog = (level, message) => {
@@ -11,13 +11,13 @@
     const prefix = `%cDOSee`;
 
     switch (level) {
-      case 'error':
+      case "error":
         console.error(prefix, styles, message);
         break;
-      case 'warn':
+      case "warn":
         console.warn(prefix, styles, message);
         break;
-      case 'info':
+      case "info":
       default:
         console.log(prefix, styles, message);
     }
@@ -46,19 +46,19 @@
   // Resize the DOSee canvas
   DOSee.canvasResize = (
     width = DOSee.gfx.mode13h.width,
-    height = DOSee.gfx.mode13h.height
+    height = DOSee.gfx.mode13h.height,
   ) => {
     const canvas = document.getElementById(`doseeCanvas`);
     if (canvas === null) {
-      doseeLog('error', `Canvas element #doseeCanvas not found, cannot resize`);
+      doseeLog("error", `Canvas element #doseeCanvas not found, cannot resize`);
       return null;
     }
 
-    doseeLog('info', `Resizing DOSee canvas to ${width}*${height}px`);
+    doseeLog("info", `Resizing DOSee canvas to ${width}*${height}px`);
     return window._emscripten_set_element_css_size(
       canvas,
       parseInt(width),
-      parseInt(height)
+      parseInt(height),
     );
   };
 
@@ -74,7 +74,7 @@
         ctrlKey: true,
         key: `Control`,
         location: 1,
-      })
+      }),
     );
     body.dispatchEvent(
       new KeyboardEvent(`keydown`, {
@@ -84,7 +84,7 @@
         composed: true,
         key: `F9`,
         location: 0,
-      })
+      }),
     );
     const e = document.getElementById(`doseeExit`);
     if (e !== null) e.classList.add(`hide-true`);
@@ -97,8 +97,8 @@
     const elm = document.getElementsByName(name);
     if (elm === null) return null;
     if (elm.length === 0) return null;
-    if (!elm[0] || !elm[0].hasAttribute('content')) return null;
-    return elm[0].getAttribute('content');
+    if (!elm[0] || !elm[0].hasAttribute("content")) return null;
+    return elm[0].getAttribute("content");
   };
 
   // Extracts the URL query string and run it through the URLSearchParams API
@@ -118,15 +118,15 @@
     const elm = document.getElementsByName(name);
     if (elm === null) return false;
     if (elm.length === 0) return false;
-    if (!elm[0] || !elm[0].hasAttribute('content')) return false;
+    if (!elm[0] || !elm[0].hasAttribute("content")) return false;
 
     try {
-      elm[0].setAttribute('content', `${value}`);
+      elm[0].setAttribute("content", `${value}`);
       return true; // Success
     } catch (error) {
       doseeLog(
-        'error',
-        `Failed to set meta content for ${name}: ${error.message}`
+        "error",
+        `Failed to set meta content for ${name}: ${error.message}`,
       );
       return false; // Failure
     }
@@ -136,14 +136,14 @@
   // (https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API)
   DOSee.fullScreen = () => {
     if (typeof document.fullscreenElement === `undefined`)
-      return doseeLog('info', `Filescreen API is not supported`);
+      return doseeLog("info", `Filescreen API is not supported`);
 
     const element = document.getElementById(`doseeCanvas`),
       restoreValue = element.style.imageRendering;
 
     // Store handlers in variables for proper cleanup
     const errorHandler = () => {
-      doseeLog('error', `Filescreen API resulted in an error`);
+      doseeLog("error", `Filescreen API resulted in an error`);
     };
     const changeHandler = () => {
       if (!document.fullscreenElement) {
@@ -152,12 +152,12 @@
     };
 
     // Remove old handlers first to prevent memory leaks
-    element.removeEventListener('fullscreenerror', errorHandler);
-    element.removeEventListener('fullscreenchange', changeHandler);
+    element.removeEventListener("fullscreenerror", errorHandler);
+    element.removeEventListener("fullscreenchange", changeHandler);
 
     // Add new handlers
-    element.addEventListener('fullscreenerror', errorHandler);
-    element.addEventListener('fullscreenchange', changeHandler);
+    element.addEventListener("fullscreenerror", errorHandler);
+    element.addEventListener("fullscreenchange", changeHandler);
 
     if (!document.fullscreenElement) {
       // Smooth out the font rendering while in full screen
@@ -188,7 +188,7 @@
       }
 
       const filename = DOSee.getMetaContent(`dosee:capture:filename`);
-      if (!filename || filename.trim() === '') {
+      if (!filename || filename.trim() === "") {
         throw new Error(`Capture filename not specified in meta tags`);
       }
 
@@ -206,14 +206,14 @@
 
           // uses FileSaver.js to save the image locally
           FileSaver.saveAs(blob, filename);
-          doseeLog('info', `Screen capture saved as ${filename}`);
+          doseeLog("info", `Screen capture saved as ${filename}`);
 
           // Success feedback
           setTimeout(() => {
             button.style.color = `black`;
           }, milliSeconds);
         } catch (error) {
-          doseeLog('error', `Failed to save screen capture: ${error.message}`);
+          doseeLog("error", `Failed to save screen capture: ${error.message}`);
           button.style.color = `red`; // Error feedback
           setTimeout(() => {
             button.style.color = `black`;
@@ -224,9 +224,9 @@
         }
       }, `image/png`); // Explicit MIME type
     } catch (error) {
-      doseeLog('error', `Screen capture failed: ${error.message}`);
+      doseeLog("error", `Screen capture failed: ${error.message}`);
       // Provide user feedback if possible
-      if (this && typeof this.style !== 'undefined') {
+      if (this && typeof this.style !== "undefined") {
         this.style.color = `red`;
         setTimeout(() => {
           this.style.color = `black`;
@@ -285,12 +285,12 @@
         if (item === null) return; // No setting stored yet
 
         // Convert string to boolean properly
-        const autoStart = item === 'true'; // Proper string-to-boolean conversion
+        const autoStart = item === "true"; // Proper string-to-boolean conversion
         autoRun.checked = autoStart;
       } catch (error) {
         doseeLog(
-          'error',
-          `Failed to restore auto-run setting: ${error.message}`
+          "error",
+          `Failed to restore auto-run setting: ${error.message}`,
         );
       }
     };
@@ -309,12 +309,12 @@
         if (item === null) return; // No setting stored yet
 
         // Convert string to boolean properly
-        const aspectRatio = item === 'true'; // Proper string-to-boolean conversion
+        const aspectRatio = item === "true"; // Proper string-to-boolean conversion
         aspect.checked = aspectRatio;
       } catch (error) {
         doseeLog(
-          'error',
-          `Failed to restore aspect ratio setting: ${error.message}`
+          "error",
+          `Failed to restore aspect ratio setting: ${error.message}`,
         );
       }
     };
@@ -327,7 +327,7 @@
           (element) => {
             localStorage.setItem(`doseeScaler`, element.target.value);
           },
-          0
+          0,
         );
       });
     };
@@ -358,7 +358,7 @@
         button.addEventListener(`click`, DOSee.screenCapture);
     }
   } catch (err) {
-    doseeLog('error', err.message);
+    doseeLog("error", err.message);
   }
 
   // Reboot button and links
