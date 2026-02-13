@@ -3,7 +3,7 @@
  * DOSee initialisation
  */
 (() => {
-  "use strict";
+  'use strict';
   // Relative file paths to DOSee emulation dependencies
   const paths = new Map()
     .set(`driveGUS`, `disk_drives/g_drive.zip`)
@@ -18,9 +18,9 @@
   const config = new Map()
     .set(`path`, DOSee.getMetaContent(`dosee:zip:path`))
     .set(`exe`, DOSee.getMetaContent(`dosee:run:filename`))
-    .set(`utils`, DOSee.getMetaContent(`dosee:utilities`) || `false`)  // Default: false
-    .set(`gus`, DOSee.getMetaContent(`dosee:audio:gus`) || `false`)    // Default: false
-    .set(`res`, DOSee.getMetaContent(`dosee:width:height`) || ``)      // Default: empty string
+    .set(`utils`, DOSee.getMetaContent(`dosee:utilities`) || `false`) // Default: false
+    .set(`gus`, DOSee.getMetaContent(`dosee:audio:gus`) || `false`) // Default: false
+    .set(`res`, DOSee.getMetaContent(`dosee:width:height`) || ``) // Default: empty string
     .set(`filename`, DOSee.getMetaContent(`dosee:loading:name`) || ``) // Default: empty string
     .set(`start`, false);
 
@@ -37,7 +37,7 @@
     const filename = config.get(`filename`);
 
     // Early return if filename already set
-    if (filename !== null) return;
+    if (filename !== '') return;
 
     // Validate path exists and is a string
     if (typeof path !== 'string' || path.length === 0) {
@@ -81,13 +81,21 @@
 
   // Load the GUS (Gravis UltraSound) driver
   const gravisDriver = (load) => {
-    if (load !== `true`) return null;
+    if (load !== `true`) {
+      if (load !== `false` && load !== ``) {
+        console.error(
+          `DOSee: Invalid GUS audio configuration value "${load}". ` +
+          `Use "true" to enable or omit/"false"/"" to disable.`
+        );
+      }
+      return null;
+    }
     return DoseeLoader.mountZip(
       `g`,
       DoseeLoader.fetchFile(
         `Gravis UltraSound (GUS) drivers`,
-        `${paths.get(`driveGUS`)}`,
-      ),
+        `${paths.get(`driveGUS`)}`
+      )
     );
   };
 
@@ -106,7 +114,9 @@
     checks();
   } catch (error) {
     console.error(`DOSee initialization failed:`, error);
-    return errorBox(`DOSee cannot start due to missing required configuration.`);
+    return errorBox(
+      `DOSee cannot start due to missing required configuration.`
+    );
   }
   extractSave();
   specialCaseURLs();
@@ -117,39 +127,75 @@
 
     try {
       const resConfig = config.get(`res`);
+      
+      // Check if empty or missing (valid - use defaults silently)
       if (typeof resConfig !== 'string' || resConfig.length === 0) {
-        console.warn(`DOSee: Invalid or missing resolution config`);
         return defaults;
       }
 
+      // Split and validate format
       const resolutions = resConfig.split(`,`);
       if (resolutions.length !== 2) {
-        console.warn(`DOSee: Invalid resolution format, expected "width,height"`);
+        console.error(
+          `DOSee: Invalid resolution format "${resConfig}". ` +
+          `Expected "width,height" (e.g., "640,480" or "800,600").`
+        );
         return defaults;
       }
 
-      const width = parseInt(resolutions[0], 10);
-      const height = parseInt(resolutions[1], 10);
+      // Parse and validate numbers (trim whitespace for robustness)
+      const width = parseInt(resolutions[0].trim(), 10);
+      const height = parseInt(resolutions[1].trim(), 10);
 
-      if (isNaN(width) || isNaN(height) || width <= 0 || height <= 0) {
-        console.warn(`DOSee: Invalid resolution values: ${resConfig}`);
+      // Check for non-numeric values
+      if (isNaN(width) || isNaN(height)) {
+        console.error(
+          `DOSee: Invalid resolution values "${resConfig}". ` +
+          `Width and height must be valid numbers.`
+        );
+        return defaults;
+      }
+
+      // Check for zero or negative values
+      if (width <= 0 || height <= 0) {
+        console.error(
+          `DOSee: Invalid resolution values "${resConfig}". ` +
+          `Width and height must be positive numbers greater than 0.`
+        );
+        return defaults;
+      }
+
+      // Optional: Prevent unreasonably large resolutions
+      if (width > 4096 || height > 4096) {
+        console.error(
+          `DOSee: Unreasonably large resolution "${resConfig}". ` +
+          `Maximum supported resolution is 4096x4096.`
+        );
         return defaults;
       }
 
       return [width, height];
     } catch (error) {
-      console.error(`DOSee: Failed to parse resolution:`, error);
+      console.error(`DOSee: Failed to parse resolution "${resConfig}":`, error);
       return defaults;
     }
   };
 
   // Load additional DOS tools and utilities
   const utilities = (load) => {
-    if (load !== `true`) return null;
+    if (load !== `true`) {
+      if (load !== `false` && load !== ``) {
+        console.error(
+          `DOSee: Invalid utilities configuration value "${load}". ` +
+          `Use "true" to enable or omit/"false"/"" to disable.`
+        );
+      }
+      return null;
+    }
     const driveLetter = `u`;
     return DoseeLoader.mountZip(
       driveLetter,
-      DoseeLoader.fetchFile(`DOSee utilities`, `${paths.get(`driveUtils`)}`),
+      DoseeLoader.fetchFile(`DOSee utilities`, `${paths.get(`driveUtils`)}`)
     );
   };
 
@@ -157,7 +203,9 @@
   const canvasSize = () => {
     const canvas = document.getElementById(`doseeCanvas`);
     if (canvas === null) {
-      console.error(`DOSee: Canvas element #doseeCanvas not found. Cannot initialize canvas size.`);
+      console.error(
+        `DOSee: Canvas element #doseeCanvas not found. Cannot initialize canvas size.`
+      );
       return;
     }
     canvas.width = nativeResolution()[0];
@@ -179,7 +227,7 @@
         // invalid protocols
         try {
           throw new Error(
-            `DOSee has aborted as it cannot be hosted over the "${url.protocol}" protocol.`,
+            `DOSee has aborted as it cannot be hosted over the "${url.protocol}" protocol.`
           );
         } catch (err) {
           console.error(err);
@@ -195,13 +243,13 @@
       crash = document.getElementById(`doseeCrashed`),
       error = document.getElementById(`doseeError`),
       slowLoad = document.getElementById(`doseeSlowLoad`);
-    
+
     // Check if required elements exist
     if (crash === null || error === null || slowLoad === null) {
       console.error(`DOSee: Required error display elements not found in DOM`);
       return;
     }
-    
+
     a.href = `https://github.com/bengarrett/DOSee#readme`;
     a.textContent = ` setup instructions? `;
     a.style.backgroundColor = `red`;
@@ -239,31 +287,33 @@
       DoseeLoader.locateAdditionalEmulatorJS(locateFiles),
       DoseeLoader.nativeResolution(
         nativeResolution()[0],
-        nativeResolution()[1],
+        nativeResolution()[1]
       ),
       DoseeLoader.mountZip(
         driveC,
         DoseeLoader.fetchFile(
           `'${config.get(`filename`)}'`,
-          `${config.get(`path`)}`,
-        ),
+          `${config.get(`path`)}`
+        )
       ),
       DoseeLoader.mountZip(
         driveConfigs,
         DoseeLoader.fetchFile(
           `DOSee configurations`,
-          `${paths.get(`driveConfigs`)}`,
-        ),
+          `${paths.get(`driveConfigs`)}`
+        )
       ),
       gravisDriver(config.get(`gus`)),
       utilities(config.get(`utils`)),
-      DoseeLoader.startExe(config.get(`exe`)),
+      DoseeLoader.startExe(config.get(`exe`))
     );
 
   // Start DOSee!
   const canvasElement = document.querySelector(`#doseeCanvas`);
   if (canvasElement === null) {
-    console.error(`DOSee: Canvas element #doseeCanvas not found. Cannot initialize emulator.`);
+    console.error(
+      `DOSee: Canvas element #doseeCanvas not found. Cannot initialize emulator.`
+    );
     return;
   }
   const emulator = new Emulator(canvasElement, init);
@@ -290,15 +340,17 @@
       console.log(
         `%cDOSee`,
         `color:dimgray;font-weight:bold`,
-        `checking ${objName}, ${typeof window[objName]}`,
+        `checking ${objName}, ${typeof window[objName]}`
       );
     });
     if (!pass) {
       // console output
-      console.error(`DOSee has aborted as it is missing the above dependencies.`);
+      console.error(
+        `DOSee has aborted as it is missing the above dependencies.`
+      );
       // error link
       return errorBox(
-        `DOSee cannot load the required dependencies listed the Browser Console.`,
+        `DOSee cannot load the required dependencies listed the Browser Console.`
       );
     }
   });

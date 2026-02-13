@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOSee Load Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+        .test-section {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .test-result {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 3px;
+        }
+        .pass {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .fail {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #testOutput {
+            font-family: monospace;
+            white-space: pre-wrap;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #dee2e6;
+        }
+    </style>
+</head>
+<body>
+    <h1>DOSee Application Load Test</h1>
+    
+    <div class="test-section">
+        <h2>Test Results</h2>
+        <div id="testResults"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Manual Tests</h2>
+        <button id="testServiceWorker">Test Service Worker</button>
+        <button id="testDependencies">Test Dependencies</button>
+        <button id="testCanvas">Test Canvas</button>
+        <button id="clearResults">Clear Results</button>
+    </div>
+
+    <div class="test-section">
+        <h2>Console Output</h2>
+        <div id="testOutput">Waiting for tests...</div>
+    </div>
+
+    <div class="test-section">
+        <h2>Debugging Information</h2>
+        <p><strong>Browser:</strong> <span id="browserInfo">Detecting...</span></p>
+        <p><strong>Protocol:</strong> <span id="protocolInfo">Detecting...</span></p>
+        <p><strong>Service Worker Support:</strong> <span id="swSupport">Detecting...</span></p>
+    </div>
+
+    <script>
+        // Log function to display test results
+        function log(message, type = 'info') {
+            const output = document.getElementById('testOutput');
+            const timestamp = new Date().toISOString().substring(11, 19);
+            
+            let formattedMessage = `[${timestamp}] ${message}`;
+            
+            if (type === 'error') {
+                formattedMessage = `<span style="color: #dc3545;">${formattedMessage}</span>`;
+            } else if (type === 'success') {
+                formattedMessage = `<span style="color: #28a745;">${formattedMessage}</span>`;
+            } else if (type === 'warning') {
+                formattedMessage = `<span style="color: #ffc107;">${formattedMessage}</span>`;
+            }
+            
+            output.innerHTML += formattedMessage + '<br>';
+            output.scrollTop = output.scrollHeight;
+        }
+
+        // Add test result to summary
+        function addTestResult(name, passed, message = '') {
+            const results = document.getElementById('testResults');
+            const resultDiv = document.createElement('div');
+            resultDiv.className = `test-result ${passed ? 'pass' : 'fail'}`;
+            resultDiv.innerHTML = `<strong>${name}:</strong> ${passed ? 'PASS' : 'FAIL'}${message ? `<br>${message}` : ''}`;
+            results.appendChild(resultDiv);
+        }
+
+        // Detect browser information
+        function detectEnvironment() {
+            document.getElementById('browserInfo').textContent = navigator.userAgent;
+            document.getElementById('protocolInfo').textContent = window.location.protocol;
+            document.getElementById('swSupport').textContent = 'serviceWorker' in navigator ? 'Supported' : 'Not supported';
+        }
+
+        // Test service worker support
+        document.getElementById('testServiceWorker').addEventListener('click', () => {
+            log('Testing service worker support...');
+            
+            if ('serviceWorker' in navigator) {
+                log('Service Worker API is available', 'success');
+                addTestResult('Service Worker API', true);
+                
+                // Try to register service worker
+                navigator.serviceWorker.register('../sw.js')
+                    .then(registration => {
+                        log(`Service Worker registered: ${registration.scope}`, 'success');
+                        addTestResult('Service Worker Registration', true, registration.scope);
+                    })
+                    .catch(err => {
+                        log(`Service Worker registration failed: ${err.message}`, 'error');
+                        addTestResult('Service Worker Registration', false, err.message);
+                    });
+            } else {
+                log('Service Worker API not available', 'error');
+                addTestResult('Service Worker API', false, 'Not supported in this browser');
+            }
+        });
+
+        // Test dependencies
+        document.getElementById('testDependencies').addEventListener('click', () => {
+            log('Testing required dependencies...');
+            
+            const dependencies = [
+                { name: 'DOSee', global: 'DOSee' },
+                { name: 'DoseeLoader', global: 'DoseeLoader' },
+                { name: 'Module', global: 'Module' },
+                { name: 'BrowserFS', global: 'BrowserFS' },
+                { name: 'FileSaver', global: 'FileSaver' }
+            ];
+
+            let allPassed = true;
+            dependencies.forEach(dep => {
+                const exists = typeof window[dep.global] !== 'undefined';
+                addTestResult(`${dep.name} Dependency`, exists, exists ? 'Available' : 'Missing');
+                if (!exists) allPassed = false;
+            });
+
+            if (allPassed) {
+                log('All dependencies available', 'success');
+            } else {
+                log('Some dependencies missing', 'error');
+            }
+        });
+
+        // Test canvas
+        document.getElementById('testCanvas').addEventListener('click', () => {
+            log('Testing canvas element...');
+            
+            const canvas = document.getElementById('doseeCanvas');
+            if (canvas) {
+                log('Canvas element found', 'success');
+                addTestResult('Canvas Element', true);
+            } else {
+                log('Canvas element not found', 'error');
+                addTestResult('Canvas Element', false, 'Not found in DOM');
+            }
+        });
+
+        // Clear results
+        document.getElementById('clearResults').addEventListener('click', () => {
+            document.getElementById('testResults').innerHTML = '';
+            document.getElementById('testOutput').innerHTML = 'Waiting for tests...';
+            log('Results cleared');
+        });
+
+        // Initialize
+        detectEnvironment();
+        log('DOSee Load Test initialized. Click buttons above to run tests.');
+    </script>
+</body>
+</html>
