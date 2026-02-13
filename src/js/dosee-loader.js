@@ -112,15 +112,24 @@ window.Module = null;
    */
   class dosboxArguments {
     constructor(executableFilename = ``, filesToMount = []) {
-      if (executableFilename === ``)
-        throw Error(`dosbox executableFilename argument cannot be blank`);
-      if (filesToMount.length === 0)
-        throw Error(`dosbox filesToMount argument cannot be empty`);
+      try {
+        if (executableFilename === ``)
+          throw new Error(`dosbox executableFilename argument cannot be blank`);
+        
+        // Note: filesToMount can be empty for simple configurations
+        // Only the executable is strictly required
+        if (filesToMount.length === 0) {
+          console.warn(`DOSee: No additional files to mount - only running executable`);
+        }
       this.verbose = `with the following configuration:`;
       this.executableFilename = executableFilename;
       this.filesToMount = filesToMount;
       // command line arguments
       this.commandLine = [];
+      } catch (error) {
+        console.error(`DOSee dosboxArguments initialization failed:`, error);
+        throw error; // Re-throw for now, could be handled by caller
+      }
     }
     build() {
       // dosbox command line parameters https://www.dosbox.com/wiki/Usage
@@ -445,11 +454,19 @@ window.Module = null;
      * @param {HTMLElement} canvas Element containing the emulator.
      * @param {object} loadFiles An object of `DoseeLoader` files to load.
      */
-    constructor(canvas = HTMLElement, loadFiles) {
-      if (canvas === null)
-        throw Error(`Emulator canvas element does not exist`);
-      if (loadFiles === null)
-        throw Error(`Emulator loadFiles must be a DoseeLoader object`);
+    constructor(canvas = null, loadFiles) {
+      // Validate canvas parameter
+      if (!(canvas instanceof HTMLElement)) {
+        throw new Error(`Emulator canvas argument must be an HTMLElement`);
+      }
+      if (canvas === null) {
+        throw new Error(`Emulator canvas element does not exist`);
+      }
+
+      // Validate loadFiles parameter
+      if (loadFiles === null || typeof loadFiles !== 'object') {
+        throw new Error(`Emulator loadFiles must be a DoseeLoader object`);
+      }
       /**
        * Initialize the loading splash screen and create its methods.
        */
