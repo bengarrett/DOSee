@@ -572,66 +572,78 @@ window.Module = null;
             // Any file system writes to MountableFileSystem will be written to the
             // deltaFS, letting us mount read-only zip files into the MountableFileSystem
             // while being able to 'write' to them.
-            gameData.fileSystem = new BrowserFS.FileSystem.OverlayFS(
-              deltaFS,
-              new BrowserFS.FileSystem.MountableFileSystem()
-            );
-            gameData.fileSystem.initialize(() => {
-              const Buffer = BrowserFS.BFSRequire(`buffer`).Buffer;
-              const fetch = (file) => {
-                if (
-                  `data` in file &&
-                  file.data !== null &&
-                  typeof file.data !== `undefined`
-                )
-                  return Promise.resolve(file.data);
-                return requestFile(
-                  file.title,
-                  file.url,
-                  `arraybuffer`,
-                  file.optional
-                );
-              };
-              const mountAt = (drive) => {
-                return (zipData) => {
-                  if (zipData === null) return;
-                  const mountpoint = `/${drive.toLowerCase()}`;
-                  // Mount into RO MFS.
-                  gameData.fileSystem
-                    .getOverlayedFileSystems()
-                    .readable.mount(
-                      mountpoint,
-                      BFSOpenZip(new Buffer(zipData))
-                    );
+            BrowserFS.FileSystem.OverlayFS.Create(
+              {
+                readable: deltaFS,
+                writable: new BrowserFS.FileSystem.MountableFileSystem(),
+              },
+              (e, overlayFS) => {
+                if (e) {
+                  doseeLog('error', `Failed to create OverlayFS: ${e.message}`);
+                  return;
+                }
+                gameData.fileSystem = overlayFS;
+                const Buffer = BrowserFS.BFSRequire(`buffer`).Buffer;
+                const fetch = (file) => {
+                  if (
+                    `data` in file &&
+                    file.data !== null &&
+                    typeof file.data !== `undefined`
+                  )
+                    return Promise.resolve(file.data);
+                  return requestFile(
+                    file.title,
+                    file.url,
+                    `arraybuffer`,
+                    file.optional
+                  );
                 };
-              };
-              const wasm = () => {
-                if (!(`emulatorWASM` in gameData)) return;
-                if (!gameData.emulatorWASM) return;
-                if (!(`WebAssembly` in window)) return;
-                gameData.files.push(
-                  fetch({
-                    title: `WASM Binary`,
-                    url: gameData.emulatorWASM,
-                  })
-                    .then((binary) => {
-                      gameData.wasmBinary = binary;
+                const mountAt = (drive) => {
+                  return async (zipData) => {
+                    if (zipData === null) return;
+                    const mountpoint = `/${drive.toLowerCase()}`;
+                    // Mount into RO MFS.
+                    try {
+                      const zipFS = await BFSOpenZip(new Buffer(zipData));
+                      gameData.fileSystem
+                        .getOverlayedFileSystems()
+                        .readable.mount(mountpoint, zipFS);
+                    } catch (e) {
+                      doseeLog(
+                        'error',
+                        `Failed to mount zip file: ${e.message}`
+                      );
+                    }
+                  };
+                };
+                const wasm = () => {
+                  if (!(`emulatorWASM` in gameData)) return;
+                  if (!gameData.emulatorWASM) return;
+                  if (!(`WebAssembly` in window)) return;
+                  gameData.files.push(
+                    fetch({
+                      title: `WASM Binary`,
+                      url: gameData.emulatorWASM,
                     })
-                    .then(() => {
-                      Promise.all(
-                        gameData.files.map((f) => {
-                          if (!f) return null;
-                          if (!f.file) return null;
-                          if (!f.drive) return null;
-                          return fetch(f.file).then(mountAt(f.drive));
-                        })
-                      ).then(resolve, reject);
-                      doseeLog('info', `loading WASM binary complete`);
-                    })
-                );
-              };
-              wasm();
-            });
+                      .then((binary) => {
+                        gameData.wasmBinary = binary;
+                      })
+                      .then(() => {
+                        Promise.all(
+                          gameData.files.map((f) => {
+                            if (!f) return null;
+                            if (!f.file) return null;
+                            if (!f.drive) return null;
+                            return fetch(f.file).then(mountAt(f.drive));
+                          })
+                        ).then(resolve, reject);
+                        doseeLog('info', `loading WASM binary complete`);
+                      })
+                  );
+                };
+                wasm();
+              }
+            );
           });
         }
 
@@ -836,7 +848,22 @@ window.Module = null;
   function BFSOpenZip(loadedData) {
     if (typeof loadedData === `undefined`)
       throw Error(`BFSOpenZip loadedData argument cannot be empty`);
-    return new BrowserFS.FileSystem.ZipFS(loadedData);
+
+    return new Promise((resolve, reject) => {
+      BrowserFS.FileSystem.ZipFS.Create(
+        {
+          zipData: loadedData,
+        },
+        (e, zipFS) => {
+          if (e) {
+            doseeLog('error', `Failed to create ZipFS: ${e.message}`);
+            reject(e);
+          } else {
+            resolve(zipFS);
+          }
+        }
+      );
+    });
   }
 
   /**
@@ -878,7 +905,7 @@ window.Module = null;
     const blockKeys = (event) => {
       if (typeof Module === `undefined`) return;
       // Check if Emscripten's ABORT flag is set (defined in the compiled WASM)
-      if (typeof ABORT !== `undefined` && ABORT === true) {
+      if (typeof Module !== `undefined` && Module.ABORT === true) {
         // cancel this preventDefault() event listener if em-dosbox has been aborted
         document.removeEventListener(`keydown`, blockKeys);
       }

@@ -9,6 +9,7 @@
 - Replaced basic npx and yarn, developer requirements with pnpm.
 - Removed a number of depreciated fallback properties in the JS.
 - Fixed a potential memory leak with full-screen usage.
+- Fixed browserfs.filesystem console warnings.
 
 ### v1.8.5
 
