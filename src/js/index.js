@@ -20,7 +20,16 @@
 
   // Hides all menu containers, if a defaultTab is provided then it will be displayed
   function resetTabs(defaultTab) {
-    menuTabs.forEach((tab) => {
+    menuTabs.forEach((tab, key) => {
+      if (tab === null) {
+        console.error(`DOSee: Menu tab element missing for key "${key}". Check your HTML for element with id "${key}Tab"`);
+        return;
+      }
+      if (typeof tab.id !== 'string' || tab.id.length === 0) {
+        console.error(`DOSee: Menu tab element has invalid id. Expected "${key}Tab", got:`, tab.id);
+        return;
+      }
+
       tab.id === `${defaultTab}`
         ? tab.classList.remove(`hidden`)
         : tab.classList.add(`hidden`);
@@ -43,15 +52,47 @@
 
   // Set the <H2> element to show the running program and archive filename
   function setHeader() {
-    const h2 = document.getElementById(`doseeH2`),
-      archive = DOSee.getMetaContent(`dosee:zip:path`).split(`/`),
-      executable = `${DOSee.getMetaContent(`dosee:run:filename`)}`,
-      leftwardArrow = 8592;
-    const fileName = archive[archive.length - 1];
-    h2.innerText =
-      executable.length > 0
-        ? `${executable} ${String.fromCharCode(leftwardArrow)} ${fileName}`
-        : `${fileName}`;
+    const h2 = document.getElementById(`doseeH2`);
+    if (h2 === null) {
+      console.error(`DOSee: Required element #doseeH2 not found. Check your HTML structure.`);
+      return;
+    }
+
+    const zipPath = DOSee.getMetaContent(`dosee:zip:path`);
+    const runFilename = DOSee.getMetaContent(`dosee:run:filename`);
+
+    if (zipPath === null) {
+      console.error(`DOSee: Missing required meta tag "dosee:zip:path". Add <meta name="dosee:zip:path" content="your/path/here.zip"> to your HTML.`);
+      return;
+    }
+
+    if (runFilename === null) {
+      console.error(`DOSee: Missing required meta tag "dosee:run:filename". Add <meta name="dosee:run:filename" content="program.exe"> to your HTML.`);
+      return;
+    }
+
+    if (!zipPath.includes('/')) {
+      console.warn(`DOSee: zip path doesn't contain '/'. Expected format like "programs/example.zip", got:`, zipPath);
+    }
+
+    try {
+      const archive = zipPath.split(`/`),
+        executable = `${runFilename}`,
+        leftwardArrow = 8592;
+
+      if (archive.length === 0) {
+        throw new Error(`Empty archive path after splitting: ${zipPath}`);
+      }
+
+      const fileName = archive[archive.length - 1];
+      h2.innerText =
+        executable.length > 0
+          ? `${executable} ${String.fromCharCode(leftwardArrow)} ${fileName}`
+          : `${fileName}`;
+    } catch (error) {
+      console.error(`DOSee: Error setting header text:`, error);
+      h2.innerText = `DOSee Configuration Error`;
+    }
   }
 
   // Update help tab example

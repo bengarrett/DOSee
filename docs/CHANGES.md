@@ -4,8 +4,11 @@
 
 ### v1.9.0
 
+- DOSee provides better feedback for missing or misconfigured HTML elements.
 - Update packages to the latest versions, including workbox.
 - Replaced basic npx and yarn, developer requirements with pnpm.
+- Removed a number of depreciated fallback properties in the JS.
+- Fixed a potential memory leak with full-screen usage.
 
 ### v1.8.5
 
