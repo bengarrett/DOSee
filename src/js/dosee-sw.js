@@ -3,26 +3,26 @@
  * DOSee service worker
  */
 
+// DOSee console logging utility with consistent styling
+const doseeLog = (level, message) => {
+  const styles = `color:dimgray;font-weight:bold`;
+  const prefix = `%cDOSee`;
+
+  switch (level) {
+    case 'error':
+      console.error(prefix, styles, message);
+      break;
+    case 'warn':
+      console.warn(prefix, styles, message);
+      break;
+    case 'info':
+    default:
+      console.log(prefix, styles, message);
+  }
+};
+
 if ('serviceWorker' in navigator) {
   ('use strict');
-
-  // DOSee console logging utility with consistent styling
-  const doseeLog = (level, message) => {
-    const styles = `color:dimgray;font-weight:bold`;
-    const prefix = `%cDOSee`;
-
-    switch (level) {
-      case 'error':
-        console.error(prefix, styles, message);
-        break;
-      case 'warn':
-        console.warn(prefix, styles, message);
-        break;
-      case 'info':
-      default:
-        console.log(prefix, styles, message);
-    }
-  };
 
   // Debug logging function
   const debugLog = (message, type = 'log') => {
@@ -252,10 +252,12 @@ if ('serviceWorker' in navigator) {
       });
   });
 } else {
-  doseeLog('info', `Service worker not supported in this browser`);
+  const message = `Service worker not supported in this browser`;
+  doseeLog('info', message);
   const updateButton = document.getElementById(`updateDOSeeSW`);
   if (updateButton) {
-    updateButton.textContent = `Service worker not supported`;
+    updateButton.value = message;
     updateButton.disabled = true;
+    updateButton.classList.remove('secondary');
   }
 }

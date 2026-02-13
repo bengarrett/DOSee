@@ -607,7 +607,7 @@ window.Module = null;
                       const zipFS = await BFSOpenZip(new Buffer(zipData));
                       gameData.fileSystem
                         .getOverlayedFileSystems()
-                        .readable.mount(mountpoint, zipFS);
+                        .writable.mount(mountpoint, zipFS);
                     } catch (e) {
                       doseeLog(
                         'error',

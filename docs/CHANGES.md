@@ -8,6 +8,7 @@
 - Update packages to the latest versions, including workbox.
 - Replaced basic npx and yarn, developer requirements with pnpm.
 - Removed a number of depreciated fallback properties in the JS.
+- Improved feedback when service worker isn't usable in the browser.
 - Fixed a potential memory leak with full-screen usage.
 - Fixed browserfs.filesystem console warnings.
 
