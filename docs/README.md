@@ -11,9 +11,9 @@
 
 ## An MS-DOS emulator for the web.
 
-DOSee is a front-end for an [MS-DOS](https://en.wikipedia.org/wiki/MS-DOS) emulation ecosystem to use on the web. The text-based MS-DOS was the dominant personal computer platform for much of the 1980s. Up until the mid-1990s before being superseded by Microsoft Windows. Emulating this platform allows tens of thousands of games, demos and applications from this era to run on a web browser both online or offline as a desktop web-app!
+DOSee is a front-end for an [MS-DOS](https://en.wikipedia.org/wiki/MS-DOS) emulation ecosystem for the web. MS-DOS was the dominant personal computer platform from the 1980s until the mid-1990s, when it was superseded by Microsoft Windows. Emulating this platform allows tens of thousands of games, demos, and applications from this era to run in a web browser, both online and offline as a desktop web app.
 
-DOSee is only a user interface and installation process for an incredible emulation ecosystem. Many remarkable people created it over many years. DOSee itself is a fork of [The Emularity](https://github.com/db48x/emularity) project started by the Internet Archive. [EM-DOSBox](https://github.com/dreamlayers/em-dosbox/), the core of this emulation, is a JavaScript port of [DOSBox](https://www.dosbox.com), the world's most popular MS-DOS emulator.
+DOSee provides only the user interface and installation process for an incredible emulation ecosystem. Many remarkable people have contributed to this ecosystem over many years. DOSee itself is a fork of [The Emularity](https://github.com/db48x/emularity) project started by the Internet Archive. [EM-DOSBox](https://github.com/dreamlayers/em-dosbox/), the core of this emulation, is a JavaScript port of [DOSBox](https://www.dosbox.com), the world's most popular MS-DOS emulator.
 
 ---
 
@@ -41,21 +41,20 @@ DOSee requires a build before it can serve to a web browser.
 git clone git@github.com:bengarrett/DOSee.git
 cd DOSee
 
- # install dependencies & build
-npm install # (or the equivalent in another package manager)
+# install dependencies & build
+pnpm install
 
 # serve DOSee over port 8086
-npm run serve
+pnpm run serve
 ```
 
 Point a web browser to http://localhost:8086
 
-[Are in the USAGE document](USAGE.md)
+[Usage instructions](USAGE.md) provide detailed configuration options.
 
 ## Editing the source JS or HTML
 
-> [!NOTE]
-> DOSee is considered feature complete. A fork is recommended for any new features.
+> **Note:** DOSee is considered feature complete. For new features, consider forking the project.
 
 If you edit the source files in `src/` you will need to rebuild the application.
 
@@ -64,10 +63,10 @@ If you edit the source files in `src/` you will need to rebuild the application.
 cd DOSee
 
 # re-build DOSee using your edits
-npm run install
+pnpm run install
 
 # serve the modified DOSee over port 8086
-npm run serve
+pnpm run serve
 ```
 
 Point a web browser to http://localhost:8086

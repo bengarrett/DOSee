@@ -1,8 +1,10 @@
-# DOSee
+# DOSee - MS-DOS Emulator for the Web
 
-## Usage & customisations
+## Usage & Customization
 
-It is easy to customise DOSee to load other MS-DOS programs by using HTML5 `<meta>` elements. An `index.html` file is an identifier which contains nine meta elements used by DOSee for handling emulation information and customisation.
+DOSee is a web-based MS-DOS emulator that runs directly in your browser. It is easy to customize DOSee to load different MS-DOS programs by using HTML5 `<meta>` elements. The `index.html` file contains meta elements that configure emulation settings and program loading.
+
+> **Note:** DOSee works best in modern browsers with WebAssembly support (Chrome, Firefox, Edge, Safari).
 
 ```html
 <!-- DOSee initialisation options -->
@@ -44,6 +46,12 @@ The meta _content_ attribute must be a relative path from the webroot and must p
 ```
 
 ---
+
+✓ Multiple programs can be chained together
+
+```html
+<meta name="dosee:run:filename" content="CLS&&@ECHO Loading game&&game.exe" />
+```
 
 ### `<meta name="dosee:run:filename">`
 
@@ -87,6 +95,12 @@ The filename used by the capture tool to save emulator screenshots. The PNG imag
 
 ---
 
+✓ Utilities drive can be enabled or disabled
+
+```html
+<meta name="dosee:utilities" content="true" />
+```
+
 ### `<meta name="dosee:utilities">`
 
 When set to `true`, it tells DOSee to mount a collection of MS-DOS utilities and tools accessible from the `U:` drive. The default option is false.
@@ -122,6 +136,12 @@ Configures the initial pixel width and height of the emulation loading screen an
 ```
 
 ---
+
+✓ Speed options include auto, 8086, 386, and max
+
+```html
+<meta name="dosee:speed" content="386" />
+```
 
 ### `<meta name="dosee:speed" content="auto" />`
 
@@ -252,6 +272,6 @@ Update the DOSee `index.html` to launch the demo and enjoy the confusing mess th
 <meta name="dosee:run:filename" content="SQ3DEMO.BAT" />
 ```
 
-![DOSee preview](../src/images/sq3demo.png)
+![DOSee preview](images/sq3demo.png)
 
-[back to README](README.md)
+[back to README](../README.md)
