@@ -18,10 +18,10 @@
   const config = new Map()
     .set(`path`, DOSee.getMetaContent(`dosee:zip:path`))
     .set(`exe`, DOSee.getMetaContent(`dosee:run:filename`))
-    .set(`utils`, DOSee.getMetaContent(`dosee:utilities`))
-    .set(`gus`, DOSee.getMetaContent(`dosee:audio:gus`))
-    .set(`res`, DOSee.getMetaContent(`dosee:width:height`))
-    .set(`filename`, DOSee.getMetaContent(`dosee:loading:name`))
+    .set(`utils`, DOSee.getMetaContent(`dosee:utilities`) || `false`)  // Default: false
+    .set(`gus`, DOSee.getMetaContent(`dosee:audio:gus`) || `false`)    // Default: false
+    .set(`res`, DOSee.getMetaContent(`dosee:width:height`) || ``)      // Default: empty string
+    .set(`filename`, DOSee.getMetaContent(`dosee:loading:name`) || ``) // Default: empty string
     .set(`start`, false);
 
   const checks = () => {
@@ -32,12 +32,31 @@
 
   // Extract and save the filename from config path
   const extractSave = () => {
-    const index = config.get(`path`).lastIndexOf(`/`),
-      filename = config.get(`filename`);
+    // Get values with null checks
+    const path = config.get(`path`);
+    const filename = config.get(`filename`);
+
+    // Early return if filename already set
     if (filename !== null) return;
-    if (index)
-      return config.set(`filename`, config.get(`path`).slice(index + 1));
-    config.set(`filename`, config.get(`path`));
+
+    // Validate path exists and is a string
+    if (typeof path !== 'string' || path.length === 0) {
+      console.warn(`DOSee: Invalid or missing path in config`);
+      return;
+    }
+
+    // Extract filename from path
+    const index = path.lastIndexOf(`/`);
+    if (index === -1) {
+      // No slash found, use entire path as filename
+      config.set(`filename`, path);
+    } else if (index === 0) {
+      // Path starts with /, get everything after
+      config.set(`filename`, path.slice(1));
+    } else {
+      // Normal case: get everything after last /
+      config.set(`filename`, path.slice(index + 1));
+    }
   };
 
   // Handle URL params special cases that need additional files to be loaded by DOSee
@@ -83,16 +102,45 @@
     }
   };
 
-  checks();
+  try {
+    checks();
+  } catch (error) {
+    console.error(`DOSee initialization failed:`, error);
+    return errorBox(`DOSee cannot start due to missing required configuration.`);
+  }
   extractSave();
   specialCaseURLs();
 
   // Initialise the resolution of the DOS program - width, height
   const nativeResolution = () => {
-    const defaults = [DOSee.gfx.mode13h.width, DOSee.gfx.mode13h.height],
-      resolutions = config.get(`res`).split(`,`);
-    if (!resolutions.length) return defaults;
-    return [parseInt(resolutions[0]), parseInt(resolutions[1])];
+    const defaults = [DOSee.gfx.mode13h.width, DOSee.gfx.mode13h.height];
+
+    try {
+      const resConfig = config.get(`res`);
+      if (typeof resConfig !== 'string' || resConfig.length === 0) {
+        console.warn(`DOSee: Invalid or missing resolution config`);
+        return defaults;
+      }
+
+      const resolutions = resConfig.split(`,`);
+      if (resolutions.length !== 2) {
+        console.warn(`DOSee: Invalid resolution format, expected "width,height"`);
+        return defaults;
+      }
+
+      const width = parseInt(resolutions[0], 10);
+      const height = parseInt(resolutions[1], 10);
+
+      if (isNaN(width) || isNaN(height) || width <= 0 || height <= 0) {
+        console.warn(`DOSee: Invalid resolution values: ${resConfig}`);
+        return defaults;
+      }
+
+      return [width, height];
+    } catch (error) {
+      console.error(`DOSee: Failed to parse resolution:`, error);
+      return defaults;
+    }
   };
 
   // Load additional DOS tools and utilities
@@ -108,6 +156,10 @@
   // Initialise canvas size
   const canvasSize = () => {
     const canvas = document.getElementById(`doseeCanvas`);
+    if (canvas === null) {
+      console.error(`DOSee: Canvas element #doseeCanvas not found. Cannot initialize canvas size.`);
+      return;
+    }
     canvas.width = nativeResolution()[0];
     canvas.height = nativeResolution()[1];
   };
@@ -141,13 +193,21 @@
     const a = document.createElement(`a`),
       errMsg = `${feedback}. Have you followed these `,
       crash = document.getElementById(`doseeCrashed`),
-      error = document.getElementById(`doseeError`);
+      error = document.getElementById(`doseeError`),
+      slowLoad = document.getElementById(`doseeSlowLoad`);
+    
+    // Check if required elements exist
+    if (crash === null || error === null || slowLoad === null) {
+      console.error(`DOSee: Required error display elements not found in DOM`);
+      return;
+    }
+    
     a.href = `https://github.com/bengarrett/DOSee#readme`;
     a.textContent = ` setup instructions? `;
     a.style.backgroundColor = `red`;
     a.style.color = `white`;
     a.style.textDecoration = `underline`;
-    document.getElementById(`doseeSlowLoad`).style.display = `none`;
+    slowLoad.style.display = `none`;
     crash.classList.remove(`hidden`);
     error.textContent = errMsg;
     error.append(a);
@@ -157,8 +217,11 @@
   // NOTE: This may break audio support in Chrome 71+ due to its Web Audio autoplay policy?
   // https://goo.gl/7K7WLu
   if (DOSee.storageAvailable(`local`)) {
-    if (localStorage.getItem(`doseeAutoStart`) === `true`)
+    const autoStartItem = localStorage.getItem(`doseeAutoStart`);
+    if (autoStartItem === 'true') {
       config.set(`start`, true);
+    }
+    // Note: autoStartItem could be null (first run) or "false" (disabled)
   }
   if (config.get(`start`) === true)
     console.log(`DOSee will launch automatically`);
@@ -198,7 +261,12 @@
     );
 
   // Start DOSee!
-  const emulator = new Emulator(document.querySelector(`#doseeCanvas`), init);
+  const canvasElement = document.querySelector(`#doseeCanvas`);
+  if (canvasElement === null) {
+    console.error(`DOSee: Canvas element #doseeCanvas not found. Cannot initialize emulator.`);
+    return;
+  }
+  const emulator = new Emulator(canvasElement, init);
   emulator.start({ waitAfterDownloading: !config.get(`start`) });
 
   // Checks for and provides feedback for missing dependencies after all other JS has been loaded
@@ -215,7 +283,9 @@
     doseeObjects.forEach((objName) => {
       if (typeof window[objName] === `undefined`) {
         console.error(`checking ${objName}, ${typeof window[objName]}`);
-        return (pass = false);
+        pass = false;
+        // Continue loop to check all dependencies for comprehensive debugging
+        return;
       }
       console.log(
         `%cDOSee`,
@@ -225,13 +295,7 @@
     });
     if (!pass) {
       // console output
-      try {
-        throw new Error(
-          `DOSee has aborted as it is missing the above dependencies.`,
-        );
-      } catch (err) {
-        console.error(err);
-      }
+      console.error(`DOSee has aborted as it is missing the above dependencies.`);
       // error link
       return errorBox(
         `DOSee cannot load the required dependencies listed the Browser Console.`,
