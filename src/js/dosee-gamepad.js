@@ -90,7 +90,7 @@ class DOSeeGamepad {
 
         // Restore layout configuration first (use setConfig to ensure proper handling)
         if (parsed.layout && gamepadConfigs[parsed.layout]) {
-          doseeLog('info', 'DEBUG: Setting layout to: ' + parsed.layout);
+          doseeLog('info', `DEBUG: Setting layout to: ${parsed.layout}`);
           this.setConfig(parsed.layout, false); // Don't save during load
         }
 
@@ -98,7 +98,7 @@ class DOSeeGamepad {
         if (parsed.enabled !== undefined) {
           const shouldEnable =
             parsed.enabled === true || parsed.enabled === 'true';
-          doseeLog('info', 'DEBUG: Setting enabled to: ' + shouldEnable);
+          doseeLog('info', `DEBUG: Setting enabled to: ${shouldEnable}`);
 
           if (shouldEnable) {
             this.enable(false); // Don't save during load
@@ -109,10 +109,7 @@ class DOSeeGamepad {
 
         doseeLog(
           'info',
-          'DEBUG: After loading - enabled: ' +
-            this.enabled +
-            ', config: ' +
-            this.config
+          `DEBUG: After loading - enabled: ${this.enabled}, config: ${this.config}`
         );
         doseeLog(
           'info',
@@ -122,7 +119,7 @@ class DOSeeGamepad {
     } catch (error) {
       doseeLog(
         'warn',
-        'Gamepad: Failed to load settings from local storage: ' + error.message
+        `Gamepad: Failed to load settings from local storage: ${error.message}`
       );
     }
   }
@@ -148,7 +145,7 @@ class DOSeeGamepad {
     } catch (error) {
       doseeLog(
         'warn',
-        'Gamepad: Failed to save settings to local storage: ' + error.message
+        `Gamepad: Failed to save settings to local storage: ${error.message}`
       );
     }
   }
@@ -163,7 +160,7 @@ class DOSeeGamepad {
       localStorage.setItem(testKey, 'test');
       localStorage.removeItem(testKey);
       return true;
-    } catch (e) {
+    } catch {
       return false;
     }
   }
@@ -174,7 +171,7 @@ class DOSeeGamepad {
    */
   init() {
     // Check for Gamepad API support
-    this.supported = !!navigator.getGamepads;
+    this.supported = Boolean(navigator.getGamepads);
 
     if (!this.supported) {
       doseeLog('info', 'Gamepad: Gamepad API not supported in this browser');
@@ -203,7 +200,7 @@ class DOSeeGamepad {
    * @param {GamepadEvent} event
    */
   handleGamepadConnected(event) {
-    doseeLog('info', 'Gamepad: Controller connected: ' + event.gamepad.id);
+    doseeLog('info', `Gamepad: Controller connected: ${event.gamepad.id}`);
     doseeLog('info', 'Gamepad: Input monitoring started');
     this.gamepad = event.gamepad;
 
@@ -218,7 +215,7 @@ class DOSeeGamepad {
    * @param {GamepadEvent} event
    */
   handleGamepadDisconnected(event) {
-    doseeLog('info', 'Gamepad: Controller disconnected: ' + event.gamepad.id);
+    doseeLog('info', `Gamepad: Controller disconnected: ${event.gamepad.id}`);
     this.stopPolling();
     this.releaseAllKeys();
     this.gamepad = null;
@@ -231,9 +228,10 @@ class DOSeeGamepad {
     if (this.pollingInterval) return;
 
     doseeLog('info', 'DEBUG: Starting gamepad polling at 60fps');
+    const pollInterval = 16; // ~60fps (1000ms/60 ≈ 16.67ms)
     this.pollingInterval = setInterval(() => {
       this.pollGamepad();
-    }, 16); // ~60fps
+    }, pollInterval);
   }
 
   /**
@@ -286,11 +284,11 @@ class DOSeeGamepad {
    */
   debugGamepadState(gamepad) {
     doseeLog('info', '=== Gamepad State Debug ===');
-    doseeLog('info', 'Gamepad ID: ' + gamepad.id);
-    doseeLog('info', 'Axes: ' + gamepad.axes);
+    doseeLog('info', `Gamepad ID: ${gamepad.id}`);
+    doseeLog('info', `Axes: ${gamepad.axes}`);
     doseeLog(
       'info',
-      'Buttons: ' + gamepad.buttons.map((b) => (b.pressed ? 1 : 0))
+      `Buttons: ${gamepad.buttons.map((b) => (b.pressed ? 1 : 0))}`
     );
     doseeLog('info', '===========================');
   }
@@ -326,7 +324,8 @@ class DOSeeGamepad {
 
     for (const config of configurations) {
       // Use this configuration if it shows significant activity
-      if (this.tryAxisConfiguration(gamepad, config.xAxis, config.yAxis, 0.5)) {
+      const axisThreshold = 0.5; // Minimum axis value to consider as intentional movement
+      if (this.tryAxisConfiguration(gamepad, config.xAxis, config.yAxis, axisThreshold)) {
         return true;
       }
     }
@@ -391,7 +390,8 @@ class DOSeeGamepad {
     );
 
     // Check if any axis movement is detected
-    const axisActive = Math.abs(x) > 0.1 || Math.abs(y) > 0.1;
+    const minAxisMovement = 0.1; // Minimum axis movement to detect activity
+    const axisActive = Math.abs(x) > minAxisMovement || Math.abs(y) > minAxisMovement;
 
     // Release all arrow keys first
     this.releaseKeys(['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight']);
@@ -474,8 +474,11 @@ class DOSeeGamepad {
     // Release all arrow keys first
     this.releaseKeys(['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight']);
 
-    // Check buttons 12-19 (common range for D-pad buttons)
-    for (let i = 12; i <= 19; i++) {
+    // D-pad button range
+    const start = 12;
+    const end = 19;
+
+    for (let i = start; i <= end; i++) {
       if (i < gamepad.buttons.length) {
         const button = gamepad.buttons[i];
         if (button && button.pressed) {
@@ -509,10 +512,12 @@ class DOSeeGamepad {
       if (buttonIndex === pattern.right) return 'right';
     }
 
-    // Simple sequential mapping
-    if (buttonIndex >= 12 && buttonIndex <= 15) {
+    // Simple sequential mapping for D-pad buttons
+    const dpadStart = 12;
+    const dpadEnd = 15;
+    if (buttonIndex >= dpadStart && buttonIndex <= dpadEnd) {
       const directions = ['up', 'down', 'left', 'right'];
-      return directions[buttonIndex - 12] || null;
+      return directions[buttonIndex - dpadStart] || null;
     }
 
     return null;
@@ -713,10 +718,11 @@ class DOSeeGamepad {
       });
 
       // Dispatch to canvas with slight delay to mimic real key press timing
+      const keyPressDelay = 10; // milliseconds
       setTimeout(() => {
         if (canvas) canvas.dispatchEvent(escapeEvent);
         document.dispatchEvent(escapeEvent);
-      }, 10);
+      }, keyPressDelay);
 
       return; // Skip normal dispatch for Escape
     }

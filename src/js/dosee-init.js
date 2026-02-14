@@ -91,7 +91,7 @@
       const gamepadUIModule = await import('./dosee-gamepad-ui.js');
       gamepadUIModule.addGamepadUI(gamepadSupport);
     } catch (error) {
-      doseeLog('warn', 'Gamepad UI module not available: ' + error.message);
+      doseeLog('warn', `Gamepad UI module not available: ${error.message}`);
     }
   }
 
@@ -185,7 +185,7 @@
   try {
     checks();
   } catch (error) {
-    doseeLog('error', 'Initialization failed: ' + error.message);
+    doseeLog('error', `Initialization failed: ${error.message}`);
     return errorBox(
       `DOSee cannot start due to missing required configuration.`
     );

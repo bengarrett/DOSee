@@ -548,7 +548,7 @@ window.Module = null;
           typeof loadFiles === `function`
             ? loadFiles(requestFile, splash)
             : Promise.resolve(loadFiles);
-        let keyPressEvent, clickEvent, gameData;
+        let gameData;
 
         setupSplash(canvas, splash);
         initializeLoad
@@ -1031,6 +1031,8 @@ window.Module = null;
    * @returns {number} Interval ID for cleanup
    */
   function setupGamepadPolling(handler) {
+    const pollInterval = 100; // Polling interval in milliseconds
+    
     // Store previous button states to detect presses
     const previousStates = new Map();
 
@@ -1061,7 +1063,7 @@ window.Module = null;
         // Store current state for next poll
         previousStates.set(gamepad.index, gamepad.buttons);
       }
-    }, 100); // Poll every 100ms
+    }, pollInterval); // Poll at defined interval
   }
 
   /**

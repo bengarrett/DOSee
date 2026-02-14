@@ -32,8 +32,8 @@ export function addGamepadUI(gamepadSupport) {
   toggleInput.type = 'checkbox';
   toggleInput.id = 'gamepadToggle';
 
-  doseeLog('info', 'DEBUG UI: gamepadSupport.enabled = ' + gamepadSupport.enabled);
-  doseeLog('info', 'DEBUG UI: gamepadSupport.config = ' + gamepadSupport.config);
+  doseeLog('info', `DEBUG UI: gamepadSupport.enabled = ${gamepadSupport.enabled}`);
+  doseeLog('info', `DEBUG UI: gamepadSupport.config = ${gamepadSupport.config}`);
 
   toggleInput.checked = gamepadSupport.enabled;
   
@@ -67,7 +67,7 @@ export function addGamepadUI(gamepadSupport) {
 
   const layoutValue =
     gamepadSupport.config === gamepadConfigs.xbox ? 'xbox' : 'playstation';
-  doseeLog('info', 'DEBUG UI: Setting layout dropdown to: ' + layoutValue);
+  doseeLog('info', `DEBUG UI: Setting layout dropdown to: ${layoutValue}`);
 
   layoutSelect.value = layoutValue;
 
@@ -105,11 +105,11 @@ export function addGamepadUI(gamepadSupport) {
   });
 
   // Gamepad connection events
-  window.addEventListener('gamepadconnected', function (e) {
+  window.addEventListener('gamepadconnected', (e) => {
     updateGamepadStatus(`Connected: ${e.gamepad.id}`);
   });
 
-  window.addEventListener('gamepaddisconnected', function () {
+  window.addEventListener('gamepaddisconnected', () => {
     updateGamepadStatus('No gamepad detected');
   });
 

@@ -74,7 +74,7 @@
           Module.quit();   // Fallback to standard version
         }
       } catch (e) {
-        doseeLog('warn', 'Direct Module quit failed, trying keyboard events: ' + e.message);
+        doseeLog('warn', `Direct Module quit failed, trying keyboard events: ${e.message}`);
       }
     }
     
@@ -107,7 +107,7 @@
           })
         );
       } catch (e) {
-        doseeLog('warn', 'Keyboard event dispatch failed: ' + e.message);
+        doseeLog('warn', `Keyboard event dispatch failed: ${e.message}`);
       }
     }
     
