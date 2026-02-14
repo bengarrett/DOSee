@@ -1015,8 +1015,11 @@ window.Module = null;
         // A button (button 0) or Cross button (also typically button 0) to start
         // This covers both Xbox (A) and PlayStation (Cross) controllers
         if (gamepadEvent.button === 0) {
-          doseeLog('info', 'Gamepad button pressed to start emulation');
-          resolve();
+          // Only allow gamepad start if gamepad support is enabled (default to true if not set)
+          if (window.doseeGamepadEnabled !== false) {
+            doseeLog('info', 'Gamepad button pressed to start emulation');
+            resolve();
+          }
         }
       }
     };

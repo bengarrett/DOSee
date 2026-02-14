@@ -13,7 +13,7 @@
  */
 
 // DOSee console logging utility with consistent styling
-const doseeLog = (level, message) => {
+export const doseeLog = (level, message) => {
   const styles = `color:dimgray;font-weight:bold`;
   const prefix = `%cDOSee`;
 

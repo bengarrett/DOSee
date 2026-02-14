@@ -1,6 +1,9 @@
 /**
  * DOSee Gamepad UI Controls
  * Adds gamepad controls to the DOSee interface that match the existing UI style
+ *
+ * BE WARNED, this was created with code agents, please see the header comment of
+ * dosee-gamepad.js for potential issues.
  */
 
 /**
@@ -9,14 +12,14 @@
  */
 export function addGamepadUI(gamepadSupport) {
   if (!gamepadSupport || !document.getElementById('optionsTab')) {
-    console.warn('DOSee Gamepad UI: Required elements not found');
+    doseeLog('warn', 'DOSee Gamepad UI: Required elements not found');
     return;
   }
 
   // Create gamepad controls fieldset
   const gamepadFieldset = document.createElement('fieldset');
   gamepadFieldset.id = 'gamepadControls';
-  
+
   const legend = document.createElement('legend');
   legend.textContent = 'Gamepad Settings';
   gamepadFieldset.appendChild(legend);
@@ -24,18 +27,21 @@ export function addGamepadUI(gamepadSupport) {
   // Add gamepad toggle
   const toggleLabel = document.createElement('label');
   toggleLabel.className = 'radio-inline';
-  
+
   const toggleInput = document.createElement('input');
   toggleInput.type = 'checkbox';
   toggleInput.id = 'gamepadToggle';
-  
-  console.log('DEBUG UI: gamepadSupport.enabled =', gamepadSupport.enabled);
-  console.log('DEBUG UI: gamepadSupport.config =', gamepadSupport.config);
-  
+
+  doseeLog('info', 'DEBUG UI: gamepadSupport.enabled = ' + gamepadSupport.enabled);
+  doseeLog('info', 'DEBUG UI: gamepadSupport.config = ' + gamepadSupport.config);
+
   toggleInput.checked = gamepadSupport.enabled;
   
+  // Set global flag to match initial state
+  window.doseeGamepadEnabled = gamepadSupport.enabled;
+
   const toggleText = document.createTextNode(' Enable Gamepad Support');
-  
+
   toggleLabel.appendChild(toggleInput);
   toggleLabel.appendChild(toggleText);
   gamepadFieldset.appendChild(toggleLabel);
@@ -44,26 +50,27 @@ export function addGamepadUI(gamepadSupport) {
   // Add layout selector
   const layoutLabel = document.createElement('label');
   layoutLabel.textContent = 'Controller Layout: ';
-  
+
   const layoutSelect = document.createElement('select');
   layoutSelect.id = 'gamepadLayout';
-  
+
   const xboxOption = document.createElement('option');
   xboxOption.value = 'xbox';
   xboxOption.textContent = 'Xbox Controller';
-  
+
   const psOption = document.createElement('option');
   psOption.value = 'playstation';
   psOption.textContent = 'PlayStation Controller';
-  
+
   layoutSelect.appendChild(xboxOption);
   layoutSelect.appendChild(psOption);
-  
-  const layoutValue = gamepadSupport.config === gamepadConfigs.xbox ? 'xbox' : 'playstation';
-  console.log('DEBUG UI: Setting layout dropdown to:', layoutValue);
-  
+
+  const layoutValue =
+    gamepadSupport.config === gamepadConfigs.xbox ? 'xbox' : 'playstation';
+  doseeLog('info', 'DEBUG UI: Setting layout dropdown to: ' + layoutValue);
+
   layoutSelect.value = layoutValue;
-  
+
   layoutLabel.appendChild(layoutSelect);
   gamepadFieldset.appendChild(layoutLabel);
   gamepadFieldset.appendChild(document.createElement('br'));
@@ -80,27 +87,29 @@ export function addGamepadUI(gamepadSupport) {
   optionsTab.appendChild(gamepadFieldset);
 
   // Set up event handlers
-  toggleInput.addEventListener('change', function() {
+  toggleInput.addEventListener('change', function () {
     if (this.checked) {
       gamepadSupport.enable();
+      window.doseeGamepadEnabled = true;
       updateGamepadStatus('Gamepad enabled');
     } else {
       gamepadSupport.disable();
+      window.doseeGamepadEnabled = false;
       updateGamepadStatus('Gamepad disabled');
     }
   });
 
-  layoutSelect.addEventListener('change', function() {
+  layoutSelect.addEventListener('change', function () {
     gamepadSupport.setConfig(this.value);
     updateGamepadStatus(`Layout: ${this.value}`);
   });
 
   // Gamepad connection events
-  window.addEventListener('gamepadconnected', function(e) {
+  window.addEventListener('gamepadconnected', function (e) {
     updateGamepadStatus(`Connected: ${e.gamepad.id}`);
   });
 
-  window.addEventListener('gamepaddisconnected', function() {
+  window.addEventListener('gamepaddisconnected', function () {
     updateGamepadStatus('No gamepad detected');
   });
 
@@ -117,6 +126,7 @@ export function addGamepadUI(gamepadSupport) {
 
 /**
  * Add CSS styles for gamepad controls
+ * Because this is created by an coding agent, it is kept out of the DOSee CSS files
  */
 function addGamepadCSS() {
   const style = document.createElement('style');
@@ -165,5 +175,5 @@ function addGamepadCSS() {
   document.head.appendChild(style);
 }
 
-// Import gamepad configs for layout detection
-import { gamepadConfigs } from './dosee-gamepad.js';
+// Import gamepad configs and logging function for layout detection
+import { gamepadConfigs, doseeLog } from './dosee-gamepad.js';
