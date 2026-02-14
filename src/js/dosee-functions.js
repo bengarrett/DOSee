@@ -62,30 +62,56 @@
     );
   };
 
-  // Aborts DOSee pressing the DOSBox Ctrl-F9 keyboard key combination.
+  // Aborts DOSee by calling em-dosbox's quit function directly
   DOSee.exit = () => {
-    const body = document.getElementsByTagName(`body`)[0];
-    body.dispatchEvent(
-      new KeyboardEvent(`keydown`, {
-        bubbles: true,
-        cancelable: true,
-        code: `ControlLeft`,
-        composed: true,
-        ctrlKey: true,
-        key: `Control`,
-        location: 1,
-      })
-    );
-    body.dispatchEvent(
-      new KeyboardEvent(`keydown`, {
-        bubbles: true,
-        cancelable: true,
-        code: `F9`,
-        composed: true,
-        key: `F9`,
-        location: 0,
-      })
-    );
+    // Try to call em-dosbox's native quit function first
+    // Note: In emterpreter-async builds, Module.quit is replaced with quit_
+    if (typeof Module !== 'undefined') {
+      try {
+        if (Module.quit_) {
+          Module.quit_();  // Use the emterpreter-async version
+        } else if (Module.quit) {
+          Module.quit();   // Fallback to standard version
+        }
+      } catch (e) {
+        doseeLog('warn', 'Direct Module quit failed, trying keyboard events: ' + e.message);
+      }
+    }
+    
+    // Fallback: Try keyboard events to canvas
+    const canvas = document.getElementById(`doseeCanvas`);
+    if (canvas) {
+      try {
+        // Dispatch Ctrl key first
+        canvas.dispatchEvent(
+          new KeyboardEvent(`keydown`, {
+            bubbles: true,
+            cancelable: true,
+            code: `ControlLeft`,
+            composed: true,
+            ctrlKey: true,
+            key: `Control`,
+            location: 1,
+          })
+        );
+        // Dispatch F9 key with Ctrl modifier
+        canvas.dispatchEvent(
+          new KeyboardEvent(`keydown`, {
+            bubbles: true,
+            cancelable: true,
+            code: `F9`,
+            composed: true,
+            ctrlKey: true,
+            key: `F9`,
+            location: 0,
+          })
+        );
+      } catch (e) {
+        doseeLog('warn', 'Keyboard event dispatch failed: ' + e.message);
+      }
+    }
+    
+    // Update UI regardless of success
     const e = document.getElementById(`doseeExit`);
     if (e !== null) e.classList.add(`hide-true`);
     const h = document.getElementById(`doseeHalted`);
