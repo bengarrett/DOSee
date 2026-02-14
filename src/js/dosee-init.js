@@ -42,7 +42,7 @@
     doseeLog('info', 'Gamepad support initialized');
   } catch (error) {
     // Fallback for non-module environments or if file doesn't exist
-    console.warn('Gamepad module not available:', error.message);
+    doseeLog('warn', 'Gamepad module not available:', error.message);
     gamepadSupport = null;
   }
 
@@ -60,20 +60,30 @@
   if (gamepadSupport) {
     // Import gamepad configs for layout detection
     const { gamepadConfigs } = await import('./dosee-gamepad.js');
-    
+
     // Check if localStorage settings exist
-    const hasLocalSettings = localStorage.getItem('doseeGamepadSettings') !== null;
-    
+    const hasLocalSettings =
+      localStorage.getItem('doseeGamepadSettings') !== null;
+
     if (hasLocalSettings) {
       // LocalStorage settings exist - they were already loaded in init()
-      doseeLog('info', 'Gamepad support using saved settings from localStorage');
-      
+      doseeLog(
+        'info',
+        'Gamepad support using saved settings from localStorage'
+      );
+
       // Ensure the gamepad is enabled if the saved setting says it should be
       if (gamepadSupport.enabled) {
-        doseeLog('info', `Gamepad support enabled with ${gamepadSupport.config === gamepadConfigs.xbox ? 'xbox' : 'playstation'} layout (from localStorage)`);
+        doseeLog(
+          'info',
+          `Gamepad support enabled with ${gamepadSupport.config === gamepadConfigs.xbox ? 'xbox' : 'playstation'} layout (from localStorage)`
+        );
       }
     } else {
-      doseeLog('info', 'Gamepad support ready - use UI to enable and configure');
+      doseeLog(
+        'info',
+        'Gamepad support ready - use UI to enable and configure'
+      );
     }
 
     // Add UI controls for gamepad
@@ -81,7 +91,7 @@
       const gamepadUIModule = await import('./dosee-gamepad-ui.js');
       gamepadUIModule.addGamepadUI(gamepadSupport);
     } catch (error) {
-      console.warn('Gamepad UI module not available:', error.message);
+      doseeLog('warn', 'Gamepad UI module not available: ' + error.message);
     }
   }
 
@@ -102,7 +112,7 @@
 
     // Validate path exists and is a string
     if (typeof path !== 'string' || path.length === 0) {
-      console.warn(`DOSee: Invalid or missing path in config`);
+      doseeLog('warn', 'Invalid or missing path in config');
       return;
     }
 
@@ -175,7 +185,7 @@
   try {
     checks();
   } catch (error) {
-    console.error(`DOSee initialization failed:`, error);
+    doseeLog('error', 'Initialization failed: ' + error.message);
     return errorBox(
       `DOSee cannot start due to missing required configuration.`
     );
@@ -272,9 +282,7 @@
   const canvasSize = () => {
     const canvas = document.getElementById(`doseeCanvas`);
     if (canvas === null) {
-      console.error(
-        `DOSee: Canvas element #doseeCanvas not found. Cannot initialize canvas size.`
-      );
+      doseeLog('error', 'Canvas element #doseeCanvas not found. Cannot initialize canvas size.');
       return;
     }
     canvas.width = nativeResolution()[0];
@@ -299,7 +307,7 @@
             `DOSee has aborted as it cannot be hosted over the "${url.protocol}" protocol.`
           );
         } catch (err) {
-          console.error(err);
+          doseeLog('error', err.message);
         }
         return errorBox(`DOSee cannot run over the ${url.protocol} protocol`);
     }
@@ -315,7 +323,7 @@
 
     // Check if required elements exist
     if (crash === null || error === null || slowLoad === null) {
-      console.error(`DOSee: Required error display elements not found in DOM`);
+      doseeLog('error', 'Required error display elements not found in DOM');
       return;
     }
 
@@ -341,7 +349,7 @@
     // Note: autoStartItem could be null (first run) or "false" (disabled)
   }
   if (config.get(`start`) === true)
-    console.log(`DOSee will launch automatically`);
+    doseeLog('info', 'DOSee will launch automatically');
 
   // Initialise DOSee
   // Note order of these DoseeLoader values are important and swapping them could cause failures
@@ -380,9 +388,7 @@
   // Start DOSee!
   const canvasElement = document.querySelector(`#doseeCanvas`);
   if (canvasElement === null) {
-    console.error(
-      `DOSee: Canvas element #doseeCanvas not found. Cannot initialize emulator.`
-    );
+    doseeLog('error', 'Canvas element #doseeCanvas not found. Cannot initialize emulator.');
     return;
   }
   const emulator = new Emulator(canvasElement, init);
@@ -401,22 +407,16 @@
     let pass = true;
     doseeObjects.forEach((objName) => {
       if (typeof window[objName] === `undefined`) {
-        console.error(`checking ${objName}, ${typeof window[objName]}`);
+        doseeLog('error', `checking ${objName}, ${typeof window[objName]}`);
         pass = false;
         // Continue loop to check all dependencies for comprehensive debugging
         return;
       }
-      console.log(
-        `%cDOSee`,
-        `color:dimgray;font-weight:bold`,
-        `checking ${objName}, ${typeof window[objName]}`
-      );
+      doseeLog('info', `checking ${objName}, ${typeof window[objName]}`);
     });
     if (!pass) {
       // console output
-      console.error(
-        `DOSee has aborted as it is missing the above dependencies.`
-      );
+      doseeLog('error', 'DOSee has aborted as it is missing the above dependencies.');
       // error link
       return errorBox(
         `DOSee cannot load the required dependencies listed the Browser Console.`

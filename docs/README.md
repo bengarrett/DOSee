@@ -73,6 +73,11 @@ Point a web browser to http://localhost:8086
 
 Due to the PWA offline feature, web browsers need to unregister the service workers to reflect any changes to the application code. There is a red _Update DOSee and the service worker_ button on the index.html example that will do this and then reload the browser window. The eventListener code for this button can be found in the `src/js/dosee-sw.js` file.
 
+## Gamepad support
+
+DOSee has hacked support for Xbox and PlayStation gamepad controllers, which act as keyboard input for DOS games. When enabled,
+gamepad buttons map to keyboard controls (D-pad for arrow keys, face buttons for common actions like Space, Enter, Escape). To customize or modify the button mappings, edit the `export const gamepadConfigs = {}` object in `src/js/dosee-gamepad.js`.
+
 ### License
 
 1. DOSee is under a GPL-3.0 license.

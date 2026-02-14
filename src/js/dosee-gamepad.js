@@ -1,10 +1,34 @@
 /**
  * DOSee Gamepad Support Module
  * Maps gamepad input to keyboard events for DOS emulation
- * 
+ *
  * This module provides gamepad support by translating gamepad button presses
  * and D-pad movements into keyboard events that DOSBox can understand.
+ *
+ * BE WARNED, this hacked gamepad support was created by with coding agents, which
+ * are dumb and love to make a mess of things. I had to jump through hoops and painful
+ * feedback loops to get this operating at a basic level.
+ * So I will not be supporting this code, and given the copy-paste nature of LLMs,
+ * it is likely parts of this code are (c) by people elsewhere.
  */
+
+// DOSee console logging utility with consistent styling
+const doseeLog = (level, message) => {
+  const styles = `color:dimgray;font-weight:bold`;
+  const prefix = `%cDOSee`;
+
+  switch (level) {
+    case 'error':
+      console.error(prefix, styles, message);
+      break;
+    case 'warn':
+      console.warn(prefix, styles, message);
+      break;
+    case 'info':
+    default:
+      console.log(prefix, styles, message);
+  }
+};
 
 // Gamepad configuration presets
 export const gamepadConfigs = {
@@ -18,8 +42,8 @@ export const gamepadConfigs = {
       lb: { key: 'Ctrl', name: 'Control' },
       rb: { key: 'Alt', name: 'Alt' },
       start: { key: 'P', name: 'Pause' },
-      back: { key: 'M', name: 'Menu' }
-    }
+      back: { key: 'M', name: 'Menu' },
+    },
   },
   playstation: {
     dpad: { xAxis: 6, yAxis: 7, threshold: 0.5 },
@@ -31,9 +55,9 @@ export const gamepadConfigs = {
       l1: { key: 'Ctrl', name: 'Control' },
       r1: { key: 'Alt', name: 'Alt' },
       options: { key: 'P', name: 'Pause' },
-      share: { key: 'M', name: 'Menu' }
-    }
-  }
+      share: { key: 'M', name: 'Menu' },
+    },
+  },
 };
 
 class DOSeeGamepad {
@@ -53,7 +77,7 @@ class DOSeeGamepad {
   loadSettings() {
     // Check if local storage is available
     if (!this.storageAvailable()) {
-      console.log('DOSee Gamepad: Local storage not available');
+      doseeLog('info', 'Gamepad: Local storage not available');
       return;
     }
 
@@ -61,32 +85,45 @@ class DOSeeGamepad {
       const settings = localStorage.getItem('doseeGamepadSettings');
       if (settings) {
         const parsed = JSON.parse(settings);
-        
-        console.log('DEBUG: Loading settings from localStorage:', parsed);
-        
+
+        doseeLog('info', 'DEBUG: Loading settings from localStorage');
+
         // Restore layout configuration first (use setConfig to ensure proper handling)
         if (parsed.layout && gamepadConfigs[parsed.layout]) {
-          console.log('DEBUG: Setting layout to:', parsed.layout);
+          doseeLog('info', 'DEBUG: Setting layout to: ' + parsed.layout);
           this.setConfig(parsed.layout, false); // Don't save during load
         }
-        
+
         // Restore enabled state and apply it (use enable/disable methods)
         if (parsed.enabled !== undefined) {
-          const shouldEnable = parsed.enabled === true || parsed.enabled === 'true';
-          console.log('DEBUG: Setting enabled to:', shouldEnable);
-          
+          const shouldEnable =
+            parsed.enabled === true || parsed.enabled === 'true';
+          doseeLog('info', 'DEBUG: Setting enabled to: ' + shouldEnable);
+
           if (shouldEnable) {
             this.enable(false); // Don't save during load
           } else {
             this.disable(false); // Don't save during load
           }
         }
-        
-        console.log('DEBUG: After loading - enabled:', this.enabled, 'config:', this.config);
-        console.log('DOSee Gamepad: Settings loaded and applied from local storage');
+
+        doseeLog(
+          'info',
+          'DEBUG: After loading - enabled: ' +
+            this.enabled +
+            ', config: ' +
+            this.config
+        );
+        doseeLog(
+          'info',
+          'Gamepad: Settings loaded and applied from local storage'
+        );
       }
     } catch (error) {
-      console.warn('DOSee Gamepad: Failed to load settings from local storage', error);
+      doseeLog(
+        'warn',
+        'Gamepad: Failed to load settings from local storage: ' + error.message
+      );
     }
   }
 
@@ -96,20 +133,23 @@ class DOSeeGamepad {
   saveSettings() {
     // Check if local storage is available
     if (!this.storageAvailable()) {
-      console.log('DOSee Gamepad: Local storage not available');
+      doseeLog('info', 'Gamepad: Local storage not available');
       return;
     }
 
     try {
       const settings = {
         enabled: this.enabled,
-        layout: this.config === gamepadConfigs.xbox ? 'xbox' : 'playstation'
+        layout: this.config === gamepadConfigs.xbox ? 'xbox' : 'playstation',
       };
-      
+
       localStorage.setItem('doseeGamepadSettings', JSON.stringify(settings));
-      console.log('DOSee Gamepad: Settings saved to local storage');
+      doseeLog('info', 'Gamepad: Settings saved to local storage');
     } catch (error) {
-      console.warn('DOSee Gamepad: Failed to save settings to local storage', error);
+      doseeLog(
+        'warn',
+        'Gamepad: Failed to save settings to local storage: ' + error.message
+      );
     }
   }
 
@@ -137,7 +177,7 @@ class DOSeeGamepad {
     this.supported = !!navigator.getGamepads;
 
     if (!this.supported) {
-      console.log('DOSee Gamepad: Gamepad API not supported in this browser');
+      doseeLog('info', 'Gamepad: Gamepad API not supported in this browser');
       return false;
     }
 
@@ -145,10 +185,16 @@ class DOSeeGamepad {
     this.loadSettings();
 
     // Set up event listeners
-    window.addEventListener('gamepadconnected', this.handleGamepadConnected.bind(this));
-    window.addEventListener('gamepaddisconnected', this.handleGamepadDisconnected.bind(this));
+    window.addEventListener(
+      'gamepadconnected',
+      this.handleGamepadConnected.bind(this)
+    );
+    window.addEventListener(
+      'gamepaddisconnected',
+      this.handleGamepadDisconnected.bind(this)
+    );
 
-    console.log('DOSee Gamepad: Initialized');
+    doseeLog('info', 'Gamepad: Initialized');
     return true;
   }
 
@@ -157,13 +203,13 @@ class DOSeeGamepad {
    * @param {GamepadEvent} event
    */
   handleGamepadConnected(event) {
-    console.log('DOSee Gamepad: Controller connected', event.gamepad.id);
-    console.log('Gamepad: Input monitoring started. Press buttons to see key mappings.');
+    doseeLog('info', 'Gamepad: Controller connected: ' + event.gamepad.id);
+    doseeLog('info', 'Gamepad: Input monitoring started');
     this.gamepad = event.gamepad;
-    
+
     // Debug the gamepad state initially to help identify axes
     this.debugGamepadState(event.gamepad);
-    
+
     this.startPolling();
   }
 
@@ -172,7 +218,7 @@ class DOSeeGamepad {
    * @param {GamepadEvent} event
    */
   handleGamepadDisconnected(event) {
-    console.log('DOSee Gamepad: Controller disconnected', event.gamepad.id);
+    doseeLog('info', 'Gamepad: Controller disconnected: ' + event.gamepad.id);
     this.stopPolling();
     this.releaseAllKeys();
     this.gamepad = null;
@@ -184,7 +230,7 @@ class DOSeeGamepad {
   startPolling() {
     if (this.pollingInterval) return;
 
-    console.log('DEBUG: Starting gamepad polling at 60fps');
+    doseeLog('info', 'DEBUG: Starting gamepad polling at 60fps');
     this.pollingInterval = setInterval(() => {
       this.pollGamepad();
     }, 16); // ~60fps
@@ -195,17 +241,17 @@ class DOSeeGamepad {
    */
   debugCurrentState() {
     if (!this.gamepad) {
-      console.log('DEBUG: No gamepad connected');
+      doseeLog('info', 'DEBUG: No gamepad connected');
       return;
     }
-    
+
     const gamepads = navigator.getGamepads();
     const currentGamepad = gamepads[this.gamepad.index] || gamepads[0];
-    
+
     if (currentGamepad) {
       this.debugGamepadState(currentGamepad);
     } else {
-      console.log('DEBUG: Gamepad not found in navigator.getGamepads()');
+      doseeLog('info', 'DEBUG: Gamepad not found in navigator.getGamepads()');
     }
   }
 
@@ -239,11 +285,14 @@ class DOSeeGamepad {
    * @param {Gamepad} gamepad
    */
   debugGamepadState(gamepad) {
-    console.log('=== Gamepad State Debug ===');
-    console.log('Gamepad ID:', gamepad.id);
-    console.log('Axes:', gamepad.axes);
-    console.log('Buttons:', gamepad.buttons.map(b => b.pressed ? 1 : 0));
-    console.log('===========================');
+    doseeLog('info', '=== Gamepad State Debug ===');
+    doseeLog('info', 'Gamepad ID: ' + gamepad.id);
+    doseeLog('info', 'Axes: ' + gamepad.axes);
+    doseeLog(
+      'info',
+      'Buttons: ' + gamepad.buttons.map((b) => (b.pressed ? 1 : 0))
+    );
+    doseeLog('info', '===========================');
   }
 
   /**
@@ -253,7 +302,7 @@ class DOSeeGamepad {
   handleDpad(gamepad) {
     // Try axis-based D-pad with multiple common configurations
     const axisSuccess = this.tryMultipleAxisConfigurations(gamepad);
-    
+
     // If axis-based didn't work, try button-based D-pad (POV hat)
     if (!axisSuccess) {
       this.handleDpadButtons(gamepad);
@@ -268,23 +317,20 @@ class DOSeeGamepad {
   tryMultipleAxisConfigurations(gamepad) {
     // Common D-pad axis configurations for different controllers
     const configurations = [
-      { xAxis: 6, yAxis: 7 },  // Xbox/PS standard
-      { xAxis: 0, yAxis: 1 },  // Some USB controllers
-      { xAxis: 2, yAxis: 3 },  // Some controllers
-      { xAxis: 4, yAxis: 5 },  // Rare but possible
-      { xAxis: 16, yAxis: 17 } // Some advanced controllers
+      { xAxis: 6, yAxis: 7 }, // Xbox/PS standard
+      { xAxis: 0, yAxis: 1 }, // Some USB controllers
+      { xAxis: 2, yAxis: 3 }, // Some controllers
+      { xAxis: 4, yAxis: 5 }, // Rare but possible
+      { xAxis: 16, yAxis: 17 }, // Some advanced controllers
     ];
 
     for (const config of configurations) {
-      const x = gamepad.axes[config.xAxis] || 0;
-      const y = gamepad.axes[config.yAxis] || 0;
-      
       // Use this configuration if it shows significant activity
       if (this.tryAxisConfiguration(gamepad, config.xAxis, config.yAxis, 0.5)) {
         return true;
       }
     }
-    
+
     return false;
   }
 
@@ -305,26 +351,26 @@ class DOSeeGamepad {
 
     // Handle X axis (left/right)
     if (x < -threshold) {
-      console.log(`D-pad: left (axis ${xAxis})`);
+      doseeLog('info', `D-pad: left (axis ${xAxis})`);
       this.pressKey('ArrowLeft');
       return true;
     } else if (x > threshold) {
-      console.log(`D-pad: right (axis ${xAxis})`);
+      doseeLog('info', `D-pad: right (axis ${xAxis})`);
       this.pressKey('ArrowRight');
       return true;
     }
 
     // Handle Y axis (up/down)
     if (y < -threshold) {
-      console.log(`D-pad: up (axis ${yAxis})`);
+      doseeLog('info', `D-pad: up (axis ${yAxis})`);
       this.pressKey('ArrowUp');
       return true;
     } else if (y > threshold) {
-      console.log(`D-pad: down (axis ${yAxis})`);
+      doseeLog('info', `D-pad: down (axis ${yAxis})`);
       this.pressKey('ArrowDown');
       return true;
     }
-    
+
     return false;
   }
 
@@ -339,36 +385,39 @@ class DOSeeGamepad {
     const y = gamepad.axes[yAxis] || 0;
 
     // Debug logging for D-pad axes
-    console.log(`D-pad Axis Debug - X: ${x.toFixed(2)}, Y: ${y.toFixed(2)}, Threshold: ${threshold}`);
+    doseeLog(
+      'info',
+      `D-pad Axis Debug - X: ${x.toFixed(2)}, Y: ${y.toFixed(2)}, Threshold: ${threshold}`
+    );
 
     // Check if any axis movement is detected
     const axisActive = Math.abs(x) > 0.1 || Math.abs(y) > 0.1;
-    
+
     // Release all arrow keys first
     this.releaseKeys(['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight']);
 
     // Handle X axis (left/right)
     if (x < -threshold) {
-      console.log('Gamepad: D-pad Left → ArrowLeft (axis-based)');
+      doseeLog('info', 'Gamepad: D-pad Left → ArrowLeft (axis-based)');
       this.pressKey('ArrowLeft');
       return true;
     } else if (x > threshold) {
-      console.log('Gamepad: D-pad Right → ArrowRight (axis-based)');
+      doseeLog('info', 'Gamepad: D-pad Right → ArrowRight (axis-based)');
       this.pressKey('ArrowRight');
       return true;
     }
 
     // Handle Y axis (up/down) - Y axis is typically inverted
     if (y < -threshold) {
-      console.log('Gamepad: D-pad Up → ArrowUp (axis-based)');
+      doseeLog('info', 'Gamepad: D-pad Up → ArrowUp (axis-based)');
       this.pressKey('ArrowUp');
       return true;
     } else if (y > threshold) {
-      console.log('Gamepad: D-pad Down → ArrowDown (axis-based)');
+      doseeLog('info', 'Gamepad: D-pad Down → ArrowDown (axis-based)');
       this.pressKey('ArrowDown');
       return true;
     }
-    
+
     return axisActive; // Return true if any axis movement detected, even if below threshold
   }
 
@@ -380,7 +429,7 @@ class DOSeeGamepad {
   handleDpadButtons(gamepad) {
     // Try common button indices
     const commonDpadButtons = this.tryCommonDpadButtonIndices(gamepad);
-    
+
     // If common indices don't work, scan all buttons for D-pad
     if (!commonDpadButtons) {
       this.scanAllButtonsForDpad(gamepad);
@@ -395,10 +444,10 @@ class DOSeeGamepad {
   tryCommonDpadButtonIndices(gamepad) {
     // Common button indices for D-pad (varies by controller)
     const dpadButtonMap = {
-      up: 12,    // Common D-pad up button index
-      down: 13,  // Common D-pad down button index  
-      left: 14,  // Common D-pad left button index
-      right: 15 // Common D-pad right button index
+      up: 12, // Common D-pad up button index
+      down: 13, // Common D-pad down button index
+      left: 14, // Common D-pad left button index
+      right: 15, // Common D-pad right button index
     };
 
     let foundAny = false;
@@ -413,7 +462,7 @@ class DOSeeGamepad {
         }
       }
     }
-    
+
     return foundAny;
   }
 
@@ -424,7 +473,7 @@ class DOSeeGamepad {
   scanAllButtonsForDpad(gamepad) {
     // Release all arrow keys first
     this.releaseKeys(['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight']);
-    
+
     // Check buttons 12-19 (common range for D-pad buttons)
     for (let i = 12; i <= 19; i++) {
       if (i < gamepad.buttons.length) {
@@ -450,22 +499,22 @@ class DOSeeGamepad {
     const patterns = [
       { up: 12, down: 13, left: 14, right: 15 },
       { up: 13, down: 12, left: 14, right: 15 },
-      { up: 14, down: 15, left: 12, right: 13 }
+      { up: 14, down: 15, left: 12, right: 13 },
     ];
-    
+
     for (const pattern of patterns) {
       if (buttonIndex === pattern.up) return 'up';
       if (buttonIndex === pattern.down) return 'down';
       if (buttonIndex === pattern.left) return 'left';
       if (buttonIndex === pattern.right) return 'right';
     }
-    
+
     // Simple sequential mapping
     if (buttonIndex >= 12 && buttonIndex <= 15) {
       const directions = ['up', 'down', 'left', 'right'];
       return directions[buttonIndex - 12] || null;
     }
-    
+
     return null;
   }
 
@@ -474,8 +523,8 @@ class DOSeeGamepad {
    * @param {string} direction
    */
   handleDpadButtonPress(direction) {
-    console.log(`D-pad: ${direction}`);
-    
+    doseeLog('info', `D-pad: ${direction}`);
+
     switch (direction) {
       case 'up':
         this.pressKey('ArrowUp');
@@ -504,20 +553,23 @@ class DOSeeGamepad {
       const button = gamepad.buttons[buttonIndex];
 
       if (button && button.pressed && !this.activeKeys.has(mapping.key)) {
-        console.log(`Gamepad: ${buttonName} → ${mapping.key}`);
-        
+        doseeLog('info', `Gamepad: ${buttonName} → ${mapping.key}`);
+
         // Debug gamepad state when back/share is pressed
         if (buttonName === 'back' || buttonName === 'share') {
           this.debugGamepadState(gamepad);
         }
-        
+
         this.pressKey(mapping.key);
-      } else if ((!button || !button.pressed) && this.activeKeys.has(mapping.key)) {
-        console.log(`Gamepad: ${buttonName} released`);
+      } else if (
+        (!button || !button.pressed) &&
+        this.activeKeys.has(mapping.key)
+      ) {
+        doseeLog('info', `Gamepad: ${buttonName} released`);
         this.releaseKey(mapping.key);
       }
     }
-    
+
     // Simple D-pad button test - check buttons 12-15 directly
     this.checkSimpleDpadButtons(gamepad);
   }
@@ -529,9 +581,9 @@ class DOSeeGamepad {
   checkSimpleDpadButtons(gamepad) {
     const dpadButtons = {
       12: 'ArrowUp',
-      13: 'ArrowDown', 
+      13: 'ArrowDown',
       14: 'ArrowLeft',
-      15: 'ArrowRight'
+      15: 'ArrowRight',
     };
 
     for (const [buttonIndex, arrowKey] of Object.entries(dpadButtons)) {
@@ -539,7 +591,7 @@ class DOSeeGamepad {
       if (idx < gamepad.buttons.length) {
         const button = gamepad.buttons[idx];
         if (button && button.pressed && !this.activeKeys.has(arrowKey)) {
-          console.log(`D-pad: ${buttonIndex} → ${arrowKey}`);
+          doseeLog('info', `D-pad: ${buttonIndex} → ${arrowKey}`);
           this.pressKey(arrowKey);
         }
       }
@@ -554,10 +606,22 @@ class DOSeeGamepad {
   getButtonIndex(buttonName) {
     // Standard button mapping for most controllers
     const buttonMap = {
-      'a': 0, 'b': 1, 'x': 2, 'y': 3,
-      'lb': 4, 'rb': 5, 'back': 8, 'start': 9,
-      'cross': 0, 'circle': 1, 'square': 2, 'triangle': 3,
-      'l1': 4, 'r1': 5, 'options': 9, 'share': 8
+      a: 0,
+      b: 1,
+      x: 2,
+      y: 3,
+      lb: 4,
+      rb: 5,
+      back: 8,
+      start: 9,
+      cross: 0,
+      circle: 1,
+      square: 2,
+      triangle: 3,
+      l1: 4,
+      r1: 5,
+      options: 9,
+      share: 8,
     };
     return buttonMap[buttonName] || -1;
   }
@@ -570,7 +634,7 @@ class DOSeeGamepad {
     if (this.activeKeys.has(key)) return;
 
     if (this.developerMode) {
-      console.log(`[DEV] Key press: ${key}`);
+      doseeLog('info', `[DEV] Key press: ${key}`);
     }
 
     this.activeKeys.add(key);
@@ -585,7 +649,7 @@ class DOSeeGamepad {
     if (!this.activeKeys.has(key)) return;
 
     if (this.developerMode) {
-      console.log(`[DEV] Key release: ${key}`);
+      doseeLog('info', `[DEV] Key release: ${key}`);
     }
 
     this.activeKeys.delete(key);
@@ -597,7 +661,7 @@ class DOSeeGamepad {
    * @param {string[]} keys
    */
   releaseKeys(keys) {
-    keys.forEach(key => this.releaseKey(key));
+    keys.forEach((key) => this.releaseKey(key));
   }
 
   /**
@@ -618,13 +682,13 @@ class DOSeeGamepad {
   dispatchKeyEvent(type, key) {
     const keyCode = this.getKeyCode(key);
     const legacyKeyCode = this.getLegacyKeyCode(keyCode);
-    
+
     // Get the canvas and focus it
     const canvas = document.querySelector('canvas');
     if (canvas) {
       canvas.focus();
     }
-    
+
     // Special handling for Escape key which Em-DOSBox might be filtering
     if (key === 'Esc') {
       // Create a more 'real' looking Escape event
@@ -634,7 +698,7 @@ class DOSeeGamepad {
         keyCode: 27,
         which: 27,
         bubbles: true,
-        cancelable: false,  // Make it non-cancelable like real Escape
+        cancelable: false, // Make it non-cancelable like real Escape
         composed: true,
         // Add properties that real keyboard events have
         shiftKey: false,
@@ -645,18 +709,18 @@ class DOSeeGamepad {
         isComposing: false,
         // Try to make it look more like a real event
         view: window,
-        detail: 0
+        detail: 0,
       });
-      
+
       // Dispatch to canvas with slight delay to mimic real key press timing
       setTimeout(() => {
         if (canvas) canvas.dispatchEvent(escapeEvent);
         document.dispatchEvent(escapeEvent);
       }, 10);
-      
+
       return; // Skip normal dispatch for Escape
     }
-    
+
     // Normal dispatch for other keys
     try {
       const event = new KeyboardEvent(type, {
@@ -665,22 +729,25 @@ class DOSeeGamepad {
         keyCode: legacyKeyCode,
         which: legacyKeyCode,
         bubbles: true,
-        cancelable: true
+        cancelable: true,
       });
-      
+
       if (this.developerMode) {
-        console.log(`[DEV] Dispatching ${type} event for key: ${key}`);
+        doseeLog('info', `[DEV] Dispatching ${type} event for key: ${key}`);
       }
-      
+
       // Send to canvas first (where Em-DOSBox should be listening)
       if (canvas) {
         canvas.dispatchEvent(event);
       }
-      
+
       // Also send to document for good measure
       document.dispatchEvent(event);
     } catch (error) {
-      console.error(`Failed to dispatch ${type} for ${key}:`, error);
+      doseeLog(
+        'error',
+        `Failed to dispatch ${type} for ${key}: ${error.message}`
+      );
     }
   }
 
@@ -692,18 +759,18 @@ class DOSeeGamepad {
   getKeyCode(key) {
     // Map key names to key codes
     const codeMap = {
-      'ArrowUp': 'ArrowUp',
-      'ArrowDown': 'ArrowDown',
-      'ArrowLeft': 'ArrowLeft',
-      'ArrowRight': 'ArrowRight',
+      ArrowUp: 'ArrowUp',
+      ArrowDown: 'ArrowDown',
+      ArrowLeft: 'ArrowLeft',
+      ArrowRight: 'ArrowRight',
       ' ': 'Space',
-      'Esc': 'Escape',
-      'Enter': 'Enter',
-      'Tab': 'Tab',
-      'Ctrl': 'ControlLeft',
-      'Alt': 'AltLeft',
-      'P': 'KeyP',
-      'M': 'KeyM'
+      Esc: 'Escape',
+      Enter: 'Enter',
+      Tab: 'Tab',
+      Ctrl: 'ControlLeft',
+      Alt: 'AltLeft',
+      P: 'KeyP',
+      M: 'KeyM',
     };
     return codeMap[key] || key;
   }
@@ -716,18 +783,18 @@ class DOSeeGamepad {
   getLegacyKeyCode(key) {
     // Map key codes to legacy numerical keyCodes
     const legacyMap = {
-      'ArrowUp': 38,
-      'ArrowDown': 40,
-      'ArrowLeft': 37,
-      'ArrowRight': 39,
+      ArrowUp: 38,
+      ArrowDown: 40,
+      ArrowLeft: 37,
+      ArrowRight: 39,
       ' ': 32,
-      'Esc': 27,
-      'Enter': 13,
-      'Tab': 9,
-      'ControlLeft': 17,
-      'AltLeft': 18,
-      'KeyP': 80,
-      'KeyM': 77
+      Esc: 27,
+      Enter: 13,
+      Tab: 9,
+      ControlLeft: 17,
+      AltLeft: 18,
+      KeyP: 80,
+      KeyM: 77,
     };
     return legacyMap[key] || 0;
   }
@@ -741,11 +808,11 @@ class DOSeeGamepad {
   setConfig(configName, saveToStorage = true) {
     if (gamepadConfigs[configName]) {
       this.config = gamepadConfigs[configName];
-      console.log(`DOSee Gamepad: Switched to ${configName} layout`);
+      doseeLog('info', `Gamepad: Switched to ${configName} layout`);
       if (saveToStorage) this.saveSettings();
       return true;
     }
-    console.warn(`DOSee Gamepad: Unknown config ${configName}`);
+    doseeLog('warn', `Gamepad: Unknown config ${configName}`);
     return false;
   }
 
@@ -754,7 +821,7 @@ class DOSeeGamepad {
    */
   enableDeveloperMode() {
     this.developerMode = true;
-    console.log('DOSee Gamepad: Developer mode enabled');
+    doseeLog('info', 'Gamepad: Developer mode enabled');
   }
 
   /**
@@ -763,7 +830,7 @@ class DOSeeGamepad {
    */
   enable(saveToStorage = true) {
     this.enabled = true;
-    console.log('DOSee Gamepad: Enabled');
+    doseeLog('info', 'Gamepad: Enabled');
     if (this.gamepad) this.startPolling();
     if (saveToStorage) this.saveSettings();
   }
@@ -774,7 +841,7 @@ class DOSeeGamepad {
    */
   disable(saveToStorage = true) {
     this.enabled = false;
-    console.log('DOSee Gamepad: Disabled');
+    doseeLog('info', 'Gamepad: Disabled');
     this.stopPolling();
     this.releaseAllKeys();
     if (saveToStorage) this.saveSettings();
@@ -786,8 +853,11 @@ class DOSeeGamepad {
   destroy() {
     this.disable();
     window.removeEventListener('gamepadconnected', this.handleGamepadConnected);
-    window.removeEventListener('gamepaddisconnected', this.handleGamepadDisconnected);
-    console.log('DOSee Gamepad: Destroyed');
+    window.removeEventListener(
+      'gamepaddisconnected',
+      this.handleGamepadDisconnected
+    );
+    doseeLog('info', 'Gamepad: Destroyed');
   }
 }
 

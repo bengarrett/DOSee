@@ -4,6 +4,7 @@
 
 **Enhancements:**
 
+- Added hacked support for gamepad controllers
 - Better feedback for missing/misconfigured HTML elements
 - Updated packages (including workbox) to latest versions
 - Replaced yarn/npx with pnpm for development

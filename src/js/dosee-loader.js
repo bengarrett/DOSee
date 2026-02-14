@@ -836,7 +836,7 @@ window.Module = null;
           arguments: args,
           screenIsReadOnly: true,
           print(text) {
-            console.log(`%cDOSBox`, `color:dimgray;font-weight:bold;`, text);
+            doseeLog('info', text);
           },
           canvas,
           noInitialRun: false,
@@ -1015,7 +1015,7 @@ window.Module = null;
         // A button (button 0) or Cross button (also typically button 0) to start
         // This covers both Xbox (A) and PlayStation (Cross) controllers
         if (gamepadEvent.button === 0) {
-          console.log('Gamepad button pressed to start emulation');
+          doseeLog('info', 'Gamepad button pressed to start emulation');
           resolve();
         }
       }
