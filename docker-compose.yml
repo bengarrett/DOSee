@@ -7,15 +7,13 @@
 # Reset containers: docker compose rm
 # Reset volumes     docker compose down --volumes
 
-version: "3.9"
-
 services:
   web:
     labels:
-      net.dosee.description: "DOSee an MS-DOS emulator for the web"
-    container_name: "dosee_app"
+      net.dosee.description: 'DOSee an MS-DOS emulator for the web'
+    container_name: 'dosee_app'
     build: .
-    image: "dosee"
+    image: 'dosee'
     # expose nginx web port 80 as port 8086
     ports:
-      - "8086:80"
+      - '8086:80'

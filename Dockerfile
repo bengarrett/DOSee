@@ -21,7 +21,7 @@ FROM node:current-alpine AS build
 
 # Install and update the build dependencies
 RUN apk update &&  \
-    apk add --update yarn && \
+    apk add --update pnpm && \
     npm update --global npm
 
 # Copy source files
@@ -29,7 +29,7 @@ COPY . /dosee
 
 # Compile and build DOSee
 WORKDIR /dosee
-RUN yarn install --audit --production
+RUN pnpm install
 
 # DOSee will be served on this permanent nginx image
 # It should only ammount to around 50 MB in size
@@ -43,4 +43,6 @@ COPY --from=build /dosee/build/ /usr/share/nginx/html
 
 # Security enhancement: Run as non-root user
 RUN chown -R nginx:nginx /usr/share/nginx/html
-USER nginx
+
+# Configure nginx to run in foreground (non-daemon mode)
+RUN sed -i 's/^daemon.*;/daemon off;/' /etc/nginx/nginx.conf
