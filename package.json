@@ -14,13 +14,13 @@
   "description": "A DOSBox-based MS-DOS emulator for the web",
   "devDependencies": {
     "copyfiles": "~2.4.1",
-    "eslint": "^10.1.0",
+    "eslint": "^10.3.0",
     "eslint-config-prettier": "^10.1.8",
-    "globals": "^17.4.0",
+    "globals": "^17.6.0",
     "htmlhint": "^1.9.2",
     "http-server": "^14.1.1",
-    "prettier": "^3.8.1",
-    "puppeteer": "^24.40.0",
+    "prettier": "^3.8.3",
+    "puppeteer": "^24.42.0",
     "workbox-cli": "~7.4.0"
   },
   "homepage": "https://github.com/bengarrett/DOSee",
